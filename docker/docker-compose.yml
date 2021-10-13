@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  #  next1:
+  #    build:
+  #      context: frontend
+  #    volumes:
+  #      - ../:/app
+  #    ports:
+  #      - "3001:3000"
+  #    tty: true
+  #    command: yarn dev
+  next2:
+    build:
+      context: frontend
+    volumes:
+      - ../:/app
+    ports:
+      - "3005:7000"
+    tty: true
+    command: yarn dev
+  nginx:
+    build:
+      context: nginx
+    volumes:
+      - ./nginx/sites:/etc/nginx/sites-available
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/log:/var/log/nginx
+    ports:
+      - "86:80"
+    depends_on:
+      #      - next1
+      - next2

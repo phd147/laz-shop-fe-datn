@@ -1,0 +1,270 @@
+const navigations = [
+  {
+    // icon: Dress,
+    title: 'Cárnicos',
+    href: '/product/search/carnicos',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Res',
+        href: '/product/search/res',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Pollo',
+        href: '/product/search/pollo',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Cortes finos',
+        href: '/product/search/cortes',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Carnes frias',
+        href: '/product/search/carnes',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Otros embutidos',
+        href: '/product/search/embutidos',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Accesorios para tu carne asada',
+        href: '/product/search/accesorios',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Lacteos y huevo',
+    href: '/product/search/lacteos',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Queso',
+        href: '/product/search/queso',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Crema',
+        href: '/product/search/crema',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Leche',
+        href: '/product/search/leche',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Otros derivados lácteos',
+        href: '/product/search/derivados',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Huevo',
+        href: '/product/search/huevo',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Gourmet',
+        href: '/product/search/gourmet',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Frutas',
+    href: '/product/search/frutas',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Tropical',
+        href: '/product/search/tropical',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Bosque',
+        href: '/product/search/bosque',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Cítricas',
+        href: '/product/search/citricas',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Verduras',
+    href: '/product/search/verduras',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Hortalizas',
+        href: '/product/search/hortalizas',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Verduras',
+        href: '/product/search/verduras',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Chiles',
+        href: '/product/search/chiles',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Hierbas, germen y hongos',
+        href: '/product/search/hierbas',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Accesorios cocina y desinfección',
+        href: '/product/search/cocina',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Semillas, especias y chiles secos',
+    href: '/product/search/semillas',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Chiles',
+        href: '/product/search/chiles',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Semillas',
+        href: '/product/search/semillas',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Pastas',
+        href: '/product/search/pastas',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Especias',
+        href: '/product/search/especias',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Frutos secos',
+        href: '/product/search/secos',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Abarrotes',
+    href: '/product/search/abarrotes',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Harinas y derivados',
+        href: '/product/search/harinas',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Arroz, frijos y sopas',
+        href: '/product/search/arroz',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Enlatados',
+        href: '/product/search/enlatados',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Complementos, aderezos y salsas',
+        href: '/product/search/complementos',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Dulces y botanas',
+        href: '/product/search/dulces',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Básicos y desinfeccion del hogar',
+        href: '/product/search/basicos',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Dress,
+    title: 'Mascotas',
+    href: '/product/search/mascotas',
+    menuComponent: 'MegaMenu2',
+    menuData: [
+      {
+        // icon: Woman,
+        title: 'Alimento para perro',
+        href: '/product/search/perro',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Alimento para gato',
+        href: '/product/search/gato',
+        megaMenu: 2,
+      },
+      {
+        // icon: Woman,
+        title: 'Accesorios',
+        href: '/product/search/accesorios',
+        megaMenu: 2,
+      },
+    ],
+  },
+  {
+    // icon: Microphone,
+    title: 'Recetarios',
+    href: '/recetario',
+    menuComponent: 'MegaMenu1',
+  },
+]
+
+export default navigations
