@@ -18,7 +18,7 @@ services:
     ports:
       - "3005:7000"
     tty: true
-    command: yarn dev
+#    command: yarn dev
   nginx:
     build:
       context: nginx
