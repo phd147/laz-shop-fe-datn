@@ -13,9 +13,9 @@ import Categories from '@component/home-1/Categories'
 // import Section9 from '@component/home-1/Section9'
 import AppLayout from '@component/layout/AppLayout'
 import React from 'react'
-import ProductsPromotion from '@component/home-1/ProductsPromotion'
+// import ProductsPromotion from '@component/home-1/ProductsPromotion'
 import AllProducts from '@component/home-1/AllProducts'
-import ProductsSale from '@component/home-1/ProductsSale'
+// import ProductsSale from '@component/home-1/ProductsSale'
 
 const IndexPage = () => {
 
@@ -24,8 +24,8 @@ const IndexPage = () => {
       <Promotions />
       {/*<Section2 />*/}
       <Categories />
-      <ProductsPromotion />
-      <ProductsSale />
+      {/*<ProductsPromotion />*/}
+      {/*<ProductsSale />*/}
       <AllProducts />
       {/*<Section4 />*/}
       {/*<Section5 />*/}
