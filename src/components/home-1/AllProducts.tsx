@@ -27,7 +27,8 @@ const AllProducts = () => {
           <Grid container spacing={4}>
             {productDatabase.slice(81, 90).map((item, ind) => (
               <Grid item lg={4} sm={6} xs={12} key={ind}>
-                <ProductCard1 off={50} hoverEffect {...item} />
+                <ProductCard1  hoverEffect {...item} />
+                {/*off={50}*/}
               </Grid>
             ))}
           </Grid>

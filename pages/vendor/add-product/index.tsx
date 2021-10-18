@@ -9,33 +9,33 @@ import React, { useState } from 'react'
 import * as yup from 'yup'
 import SaveIcon from '@material-ui/icons/Save'
 import categories from '@data/categories'
-import units from '@data/units'
+// import units from '@data/units'
 import Card from '@material-ui/core/Card'
 
 const OrderDetails = () => {
   const [subCategoryDisabled, setSubCategoryDisabled] = useState(true)
   const [categorySelected, setCategorySelected] = useState('0')
-  const [subCategorySelected, setSubCategorySelected] = useState('0')
+  // const [subCategorySelected, setSubCategorySelected] = useState('0')
 
   const handleFormSubmit = async (values: any) => {
     console.log(values)
   }
 
-  const subCategoryDisabledState = {
-    disabled: subCategoryDisabled,
-  }
+  // const subCategoryDisabledState = {
+  //   disabled: subCategoryDisabled,
+  // }
 
-  function returnSubCategories(id: number) {
-    if (!isNaN(id)) {
-      const data = categories.find(value => value.id == id)
-      if (data != null) {
-        return (data.subcategory.map(value => {
-          return (<MenuItem value={value.id}>{value.name}</MenuItem>)
-        }))
-      }
-    }
-    return (<MenuItem value='1'>No hay información</MenuItem>)
-  }
+  // function returnSubCategories(id: number) {
+  //   if (!isNaN(id)) {
+  //     const data = categories.find(value => value.id == id)
+  //     if (data != null) {
+  //       return (data.subcategory.map(value => {
+  //         return (<MenuItem value={value.id}>{value.name}</MenuItem>)
+  //       }))
+  //     }
+  //   }
+  //   return (<MenuItem value='1'>No hay información</MenuItem>)
+  // }
 
   return (
     <VendorDashboardLayout>
@@ -64,8 +64,8 @@ const OrderDetails = () => {
                 <Grid item sm={4} xs={12}>
                   <TextField
                     name='name'
-                    label='Nombre'
-                    placeholder='Nombre'
+                    label='Name'
+                    placeholder='Name'
                     fullWidth
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -77,7 +77,7 @@ const OrderDetails = () => {
                 <Grid item sm={4} xs={12}>
                   <TextField
                     name='category'
-                    label='Seleccionar Categoria'
+                    label='Select categories'
                     placeholder='Categoria'
                     fullWidth
                     select
@@ -94,26 +94,26 @@ const OrderDetails = () => {
                     {categories.map(category => <MenuItem value={category.id}>{category.name}</MenuItem>)}
                   </TextField>
                 </Grid>
-                <Grid item sm={4} xs={12}>
-                  <TextField
-                    name='subcategory'
-                    label='Seleccionar Subcategoria'
-                    placeholder='Subcategoria'
-                    fullWidth
-                    select
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e)
-                      setSubCategorySelected(e.target.value)
-                    }}
-                    value={values.subcategory || ''}
-                    error={!!touched.subcategory && !!errors.subcategory}
-                    helperText={touched.subcategory && errors.subcategory}
-                    inputProps={subCategoryDisabledState}
-                  >
-                    {categorySelected && returnSubCategories(parseInt(categorySelected))}
-                  </TextField>
-                </Grid>
+                {/*<Grid item sm={4} xs={12}>*/}
+                {/*  <TextField*/}
+                {/*    name='subcategory'*/}
+                {/*    label='Select sub categories'*/}
+                {/*    placeholder='Sub categories'*/}
+                {/*    fullWidth*/}
+                {/*    select*/}
+                {/*    onBlur={handleBlur}*/}
+                {/*    onChange={(e) => {*/}
+                {/*      handleChange(e)*/}
+                {/*      setSubCategorySelected(e.target.value)*/}
+                {/*    }}*/}
+                {/*    value={values.subcategory || ''}*/}
+                {/*    error={!!touched.subcategory && !!errors.subcategory}*/}
+                {/*    helperText={touched.subcategory && errors.subcategory}*/}
+                {/*    inputProps={subCategoryDisabledState}*/}
+                {/*  >*/}
+                {/*    {categorySelected && returnSubCategories(parseInt(categorySelected))}*/}
+                {/*  </TextField>*/}
+                {/*</Grid>*/}
                 <Grid item xs={12}>
                   <DropZone
                     onChange={(files) => {
@@ -124,8 +124,8 @@ const OrderDetails = () => {
                 <Grid item xs={12}>
                   <TextField
                     name='description'
-                    label='Descripción'
-                    placeholder='Descripción'
+                    label='Description'
+                    placeholder='Description'
                     rows={6}
                     multiline
                     fullWidth
@@ -143,9 +143,9 @@ const OrderDetails = () => {
               <Grid container spacing={3}>
                 <Grid item sm={4} xs={12}>
                   <TextField
-                    name='stock'
-                    label='Cantidad'
-                    placeholder='Cantidad'
+                    name='amount'
+                    label='Amount'
+                    placeholder='Amount'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}
@@ -155,27 +155,27 @@ const OrderDetails = () => {
                     helperText={touched.stock && errors.stock}
                   />
                 </Grid>
-                <Grid item sm={4} xs={12}>
-                  <TextField
-                    name='unit'
-                    label='Seleccionar Unidad'
-                    placeholder='Unidad'
-                    fullWidth
-                    select
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.unit || ''}
-                    error={!!touched.unit && !!errors.unit}
-                    helperText={touched.unit && errors.unit}
-                  >
-                    {units.map(value => <MenuItem value={value.id}>{value.name}</MenuItem>)}
-                  </TextField>
-                </Grid>
+                {/*<Grid item sm={4} xs={12}>*/}
+                {/*  <TextField*/}
+                {/*    name='unit'*/}
+                {/*    label='Seleccionar Unidad'*/}
+                {/*    placeholder='Unidad'*/}
+                {/*    fullWidth*/}
+                {/*    select*/}
+                {/*    onBlur={handleBlur}*/}
+                {/*    onChange={handleChange}*/}
+                {/*    value={values.unit || ''}*/}
+                {/*    error={!!touched.unit && !!errors.unit}*/}
+                {/*    helperText={touched.unit && errors.unit}*/}
+                {/*  >*/}
+                {/*    {units.map(value => <MenuItem value={value.id}>{value.name}</MenuItem>)}*/}
+                {/*  </TextField>*/}
+                {/*</Grid>*/}
                 <Grid item sm={4} xs={12}>
                   <TextField
                     name='price'
-                    label='Precio de compra'
-                    placeholder='Precio de compra'
+                    label='Price'
+                    placeholder='Price'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}
@@ -187,87 +187,87 @@ const OrderDetails = () => {
                 </Grid>
               </Grid>
             </Card>
-            <Card sx={{ p: '30px', marginTop: '10px' }} variant='outlined'>
-              <h3>Venta al publico</h3>
-              <Grid container spacing={3}>
-                <Grid item sm={4} xs={12}>
-                  <TextField
-                    name='stock_sale'
-                    label='Cantidad minima'
-                    placeholder='Cantidad minima'
-                    type='number'
-                    fullWidth
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.stock_sale || ''}
-                    error={!!touched.stock_sale && !!errors.stock_sale}
-                    helperText={touched.stock_sale && errors.stock_sale}
-                  />
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <TextField
-                    name='unit_sale'
-                    label='Seleccionar Unidad'
-                    placeholder='Unidad'
-                    fullWidth
-                    select
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.unit_sale || ''}
-                    error={!!touched.unit_sale && !!errors.unit_sale}
-                    helperText={touched.unit_sale && errors.unit_sale}
-                  >
-                    {units.map(value => <MenuItem value={value.id}>{value.name}</MenuItem>)}
-                  </TextField>
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <TextField
-                    name='sale_price'
-                    label='Precio de venta'
-                    placeholder='Precio de venta'
-                    type='number'
-                    fullWidth
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.sale_price || ''}
-                    error={!!touched.sale_price && !!errors.sale_price}
-                    helperText={touched.sale_price && errors.sale_price}
-                  />
-                </Grid>
-              </Grid>
-            </Card>
-            <Card sx={{ p: '30px', marginTop: '10px' }} variant='outlined'>
-              <h3>Otros</h3>
-              <Grid container spacing={3}>
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                    name='tags'
-                    label='Tags'
-                    placeholder='Tags'
-                    fullWidth
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.tags || ''}
-                    error={!!touched.tags && !!errors.tags}
-                    helperText={touched.tags && errors.tags}
-                  />
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                    name='code'
-                    label='Codigo de barras'
-                    placeholder='Codigo de barras'
-                    disabled={true}
-                    fullWidth
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={categorySelected.toString().padStart(3,"0") + subCategorySelected.toString().padStart(3,"0")}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                  />
-                </Grid>
-              </Grid>
-            </Card>
+            {/*<Card sx={{ p: '30px', marginTop: '10px' }} variant='outlined'>*/}
+            {/*  <h3>Venta al publico</h3>*/}
+            {/*  <Grid container spacing={3}>*/}
+            {/*    <Grid item sm={4} xs={12}>*/}
+            {/*      <TextField*/}
+            {/*        name='stock_sale'*/}
+            {/*        label='Cantidad minima'*/}
+            {/*        placeholder='Cantidad minima'*/}
+            {/*        type='number'*/}
+            {/*        fullWidth*/}
+            {/*        onBlur={handleBlur}*/}
+            {/*        onChange={handleChange}*/}
+            {/*        value={values.stock_sale || ''}*/}
+            {/*        error={!!touched.stock_sale && !!errors.stock_sale}*/}
+            {/*        helperText={touched.stock_sale && errors.stock_sale}*/}
+            {/*      />*/}
+            {/*    </Grid>*/}
+            {/*    <Grid item sm={4} xs={12}>*/}
+            {/*      <TextField*/}
+            {/*        name='unit_sale'*/}
+            {/*        label='Seleccionar Unidad'*/}
+            {/*        placeholder='Unidad'*/}
+            {/*        fullWidth*/}
+            {/*        select*/}
+            {/*        onBlur={handleBlur}*/}
+            {/*        onChange={handleChange}*/}
+            {/*        value={values.unit_sale || ''}*/}
+            {/*        error={!!touched.unit_sale && !!errors.unit_sale}*/}
+            {/*        helperText={touched.unit_sale && errors.unit_sale}*/}
+            {/*      >*/}
+            {/*        {units.map(value => <MenuItem value={value.id}>{value.name}</MenuItem>)}*/}
+            {/*      </TextField>*/}
+            {/*    </Grid>*/}
+            {/*    <Grid item sm={4} xs={12}>*/}
+            {/*      <TextField*/}
+            {/*        name='sale_price'*/}
+            {/*        label='Precio de venta'*/}
+            {/*        placeholder='Precio de venta'*/}
+            {/*        type='number'*/}
+            {/*        fullWidth*/}
+            {/*        onBlur={handleBlur}*/}
+            {/*        onChange={handleChange}*/}
+            {/*        value={values.sale_price || ''}*/}
+            {/*        error={!!touched.sale_price && !!errors.sale_price}*/}
+            {/*        helperText={touched.sale_price && errors.sale_price}*/}
+            {/*      />*/}
+            {/*    </Grid>*/}
+            {/*  </Grid>*/}
+            {/*</Card>*/}
+            {/*<Card sx={{ p: '30px', marginTop: '10px' }} variant='outlined'>*/}
+            {/*  <h3>Otros</h3>*/}
+            {/*  <Grid container spacing={3}>*/}
+            {/*    <Grid item sm={6} xs={12}>*/}
+            {/*      <TextField*/}
+            {/*        name='tags'*/}
+            {/*        label='Tags'*/}
+            {/*        placeholder='Tags'*/}
+            {/*        fullWidth*/}
+            {/*        onBlur={handleBlur}*/}
+            {/*        onChange={handleChange}*/}
+            {/*        value={values.tags || ''}*/}
+            {/*        error={!!touched.tags && !!errors.tags}*/}
+            {/*        helperText={touched.tags && errors.tags}*/}
+            {/*      />*/}
+            {/*    </Grid>*/}
+            {/*    <Grid item sm={6} xs={12}>*/}
+            {/*      <TextField*/}
+            {/*        name='code'*/}
+            {/*        label='Codigo de barras'*/}
+            {/*        placeholder='Codigo de barras'*/}
+            {/*        disabled={true}*/}
+            {/*        fullWidth*/}
+            {/*        onBlur={handleBlur}*/}
+            {/*        onChange={handleChange}*/}
+            {/*        value={categorySelected.toString().padStart(3,"0") + subCategorySelected.toString().padStart(3,"0")}*/}
+            {/*        error={!!touched.code && !!errors.code}*/}
+            {/*        helperText={touched.code && errors.code}*/}
+            {/*      />*/}
+            {/*    </Grid>*/}
+            {/*  </Grid>*/}
+            {/*</Card>*/}
             <Button
               variant='outlined'
               color='info'

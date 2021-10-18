@@ -28,8 +28,11 @@
     "@material-ui/lab": "^5.0.0-alpha.38",
     "@material-ui/styles": "^5.0.0-alpha.35",
     "@material-ui/system": "^5.0.0-alpha.38",
+    "axios": "^0.23.0",
     "chart.js": "^3.3.2",
     "clsx": "^1.1.1",
+    "cookie": "^0.4.1",
+    "cookie-parser": "^1.4.5",
     "date-fns": "^2.22.1",
     "firebase": "^9.1.0",
     "formik": "^2.2.6",
@@ -43,6 +46,7 @@
     "react-number-format": "^4.7.3",
     "react-scroll": "^1.8.2",
     "react-simple-image-viewer": "0.0.8",
+    "redux-thunk": "^2.3.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {

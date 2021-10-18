@@ -21,6 +21,8 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import * as yup from 'yup'
 
+import { instance } from '../../api/api'
+
 const fbStyle = {
   background: '#3B5998',
   color: 'white',
@@ -35,7 +37,7 @@ type StyledCardProps = {
 }
 
 const StyledCard = styled<React.FC<StyledCardProps & CardProps>>(
-  ({ children, passwordVisibility, ...rest }) => <Card {...rest}>{children}</Card>
+  ({ children, passwordVisibility, ...rest }) => <Card {...rest}>{children}</Card>,
 )<CardProps>(({ theme, passwordVisibility }) => ({
   width: 500,
   [theme.breakpoints.down('sm')]: {
@@ -80,6 +82,19 @@ const Signup = () => {
     console.log(values)
   }
 
+  const handleGoogleLogin = async () => {
+    const res = await instance.get('/google-login-url')
+    console.log({ res })
+    router.push(res.data.url);
+  }
+
+  const handleFacebookLogin = async () => {
+    const res = await instance.get('/facebook-login-url')
+    console.log({ res })
+    router.push(res.data.url);
+  }
+
+
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       onSubmit: handleFormSubmit,
@@ -89,28 +104,28 @@ const Signup = () => {
 
   return (
     <StyledCard elevation={3} passwordVisibility={passwordVisibility}>
-      <form className="content" onSubmit={handleSubmit}>
-        <H3 textAlign="center" mb={1}>
+      <form className='content' onSubmit={handleSubmit}>
+        <H3 textAlign='center' mb={1}>
           Create Your Account
         </H3>
         <Small
-          fontWeight="600"
-          fontSize="12px"
-          color="grey.800"
-          textAlign="center"
+          fontWeight='600'
+          fontSize='12px'
+          color='grey.800'
+          textAlign='center'
           mb={4.5}
-          display="block"
+          display='block'
         >
           Please fill all fields to continue
         </Small>
 
         <BazarTextField
           mb={1.5}
-          name="name"
-          label="Full Name"
-          placeholder="Ralph Adwards"
-          variant="outlined"
-          size="small"
+          name='name'
+          label='Full Name'
+          placeholder='Ralph Adwards'
+          variant='outlined'
+          size='small'
           fullWidth
           onBlur={handleBlur}
           onChange={handleChange}
@@ -121,12 +136,12 @@ const Signup = () => {
 
         <BazarTextField
           mb={1.5}
-          name="email"
-          label="Email or Phone Number"
-          placeholder="exmple@mail.com"
-          variant="outlined"
-          size="small"
-          type="email"
+          name='email'
+          label='Email or Phone Number'
+          placeholder='exmple@mail.com'
+          variant='outlined'
+          size='small'
+          type='email'
           fullWidth
           onBlur={handleBlur}
           onChange={handleChange}
@@ -137,25 +152,25 @@ const Signup = () => {
 
         <BazarTextField
           mb={1.5}
-          name="password"
-          label="Password"
-          placeholder="*********"
-          autoComplete="on"
+          name='password'
+          label='Password'
+          placeholder='*********'
+          autoComplete='on'
           type={passwordVisibility ? 'text' : 'password'}
-          variant="outlined"
-          size="small"
+          variant='outlined'
+          size='small'
           fullWidth
           InputProps={{
             endAdornment: (
               <IconButton
-                size="small"
-                type="button"
+                size='small'
+                type='button'
                 onClick={togglePasswordVisibility}
               >
                 {passwordVisibility ? (
-                  <Visibility className="passwordEye" fontSize="small" />
+                  <Visibility className='passwordEye' fontSize='small' />
                 ) : (
-                  <VisibilityOff className="passwordEye" fontSize="small" />
+                  <VisibilityOff className='passwordEye' fontSize='small' />
                 )}
               </IconButton>
             ),
@@ -168,25 +183,25 @@ const Signup = () => {
         />
 
         <BazarTextField
-          name="re_password"
-          label="Retype Password"
-          placeholder="*********"
-          autoComplete="on"
+          name='re_password'
+          label='Retype Password'
+          placeholder='*********'
+          autoComplete='on'
           type={passwordVisibility ? 'text' : 'password'}
-          variant="outlined"
-          size="small"
+          variant='outlined'
+          size='small'
           fullWidth
           InputProps={{
             endAdornment: (
               <IconButton
-                size="small"
-                type="button"
+                size='small'
+                type='button'
                 onClick={togglePasswordVisibility}
               >
                 {passwordVisibility ? (
-                  <Visibility className="passwordEye" fontSize="small" />
+                  <Visibility className='passwordEye' fontSize='small' />
                 ) : (
-                  <VisibilityOff className="passwordEye" fontSize="small" />
+                  <VisibilityOff className='passwordEye' fontSize='small' />
                 )}
               </IconButton>
             ),
@@ -199,21 +214,21 @@ const Signup = () => {
         />
 
         <FormControlLabel
-          className="agreement"
-          name="agreement"
+          className='agreement'
+          name='agreement'
           onChange={handleChange}
           control={
             <Checkbox
-              size="small"
-              color="secondary"
+              size='small'
+              color='secondary'
               checked={values.agreement || false}
             />
           }
           label={
-            <FlexBox flexWrap="wrap" alignItems="center" justifyContent="flex-start">
+            <FlexBox flexWrap='wrap' alignItems='center' justifyContent='flex-start'>
               By signing up, you agree to
-              <a href="/" target="_blank" rel="noreferrer noopener">
-                <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+              <a href='/' target='_blank' rel='noreferrer noopener'>
+                <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
                   Terms & Condtion
                 </H6>
               </a>
@@ -222,9 +237,9 @@ const Signup = () => {
         />
 
         <BazarButton
-          variant="contained"
-          color="primary"
-          type="submit"
+          variant='contained'
+          color='primary'
+          type='submit'
           fullWidth
           sx={{
             height: 44,
@@ -234,52 +249,54 @@ const Signup = () => {
         </BazarButton>
 
         <Box mb={2} mt={3.3}>
-          <Box width="200px" mx="auto">
+          <Box width='200px' mx='auto'>
             <Divider />
           </Box>
 
-          <FlexBox justifyContent="center" mt={-1.625}>
-            <Box color="grey.600" bgcolor="background.paper" px={2}>
+          <FlexBox justifyContent='center' mt={-1.625}>
+            <Box color='grey.600' bgcolor='background.paper' px={2}>
               on
             </Box>
           </FlexBox>
         </Box>
 
         <BazarButton
-          className="facebookButton"
-          size="medium"
+          className='facebookButton'
+          size='medium'
           fullWidth
           sx={{
             height: 44,
           }}
+          onClick={handleFacebookLogin}
         >
           <Image
-            src="/assets/images/icons/facebook-filled-white.svg"
-            alt="facebook"
+            src='/assets/images/icons/facebook-filled-white.svg'
+            alt='facebook'
           />
-          <Box fontSize="12px" ml={1}>
+          <Box fontSize='12px' ml={1}>
             Continue with Facebook
           </Box>
         </BazarButton>
         <BazarButton
-          className="googleButton"
-          size="medium"
+          className='googleButton'
+          size='medium'
           fullWidth
           sx={{
             height: 44,
           }}
+          onClick={handleGoogleLogin}
         >
-          <Image src="/assets/images/icons/google-1.svg" alt="facebook" />
-          <Box fontSize="12px" ml={1}>
+          <Image src='/assets/images/icons/google-1.svg' alt='facebook' />
+          <Box fontSize='12px' ml={1}>
             Continue with Google
           </Box>
         </BazarButton>
 
-        <FlexBox justifyContent="center" alignItems="center" my="1.25rem">
+        <FlexBox justifyContent='center' alignItems='center' my='1.25rem'>
           <Box>Don’t have account?</Box>
-          <Link href="/login">
+          <Link href='/login'>
             <a>
-              <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+              <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
                 Log In
               </H6>
             </a>
@@ -287,11 +304,11 @@ const Signup = () => {
         </FlexBox>
       </form>
 
-      <FlexBox justifyContent="center" bgcolor="grey.200" py={2.5}>
+      <FlexBox justifyContent='center' bgcolor='grey.200' py={2.5}>
         Forgot your password?
-        <Link href="/">
+        <Link href='/'>
           <a>
-            <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+            <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
               Reset It
             </H6>
           </a>
@@ -322,7 +339,7 @@ const formSchema = yup.object().shape({
     .test(
       'agreement',
       'You have to agree with our Terms and Conditions!',
-      (value) => value === true
+      (value) => value === true,
     )
     .required('You have to agree with our Terms and Conditions!'),
 })

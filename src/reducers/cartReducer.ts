@@ -1,6 +1,7 @@
 const CHANGE_CART_AMOUNT = 'CHANGE_CART_AMOUNT'
 
 export const cartInitialState = {
+  userInfo: {},
   cartList: [
     {
       price: 250,
@@ -40,12 +41,20 @@ export type cartStateType = {
 }
 
 export type cartActionType = {
-  type: typeof CHANGE_CART_AMOUNT
-  payload: CartItem
+  type: any
+  payload?: any
+  userInfo: any
 }
 
 export const cartReducer = (state: cartStateType, action: cartActionType) => {
   switch (action.type) {
+    case 'INIT_USER_INFO':
+      console.log('init user infor', action)
+      return {
+        ...state,
+        userInfo: action.userInfo,
+      }
+
     case CHANGE_CART_AMOUNT:
       let cartList = state.cartList
       let cartItem = action.payload

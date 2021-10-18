@@ -4,10 +4,12 @@ import CheckoutNavLayout from '@component/layout/CheckoutNavLayout'
 import { Grid } from '@material-ui/core'
 import React from 'react'
 
-const Checkout = () => {
+const Checkout = ({ userInfo } : any) => {
+
   return (
     <CheckoutNavLayout>
-      <Grid container flexWrap="wrap-reverse" spacing={3}>
+      <h1>{userInfo.name}</h1>
+      <Grid container flexWrap='wrap-reverse' spacing={3}>
         <Grid item lg={8} md={8} xs={12}>
           <CheckoutForm />
         </Grid>
