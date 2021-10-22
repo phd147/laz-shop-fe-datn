@@ -28,6 +28,9 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import SearchBox from '../search-box/SearchBox'
 
+import { useDispatch, useSelector } from 'react-redux'
+import authReducer from '../../redux/reducers/authReducer'
+
 type HeaderProps = {
   className?: string
   isFixed?: boolean
@@ -59,10 +62,15 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const toggleSidenav = () => setSidenavOpen(!sidenavOpen)
   const toggleDialog = () => setDialogOpen(!dialogOpen)
 
+  // @ts-ignore
+  const user = useSelector(state => state.authReducer);
+  console.log({user})
+
+
   const { state } = useAppContext()
   const { cartList } = state.cart
-  const userInfo = state.user ;
-  console.log({userInfo})
+  const userInfo = state.user
+  console.log({ userInfo })
 
   const classes = useStyles()
 
@@ -123,15 +131,15 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         </FlexBox>
 
         <FlexBox alignItems='center' sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Box
-              component={IconButton}
-              ml={2}
-              p={1.25}
-              bgcolor='grey.200'
-              onClick={toggleDialog}
-            >
-              <PersonOutline />
-            </Box>
+          <Box
+            component={IconButton}
+            ml={2}
+            p={1.25}
+            bgcolor='grey.200'
+            onClick={toggleDialog}
+          >
+            <PersonOutline />
+          </Box>
           {cartHandle}
         </FlexBox>
 
