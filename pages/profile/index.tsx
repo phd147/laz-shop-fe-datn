@@ -9,17 +9,29 @@ import Person from '@material-ui/icons/Person'
 import { Box } from '@material-ui/system'
 import { format } from 'date-fns'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-const Profile = () => {
+const Profile = ({ userInfo }: any) => {
+
+  const [infor, setInfor] = useState({
+    avatarUrl: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+  })
+
+  useEffect(() => {
+    console.log({ userInfo })
+  }, [])
+
   return (
     <CustomerDashboardLayout>
       <DashboardPageHeader
         icon={Person}
-        title="My Profile"
+        title='My Profile'
         button={
-          <Link href="/profile/edit">
-            <Button color="primary" sx={{ px: '2rem', bgcolor: 'primary.light' }}>
+          <Link href='/profile/edit'>
+            <Button color='primary' sx={{ px: '2rem', bgcolor: 'primary.light' }}>
               Edit Profile
             </Button>
           </Link>
@@ -39,26 +51,26 @@ const Profile = () => {
               }}
             >
               <Avatar
-                src="/assets/images/faces/ralph.png"
+                src={userInfo.google.picture}
                 sx={{ height: 64, width: 64 }}
               />
-              <Box ml={1.5} flex="1 1 0">
+              <Box ml={1.5} flex='1 1 0'>
                 <FlexBox
-                  flexWrap="wrap"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  flexWrap='wrap'
+                  justifyContent='space-between'
+                  alignItems='center'
                 >
                   <div>
-                    <H5 my="0px">Ralph Edwards</H5>
-                    <FlexBox alignItems="center">
-                      <Typography color="grey.600">Balance:</Typography>
-                      <Typography ml={0.5} color="primary.main">
+                    <H5 my='0px'>{userInfo.given_name}</H5>
+                    <FlexBox alignItems='center'>
+                      <Typography color='grey.600'>Balance:</Typography>
+                      <Typography ml={0.5} color='primary.main'>
                         $500
                       </Typography>
                     </FlexBox>
                   </div>
 
-                  <Typography color="grey.600" letterSpacing="0.2em">
+                  <Typography color='grey.600' letterSpacing='0.2em'>
                     SILVER USER
                   </Typography>
                 </FlexBox>
@@ -79,10 +91,10 @@ const Profile = () => {
                       p: '1rem 1.25rem',
                     }}
                   >
-                    <H3 color="primary.main" my="0px" fontWeight="600">
+                    <H3 color='primary.main' my='0px' fontWeight='600'>
                       {item.title}
                     </H3>
-                    <Small color="grey.600" textAlign="center">
+                    <Small color='grey.600' textAlign='center'>
                       {item.subtitle}
                     </Small>
                   </Card>
@@ -94,35 +106,35 @@ const Profile = () => {
       </Box>
 
       <TableRow sx={{ p: '0.75rem 1.5rem' }}>
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5} textAlign="left">
+        <FlexBox flexDirection='column' p={1}>
+          <Small color='grey.600' mb={0.5} textAlign='left'>
             First Name
           </Small>
-          <span>Ralph</span>
+          <span>{userInfo.google.family_name}</span>
         </FlexBox>
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5} textAlign="left">
+        <FlexBox flexDirection='column' p={1}>
+          <Small color='grey.600' mb={0.5} textAlign='left'>
             Last Name
           </Small>
-          <span>Edwards</span>
+          <span>{userInfo.google.given_name}</span>
         </FlexBox>
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5} textAlign="left">
+        <FlexBox flexDirection='column' p={1}>
+          <Small color='grey.600' mb={0.5} textAlign='left'>
             Email
           </Small>
-          <span>ralfedwards@email.com</span>
+          <span>{userInfo.google.email}</span>
         </FlexBox>
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5} textAlign="left">
+        <FlexBox flexDirection='column' p={1}>
+          <Small color='grey.600' mb={0.5} textAlign='left'>
             Phone
           </Small>
           <span>+1983649392983</span>
         </FlexBox>
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5}>
+        <FlexBox flexDirection='column' p={1}>
+          <Small color='grey.600' mb={0.5}>
             Birth date
           </Small>
-          <span className="pre">
+          <span className='pre'>
             {format(new Date(1996 / 11 / 16), 'dd MMM, yyyy')}
           </span>
         </FlexBox>

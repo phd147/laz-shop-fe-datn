@@ -9,12 +9,14 @@ import React, { Fragment, useCallback, useState } from 'react'
 type AppLayoutProps = {
   title?: string
   navbar?: React.ReactChild
+  userInfo: any
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({
                                                children,
                                                navbar,
-                                               title = 'La granja urbana',
+                                               title = 'Laz shop',
+                                               userInfo,
                                              }) => {
   const [isFixed, setIsFixed] = useState(false)
 
@@ -33,7 +35,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       <Topbar />
 
       <Sticky fixedOn={0} onSticky={toggleIsFixed}>
-        <Header isFixed={isFixed} />
+        <Header userInfo={userInfo} isFixed={isFixed} />
       </Sticky>
 
       {navbar && <div className='section-after-sticky'>{navbar}</div>}

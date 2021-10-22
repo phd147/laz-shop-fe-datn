@@ -182,7 +182,7 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
               ml={1.25}
               color='grey.600'
             >
-              Categorias
+              Categories
             </Box>
             <ChevronRight className='dropdown-icon' fontSize='small' />
           </BazarButton>

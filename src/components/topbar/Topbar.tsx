@@ -112,21 +112,21 @@ const Topbar = () => {
 
           <FlexBox alignItems='center'>
             <CallOutlined fontSize='small' />
-            <Span className='title'>55 3951 5969</Span>
+            <Span className='title'>0898.849.102</Span>
           </FlexBox>
           <FlexBox alignItems='center' ml={2.5}>
             <MailOutline fontSize='small' />
-            <Span className='title'>ventas@lagranjaurbana.com</Span>
+            <Span className='title'>phduc.10010@gmail.com</Span>
           </FlexBox>
         </FlexBox>
 
         <FlexBox className='topbarRight' alignItems='center'>
-          <NavLink className='link' href='/faq'>
-            Preguntas
-          </NavLink>
-          <NavLink className='link' href='/help'>
-            ¿Necestias ayuda?
-          </NavLink>
+          {/*<NavLink className='link' href='/faq'>*/}
+          {/*  Preguntas*/}
+          {/*</NavLink>*/}
+          {/*<NavLink className='link' href='/help'>*/ " "}
+          {/*  ¿Necestias ayuda?*/}
+          {/*</NavLink>*/}
 
           {/*<BazarMenu*/}
           {/*  handler={*/}

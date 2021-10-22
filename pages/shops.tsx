@@ -3,9 +3,27 @@ import NavbarLayout from '@component/layout/NavbarLayout'
 import ShopCard1 from '@component/shop/ShopCard1'
 import { H2, Span } from '@component/Typography'
 import { Grid, Pagination } from '@material-ui/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { instance } from '../src/api/api'
 
 const ShopList = () => {
+
+  const [shopList, setShopList] = useState([])
+
+  const getShopLists = async () => {
+    try {
+      const res = await instance.get('/shops')
+      console.log({res})
+      setShopList(res.data.items)
+    }catch(err){
+      console.log({err})
+    }
+  }
+
+  useEffect(() => {
+    getShopLists();
+  },[])
+
   return (
     <NavbarLayout>
       <H2 mb={3}>All Shops</H2>
@@ -31,88 +49,88 @@ const ShopList = () => {
   )
 }
 
-const shopList = [
-  {
-    name: 'Scarlett Beauty',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/cycle.png',
-    imgUrl: '/assets/images/faces/propic.png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Scroll Through',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner.png',
-    imgUrl: '/assets/images/faces/propic(1).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Coveted Clicks',
-    rating: 4.5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-3.png',
-    imgUrl: '/assets/images/faces/propic(2).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Constant Shoppers',
-    rating: 4,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-4.png',
-    imgUrl: '/assets/images/faces/propic(3).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Keyboard Kiosk',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-5.png',
-    imgUrl: '/assets/images/faces/propic(4).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Anytime Buys',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-6.png',
-    imgUrl: '/assets/images/faces/propic(5).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Word Wide Wishes',
-    rating: 4,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-7.png',
-    imgUrl: '/assets/images/faces/propic(6).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Cybershop',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-8.png',
-    imgUrl: '/assets/images/faces/propic(7).png',
-    shopUrl: '/shop/53244445',
-  },
-  {
-    name: 'Scarlett Beauty',
-    rating: 5,
-    address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
-    phone: '(613) 343-9004',
-    coverImgUrl: '/assets/images/banners/banner-9.png',
-    imgUrl: '/assets/images/faces/propic(8).png',
-    shopUrl: '/shop/53244445',
-  },
-]
+// const shopList = [
+//   {
+//     name: 'Scarlett Beauty',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/cycle.png',
+//     imgUrl: '/assets/images/faces/propic.png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Scroll Through',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner.png',
+//     imgUrl: '/assets/images/faces/propic(1).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Coveted Clicks',
+//     rating: 4.5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-3.png',
+//     imgUrl: '/assets/images/faces/propic(2).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Constant Shoppers',
+//     rating: 4,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-4.png',
+//     imgUrl: '/assets/images/faces/propic(3).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Keyboard Kiosk',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-5.png',
+//     imgUrl: '/assets/images/faces/propic(4).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Anytime Buys',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-6.png',
+//     imgUrl: '/assets/images/faces/propic(5).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Word Wide Wishes',
+//     rating: 4,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-7.png',
+//     imgUrl: '/assets/images/faces/propic(6).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Cybershop',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-8.png',
+//     imgUrl: '/assets/images/faces/propic(7).png',
+//     shopUrl: '/shop/53244445',
+//   },
+//   {
+//     name: 'Scarlett Beauty',
+//     rating: 5,
+//     address: '845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark',
+//     phone: '(613) 343-9004',
+//     coverImgUrl: '/assets/images/banners/banner-9.png',
+//     imgUrl: '/assets/images/faces/propic(8).png',
+//     shopUrl: '/shop/53244445',
+//   },
+// ]
 
 export default ShopList

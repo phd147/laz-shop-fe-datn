@@ -6,15 +6,38 @@ import Sidenav from '@component/sidenav/Sidenav'
 import useWindowSize from '@hook/useWindowSize'
 import { Grid, IconButton } from '@material-ui/core'
 import FilterList from '@material-ui/icons/FilterList'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { instance } from '../../src/api/api'
+
+import { useRouter } from 'next/router'
 
 const Shop = () => {
   const width = useWindowSize()
   const isTablet = width < 1025
 
+  const router = useRouter()
+  const { id } = router.query ;
+
+  const [shop, setShop] = useState({})
+
+
+  const getShopDetail = async () => {
+    try {
+      const res = await instance.get(`/shops/${id}`)
+      console.log({ res })
+      setShop(res.data)
+    } catch (err) {
+      console.log({ err })
+    }
+  }
+
+  useEffect(() => {
+    getShopDetail()
+  }, [])
+
   return (
     <NavbarLayout>
-      <ShopIntroCard />
+      <ShopIntroCard shop={shop} />
       <Grid container spacing={3}>
         <Grid
           item
@@ -32,7 +55,7 @@ const Shop = () => {
         <Grid item md={9} xs={12}>
           {isTablet && (
             <Sidenav
-              position="left"
+              position='left'
               handle={
                 <IconButton
                   sx={{
@@ -40,7 +63,7 @@ const Shop = () => {
                     display: 'block',
                   }}
                 >
-                  <FilterList fontSize="small" />
+                  <FilterList fontSize='small' />
                 </IconButton>
               }
             >

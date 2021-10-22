@@ -65,12 +65,12 @@ const GrocerySection1 = () => {
           >
             <FlexBox alignItems="center" flexWrap="wrap">
               <Box className="card__inner-box" color="grey.900" flex="1 1 0">
-                <H1 maxWidth="280px" mb={1} lineHeight="1.27">
-                  Obten tu orden en 2 horas
-                </H1>
-                <H6 maxWidth="470px" color="inherit" fontWeight="400" mb={5}>
-                  Siempre encontraras los productos mas frescos y sabrosos
-                </H6>
+                {/*<H1 maxWidth="280px" mb={1} lineHeight="1.27">*/}
+                {/*  Obten tu orden en 2 horas*/}
+                {/*</H1>*/}
+                {/*<H6 maxWidth="470px" color="inherit" fontWeight="400" mb={5}>*/}
+                {/*  Siempre encontraras los productos mas frescos y sabrosos*/}
+                {/*</H6>*/}
 
                 {/*<H5 fontSize="18px" fontWeight="700" mb={2.5}>*/}
                 {/*  Try our mobile app!*/}
@@ -80,7 +80,8 @@ const GrocerySection1 = () => {
               </Box>
               <Box flex="1 1 0" minWidth="285px" height="180px" position="relative">
                 <LazyImage
-                  src="/assets/images/products/garlic.png"
+                  // src="/assets/images/products/garlic.png"
+                  src={'https://www.iphonehacks.com/wp-content/uploads/2016/07/apple-com-homepage.png'}
                   layout="fill"
                   objectFit="contain"
                 />

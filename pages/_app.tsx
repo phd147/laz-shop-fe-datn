@@ -10,7 +10,9 @@ import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import React, { Fragment, useEffect } from 'react'
 
+
 import cookie from 'cookie'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { instance } from '../src/api/api'
 
@@ -24,20 +26,21 @@ Router.events.on('routeChangeError', () => nProgress.done())
 
 nProgress.configure({ showSpinner: false })
 
-const App = ({ Component, pageProps, userInfo }: any) => {
+const App = ({ Component, pageProps }: any) => {
   const Layout = Component.layout || Fragment
 
   const { dispatch } = useAppContext()
 
+
   useEffect(() => {
-    // if (userInfo) {
-    //   console.log({ userInfo })
-    //   console.log({ dispatch })
-    //   dispatch({
-    //     type: 'INIT_USER_INFO',
-    //     userInfo: userInfo,
-    //   })
-    // }
+    const {userInfo} = pageProps ;
+    if (userInfo) {
+      console.log({userInfo})
+      dispatch({
+        type: 'INIT_USER_INFO',
+        data: userInfo
+      })
+    }
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
@@ -72,60 +75,88 @@ const App = ({ Component, pageProps, userInfo }: any) => {
 App.getInitialProps = async (appContext: any): Promise<any> => {
 
   console.log('[app.js] get initial props ')
-  console.log({ appContext })
   const { router, Component, ctx } = appContext
-  console.log({ router, Component, ctx })
+  const { req, res } = ctx
 
-  const { req } = ctx
-  const { headers } = req
-  const cookies = cookie.parse(headers.cookie)
-  console.log({ cookies })
-  console.log('real cookie ', headers.cookie)
+  // TODO : check is server side or not,
+  // TODO : if server side, set cookie, otherwise , not need set cookie
+  // check route permission
+  let userInfo: unknown = {}
 
-  try {
-    const res = await instance.get('/me', {
-      headers : {
-        Cookie :headers.cookie
-      }
-    });
-    console.log({res})
-  } catch (err) {
-    console.log({err})
-  }
 
-  // TODO : call api get profile
-  const userInfo = {
-    name: 'phd',
-    role: ['admin', 'user'],
+
+  if (typeof window === 'undefined') {
+    const { headers } = req
+    const cookies = cookie.parse(headers.cookie|| '')
+    console.log({ cookies })
+    console.log('real cookie ', headers.cookie)
+    // SERVER SIDE
+    try {
+      const response = await instance.get('/me', {
+        headers: headers.cookie ? {
+          Cookie: headers.cookie,
+        } : {},
+      })
+      console.log({ response })
+      userInfo = response.data
+
+    } catch (err) {
+      console.log({ err })
+      // if(req.url !== '/login'){
+      //   res.writeHead(307, { Location: '/login' })
+      //   res.end()
+      // }
+    }
+  } else {
+    // TODO : handle with client side
+    try {
+      const response = await instance.get('/me')
+      console.log({ response })
+      userInfo = response.data
+
+    } catch (err) {
+      console.log({ err })
+      // Router.replace('/login')
+    }
   }
 
   const pageProps = {
     userInfo,
   }
+  console.log({ pageProps})
+  return {
+    pageProps,
+  }
+
+
+  // TODO : call api get profile
+  // const userInfo = {
+  //   name: 'phd',
+  //   role: ['admin', 'user'],
+  // }
+
+
 
   // TODO : check route authentication and authorization
-  if (!userInfo || userInfo.name !== 'phd') {
-    Router.push('/login')
-    // get route, get route permission, ....
-  }
+  // @ts-ignore
+  // if (!userInfo || userInfo.name !== 'phd') {
+  //   Router.push('/login')
+  //   // get route, get route permission, ....
+  // }
 
   // TODO : routing
 
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   // const appProps = await App.getInitialProps(appContext)
-
-  return {
-    pageProps,
-  }
 }
 
-export async function getServerSideProps(context) {
-  console.log({ context })
-  console.log('get server side props in app')
-  return {
-    props: {}, // will be passed to the page component as props
-  }
-}
+// export async function getServerSideProps(context) {
+//   console.log({ context })
+//   console.log('get server side props in app')
+//   return {
+//     props: {}, // will be passed to the page component as props
+//   }
+// }
 
 
 export default App

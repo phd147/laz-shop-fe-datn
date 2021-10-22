@@ -58,7 +58,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 // }))
 
 const SearchBox = () => {
-  const [category, setCategory] = useState('Todas las categorias')
+  const [category, setCategory] = useState('Search in shop')
   const [resultList, setResultList] = useState<string[]>([])
   const parentRef = useRef()
 
@@ -91,19 +91,19 @@ const SearchBox = () => {
 
   const categoryDropdown = (
     <BazarMenu
-      direction="left"
+      direction='left'
       handler={
         <FlexBox
-          className="dropdownHandler"
-          alignItems="center"
-          bgcolor="grey.100"
-          height="100%"
+          className='dropdownHandler'
+          alignItems='center'
+          bgcolor='grey.100'
+          height='100%'
           px={3}
-          color="grey.700"
+          color='grey.700'
           component={TouchRipple}
         >
           <Box mr={0.5}>{category}</Box>
-          <KeyboardArrowDownOutlined fontSize="small" color="inherit" />
+          <KeyboardArrowDownOutlined fontSize='small' color='inherit' />
         </FlexBox>
       }
     >
@@ -117,15 +117,15 @@ const SearchBox = () => {
 
   return (
     <StyledBox
-      position="relative"
-      flex="1 1 0"
-      maxWidth="670px"
-      mx="auto"
+      position='relative'
+      flex='1 1 0'
+      maxWidth='670px'
+      mx='auto'
       {...{ ref: parentRef }}
     >
       <TextField
-        variant="outlined"
-        placeholder="Qué estas buscando..."
+        variant='outlined'
+        placeholder='Search in shop'
         fullWidth
         onChange={hanldeSearch}
         InputProps={{
@@ -137,12 +137,12 @@ const SearchBox = () => {
             overflow: 'hidden',
           },
           endAdornment: categoryDropdown,
-          startAdornment: <SearchOutlined className="searchIcon" fontSize="small" />,
+          startAdornment: <SearchOutlined className='searchIcon' fontSize='small' />,
         }}
       />
 
       {!!resultList.length && (
-        <Card className="searchResultCard" elevation={2}>
+        <Card className='searchResultCard' elevation={2}>
           {resultList.map((item) => (
             <Link href={`/product/search/${item}`} key={item}>
               <MenuItem key={item}>{item}</MenuItem>
@@ -163,7 +163,7 @@ const categories = [
   'Semillas, especias y chiles secos',
   'Abarrotes',
   'Snacks',
-  'Recetas'
+  'Recetas',
 ]
 
 const dummySearchResult = [

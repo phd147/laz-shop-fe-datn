@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import * as yup from 'yup'
+import { instance } from '../../api/api'
 
 const fbStyle = {
   background: '#3B5998',
@@ -71,6 +72,18 @@ const Login = () => {
   const handleFormSubmit = async (values: any) => {
     router.push('/profile')
     console.log(values)
+  }
+
+  const handleGoogleLogin = async () => {
+    const res = await instance.get('/google-login-url')
+    console.log({ res })
+    router.push(res.data.url);
+  }
+
+  const handleFacebookLogin = async () => {
+    const res = await instance.get('/facebook-login-url')
+    console.log({ res })
+    router.push(res.data.url);
   }
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -178,6 +191,7 @@ const Login = () => {
             mb: '10px',
             height: 44,
           }}
+          onClick={handleFacebookLogin}
         >
           <Image
             src="/assets/images/icons/facebook-filled-white.svg"
@@ -194,6 +208,7 @@ const Login = () => {
           sx={{
             height: 44,
           }}
+          onClick={handleGoogleLogin}
         >
           <Image src="/assets/images/icons/google-1.svg" alt="facebook" />
           <Box fontSize="12px" ml={1}>

@@ -14,7 +14,7 @@ export default function Login() {
       await instance.post('/google/auth', {
         code,
       })
-      // router.push('/')
+      router.push('/')
     } catch (err) {
       console.log({ err })
     }

@@ -29,9 +29,9 @@ const Promotions = () => {
             <GrocerySection1 />
           </Box>
 
-          <Box overflow="hidden">
-            <GrocerySection2 />
-          </Box>
+          {/*<Box overflow="hidden">*/}
+          {/*  <GrocerySection2 />*/}
+          {/*</Box>*/}
         </Container>
       </Box>
     </Fragment>

@@ -5,20 +5,65 @@ import VendorDashboardLayout from '@component/layout/VendorDashboardLayout'
 import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import { Formik } from 'formik'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import SaveIcon from '@material-ui/icons/Save'
-import categories from '@data/categories'
+// import categories from '@data/categories'
 // import units from '@data/units'
 import Card from '@material-ui/core/Card'
+
+import { instance } from '../../../src/api/api'
 
 const OrderDetails = () => {
   const [subCategoryDisabled, setSubCategoryDisabled] = useState(true)
   const [categorySelected, setCategorySelected] = useState('0')
   // const [subCategorySelected, setSubCategorySelected] = useState('0')
+  const [imageUrl, setImageUrl] = useState(null)
+  const [categories, setCategories] = useState([])
+
+
+  useEffect(() => {
+    getCategories()
+  }, [])
+
+
+  const getCategories = async () => {
+    try {
+      const res = await instance.get('/products')
+      console.log({ res })
+      setCategories(res.data)
+    } catch (err) {
+      console.log({ err })
+    }
+  }
 
   const handleFormSubmit = async (values: any) => {
-    console.log(values)
+    console.log({ values })
+    try {
+      const res = await instance.post('/items', values)
+      console.log({ res })
+    } catch (err) {
+      console.log({ err })
+    }
+  }
+
+  const onChangeHandler = async (files: any, setFieldValue: any) => {
+    console.log({ files })
+    const formData = new FormData()
+    formData.append('media', files[0])
+    try {
+      // @ts-ignore
+      const res = await instance.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      setImageUrl(res.data)
+      setFieldValue('imageUrl', res.data)
+      console.log({ res })
+    } catch (err) {
+      console.log({ err })
+    }
   }
 
   // const subCategoryDisabledState = {
@@ -40,12 +85,12 @@ const OrderDetails = () => {
   return (
     <VendorDashboardLayout>
       <DashboardPageHeader
-        title='Nuevo producto'
+        title='Product'
         icon={DeliveryBox}
         button={
           <Link href='/vendor/products'>
             <Button color='info' sx={{ bgcolor: 'gray.500', px: '2rem' }}>
-              Regresar a la lista de productos
+              All products
             </Button>
           </Link>
         }
@@ -57,7 +102,7 @@ const OrderDetails = () => {
         validationSchema={checkoutSchema}
         onSubmit={handleFormSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+        {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
           <form onSubmit={handleSubmit}>
             <Card sx={{ p: '30px' }} variant='outlined'>
               <Grid container spacing={3}>
@@ -76,22 +121,23 @@ const OrderDetails = () => {
                 </Grid>
                 <Grid item sm={4} xs={12}>
                   <TextField
-                    name='category'
+                    name='categoryId'
                     label='Select categories'
-                    placeholder='Categoria'
+                    placeholder='Categories'
                     fullWidth
                     select
                     onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e)
-                      setCategorySelected(e.target.value)
-                      setSubCategoryDisabled(false)
+                      // setCategorySelected(e.target.value)
+                      // setSubCategoryDisabled(false)
+                      setFieldValue('categoryId', e.target.value)
                     }}
                     value={values.category || ''}
                     error={!!touched.category && !!errors.category}
                     helperText={touched.category && errors.category}
                   >
-                    {categories.map(category => <MenuItem value={category.id}>{category.name}</MenuItem>)}
+                    {categories.map(category => <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)}
                   </TextField>
                 </Grid>
                 {/*<Grid item sm={4} xs={12}>*/}
@@ -116,9 +162,8 @@ const OrderDetails = () => {
                 {/*</Grid>*/}
                 <Grid item xs={12}>
                   <DropZone
-                    onChange={(files) => {
-                      console.log(files)
-                    }}
+                    onChange={(files) => onChangeHandler(files, setFieldValue)}
+                    imageUrl={imageUrl}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -150,9 +195,9 @@ const OrderDetails = () => {
                     fullWidth
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.stock || ''}
-                    error={!!touched.stock && !!errors.stock}
-                    helperText={touched.stock && errors.stock}
+                    value={values.amount || ''}
+                    error={!!touched.amount && !!errors.amount}
+                    helperText={touched.amount && errors.amount}
                   />
                 </Grid>
                 {/*<Grid item sm={4} xs={12}>*/}
@@ -287,29 +332,35 @@ const OrderDetails = () => {
 
 const initialValues = {
   name: '',
-  stock: '',
-  price: '',
-  sale_price: '',
+  // stock: '',
+  price: 12,
+  // sale_price: '',
   description: '',
-  tags: '',
-  category: '',
-  subcategory: '',
-  unit: '',
-  code: '',
-  stock_sale: '',
-  unit_sale: '',
+  // tags: '',
+  // category: '',
+  // subcategory: '',
+  // unit: '',
+  // code: '',
+  // stock_sale: '',
+  // unit_sale: '',
+  amount: 69,
+  imageUrl: '',
+  categoryId: 1,
 }
 
 const checkoutSchema = yup.object().shape({
   name: yup.string().required('required'),
-  category: yup.string().required('required'),
-  subcategory: yup.string().required('required'),
-  unit: yup.string().required('required'),
-  stock: yup.number().required('required'),
+  categoryId: yup.number(),
+  // subcategory: yup.string().required('required'),
+  // unit: yup.string().required('required'),
+  // stock: yup.number().required('required'),
   price: yup.number().required('required'),
-  sale_price: yup.number().required('required'),
-  stock_price: yup.number().required('required'),
-  unit_sale: yup.string().required('required'),
+  // sale_price: yup.number().required('required'),
+  // stock_price: yup.number().required('required'),
+  // unit_sale: yup.string().required('required'),
+  amount: yup.number().required('required'),
+  imageUrl: yup.string(),
+  description: yup.string(),
 })
 
 export default OrderDetails

@@ -7,12 +7,33 @@ import { H5 } from '@component/Typography'
 import { Avatar, IconButton, Pagination, Typography } from '@material-ui/core'
 import East from '@material-ui/icons/East'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { instance } from '../../../src/api/api'
 
 const Products = () => {
+
+
+  const [productList, setProductList] = useState([])
+
+
+  const getProductList = async () => {
+    try {
+      const res = await instance.get('/items')
+      console.log({ res })
+      setProductList(res.data.items)
+    } catch (err) {
+      console.log({ err })
+    }
+
+  }
+
+  useEffect(() => {
+    getProductList()
+  }, [])
+
   return (
     <VendorDashboardLayout>
-      <DashboardPageHeader title="Products" icon={DeliveryBox} />
+      <DashboardPageHeader title='Products' icon={DeliveryBox} />
 
       <TableRow
         sx={{
@@ -23,67 +44,70 @@ const Products = () => {
         }}
         elevation={0}
       >
-        <FlexBox my="0px" mx={0.75} flex="2 2 220px !important">
-          <H5 ml={7} color="grey.600" textAlign="left">
+        <FlexBox my='0px' mx={0.75} flex='2 2 220px !important'>
+          <H5 ml={7} color='grey.600' textAlign='left'>
             Name
           </H5>
         </FlexBox>
-        <H5 color="grey.600" my="0px" mx={0.75} textAlign="left">
-          Stock
+        <H5 color='grey.600' my='0px' mx={0.75} textAlign='left'>
+          Amount
         </H5>
-        <H5 color="grey.600" my="0px" mx={0.75} textAlign="left">
-          Regular price
+        <H5 color='grey.600' my='0px' mx={0.75} textAlign='left'>
+          Price
         </H5>
-        <H5 color="grey.600" my="0px" mx={0.75} textAlign="left">
-          Sale Price
-        </H5>
-        <H5 flex="0 0 0 !important" color="grey.600" px={2.75} my="0px"></H5>
+        {/*<H5 color="grey.600" my="0px" mx={0.75} textAlign="left">*/}
+        {/*  Sale Price*/}
+        {/*</H5>*/}
+        <H5 flex='0 0 0 !important' color='grey.600' px={2.75} my='0px'></H5>
       </TableRow>
 
       {productList.map((item, ind) => (
-        <Link href={item.href} key={ind}>
+        <Link href={`/vendor/products/${item.id}`} key={ind}>
           <TableRow sx={{ my: '1rem', padding: '6px 18px' }}>
-            <FlexBox alignItems="center" m={0.75} flex="2 2 220px !important">
+            <FlexBox alignItems='center' m={0.75} flex='2 2 220px !important'>
               <Avatar
-                src="/assets/images/products/imageshoes.png"
+                // src='/assets/images/products/imageshoes.png'
+                src={item.imageUrl}
                 sx={{ height: 36, width: 36 }}
               />
-              <Typography textAlign="left" ml={2.5}>
-                Nike React Phantom Run Flyknit 2
+              <Typography textAlign='left' ml={2.5}>
+                {/*Nike React Phantom Run Flyknit 2*/}
+                {item.name}
               </Typography>
             </FlexBox>
             <H5
               m={0.75}
-              textAlign="left"
-              fontWeight="600"
-              color={item.stock < 6 ? 'error.main' : 'inherit'}
+              textAlign='left'
+              fontWeight='600'
+              // color={item.amount < 6 ? 'error.main' : 'inherit'}
             >
-              {item.stock.toString().padStart(2, '0')}
+              {/*{item.stock.toString().padStart(2, '0')}*/}
+              {item.amount}
             </H5>
-            <H5 m={0.75} textAlign="left" fontWeight="400">
+            <H5 m={0.75} textAlign='left' fontWeight='400'>
               ${item.price.toFixed(2)}
             </H5>
-            <H5 m={0.75} textAlign="left" fontWeight="400">
-              ${item.price.toFixed(2)}
-            </H5>
+            {/*<H5 m={0.75} textAlign="left" fontWeight="400">*/}
+            {/*  ${item.price.toFixed(2)}*/}
+            {/*</H5>*/}
 
             <Typography
-              textAlign="center"
-              color="grey.600"
+              textAlign='center'
+              color='grey.600'
               sx={{
                 flex: '0 0 0 !important',
                 display: { xs: 'none', md: 'block' },
               }}
             >
               <IconButton>
-                <East fontSize="small" color="inherit" />
+                <East fontSize='small' color='inherit' />
               </IconButton>
             </Typography>
           </TableRow>
         </Link>
       ))}
 
-      <FlexBox justifyContent="center" mt={5}>
+      <FlexBox justifyContent='center' mt={5}>
         <Pagination
           count={5}
           onChange={(data) => {
@@ -95,37 +119,37 @@ const Products = () => {
   )
 }
 
-const productList = [
-  {
-    orderNo: '1050017AS',
-    stock: 30,
-    price: 350,
-    href: '/vendor/products/5452423',
-  },
-  {
-    orderNo: '1050017AS',
-    stock: 20,
-    price: 500,
-    href: '/vendor/products/5452423',
-  },
-  {
-    orderNo: '1050017AS',
-    stock: 2,
-    price: 700,
-    href: '/vendor/products/5452423',
-  },
-  {
-    orderNo: '1050017AS',
-    stock: 25,
-    price: 300,
-    href: '/vendor/products/5452423',
-  },
-  {
-    orderNo: '1050017AS',
-    stock: 1,
-    price: 700,
-    href: '/vendor/products/5452423',
-  },
-]
+// const productList = [
+//   {
+//     orderNo: '1050017AS',
+//     stock: 30,
+//     price: 350,
+//     href: '/vendor/products/5452423',
+//   },
+//   {
+//     orderNo: '1050017AS',
+//     stock: 20,
+//     price: 500,
+//     href: '/vendor/products/5452423',
+//   },
+//   {
+//     orderNo: '1050017AS',
+//     stock: 2,
+//     price: 700,
+//     href: '/vendor/products/5452423',
+//   },
+//   {
+//     orderNo: '1050017AS',
+//     stock: 25,
+//     price: 300,
+//     href: '/vendor/products/5452423',
+//   },
+//   {
+//     orderNo: '1050017AS',
+//     stock: 1,
+//     price: 700,
+//     href: '/vendor/products/5452423',
+//   },
+// ]
 
 export default Products

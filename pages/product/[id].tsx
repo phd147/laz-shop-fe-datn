@@ -53,7 +53,7 @@ const ProductDetails = () => {
         {selectedOption === 1 && <ProductReview />}
       </Box>
 
-      <FrequentlyBought />
+      {/*<FrequentlyBought />*/}
 
       <AvailableShops />
 

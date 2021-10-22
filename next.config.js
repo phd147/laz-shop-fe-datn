@@ -1,4 +1,5 @@
 module.exports = {
+
   devIndicators: {
     autoPrerender: false,
   },
@@ -17,4 +18,7 @@ module.exports = {
   //     }
   //   ]
   // }
+  images: {
+    domains: ['www.iphonehacks.com'],
+  },
 }

@@ -10,22 +10,24 @@ import Place from '@material-ui/icons/Place'
 import { Box } from '@material-ui/system'
 import React from 'react'
 
-export interface ShopIntroCardProps {}
+export interface ShopIntroCardProps {
+  shop   : object
+}
 
-const ShopIntroCard: React.FC<ShopIntroCardProps> = () => {
+const ShopIntroCard: React.FC<ShopIntroCardProps> = ({shop}) => {
   return (
     <Card sx={{ mb: '32px', pb: '20px' }}>
       <Box
         height="202px"
         sx={{
           height: '202px',
-          background: 'url(/assets/images/banners/shop-cover.png) center/cover',
+          background: `url(${shop.coverUrl}) center/cover`,
         }}
       />
 
       <FlexBox mt={-8} px={3.75} flexWrap="wrap">
         <Avatar
-          src="/assets/images/faces/propic.png"
+          src={shop.avatarUrl}
           sx={{
             height: '120px',
             width: '120px',
@@ -58,8 +60,8 @@ const ShopIntroCard: React.FC<ShopIntroCardProps> = () => {
               display="inline-block"
               my="8px"
             >
-              <H3 fontWeight="600" color="grey.100">
-                Scarlett Beauty
+              <H3 fontWeight="600">
+                {shop.name}
               </H3>
             </Box>
 
@@ -98,14 +100,14 @@ const ShopIntroCard: React.FC<ShopIntroCardProps> = () => {
               <FlexBox color="grey.600" mb={1} maxWidth="270px">
                 <Place fontSize="small" sx={{ fontSize: '18px', mt: '3px' }} />
                 <Span color="grey.600" ml={1.5}>
-                  845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark
+                  {shop.address}
                 </Span>
               </FlexBox>
 
               <FlexBox color="grey.600" mb={1}>
                 <Call fontSize="small" sx={{ fontSize: '18px', mt: '2px' }} />
                 <Span color="grey.600" ml={1.5}>
-                  (613) 343-9004
+                  {shop.phoneNumber}
                 </Span>
               </FlexBox>
             </Box>

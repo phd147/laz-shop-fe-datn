@@ -12,20 +12,22 @@ export interface ShopCard1Props {
   name: string
   rating: number
   address: string
-  phone: string
-  coverImgUrl: string
-  imgUrl: string
+  phoneNumber: string
+  coverUrl: string
+  avatarUrl: string
   shopUrl: string
+  id : number
 }
 
 const ShopCard1: React.FC<ShopCard1Props> = ({
   name,
-  rating,
+  rating=5,
   address,
-  phone,
-  coverImgUrl,
-  imgUrl,
-  shopUrl,
+  phoneNumber,
+  coverUrl,
+ avatarUrl,
+  shopUrl='',
+  id
 }) => {
   const theme = useTheme()
 
@@ -41,7 +43,7 @@ const ShopCard1: React.FC<ShopCard1Props> = ({
             to bottom,
              ${alpha(theme.palette.grey[900], 0.8)},
              ${alpha(theme.palette.grey[900], 0.8)}
-          ), url(${coverImgUrl || '/assets/images/banners/cycle.png'})`,
+          ), url(${coverUrl || '/assets/images/banners/cycle.png'})`,
         }}
       >
         <H3 fontWeight="600" mb={1}>
@@ -66,14 +68,14 @@ const ShopCard1: React.FC<ShopCard1Props> = ({
         <FlexBox>
           <Call fontSize="small" sx={{ fontSize: '18px', mt: '2px' }} />
           <Span color="white" ml={1.5}>
-            {phone}
+            {phoneNumber}
           </Span>
         </FlexBox>
       </Box>
 
       <FlexBox pl="30px" pr={1} justifyContent="space-between">
         <Avatar
-          src={imgUrl}
+          src={avatarUrl}
           sx={{
             height: 64,
             width: 64,
@@ -82,7 +84,7 @@ const ShopCard1: React.FC<ShopCard1Props> = ({
             borderColor: 'grey.100',
           }}
         />
-        <Link href={shopUrl}>
+        <Link href={`/shop/${id}`}>
           <a>
             <IconButton sx={{ my: '0.25rem' }}>
               <East />

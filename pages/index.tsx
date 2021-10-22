@@ -17,13 +17,13 @@ import React from 'react'
 import AllProducts from '@component/home-1/AllProducts'
 // import ProductsSale from '@component/home-1/ProductsSale'
 
-const IndexPage = () => {
+const IndexPage = ({userInfo} : any) => {
 
   return (
-    <AppLayout>
+    <AppLayout userInfo={userInfo}>
       <Promotions />
       {/*<Section2 />*/}
-      <Categories />
+      {/*<Categories />*/}
       {/*<ProductsPromotion />*/}
       {/*<ProductsSale />*/}
       <AllProducts />

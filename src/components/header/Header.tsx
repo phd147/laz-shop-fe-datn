@@ -3,11 +3,12 @@ import Image from '@component/BazarImage'
 import CategoryMenu from '@component/categories/CategoryMenu'
 import FlexBox from '@component/FlexBox'
 import Category from '@component/icons/Category'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import MiniCart from '@component/mini-cart/MiniCart'
 import Login from '@component/sessions/Login'
 import { useAppContext } from '@context/app/AppContext'
 import {
+  Avatar,
   Badge,
   Box,
   Container,
@@ -24,12 +25,13 @@ import { MuiThemeProps } from '@theme/theme'
 import { layoutConstant } from '@utils/constants'
 import clsx from 'clsx'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBox from '../search-box/SearchBox'
 
 type HeaderProps = {
   className?: string
   isFixed?: boolean
+  userInfo: any
 }
 
 const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
@@ -46,6 +48,8 @@ const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
   },
 }))
 
+// TODO : handle login logic, if login , then show avatar of user,
+
 const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [sidenavOpen, setSidenavOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -58,15 +62,21 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
   const { state } = useAppContext()
   const { cartList } = state.cart
+  const userInfo = state.user ;
+  console.log({userInfo})
 
   const classes = useStyles()
 
+  useEffect(() => {
+    console.log({ userInfo })
+  }, [])
+
   const cartHandle = (
-    <Badge badgeContent={cartList.length} color="primary">
+    <Badge badgeContent={cartList.length} color='primary'>
       <Box
         component={IconButton}
         ml={2.5}
-        bgcolor="grey.200"
+        bgcolor='grey.200'
         p={1.25}
         onClick={toggleSidenav}
       >
@@ -86,56 +96,57 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         }}
       >
         <FlexBox
-          alignItems="center"
+          alignItems='center'
           mr={2}
-          minWidth="170px"
+          minWidth='170px'
           sx={{ display: { xs: 'none', md: 'flex' } }}
         >
-          <Link href="/">
+          <Link href='/'>
             <a>
-              <Image height={'70px'} mb={0.5} src="/assets/images/logos/logo.svg" alt="logo" />
+              <Image height={'70px'} mb={0.5} src={'https://cdn.logo.com/hotlink-ok/logo-social.png'} alt='logo' />
             </a>
           </Link>
 
           {isFixed && (
             <CategoryMenu>
-              <FlexBox color="grey.600" alignItems="center" ml={2}>
-                <BazarButton color="inherit">
-                  <Category fontSize="small" color="inherit" />
-                  <KeyboardArrowDown fontSize="small" color="inherit" />
+              <FlexBox color='grey.600' alignItems='center' ml={2}>
+                <BazarButton color='inherit'>
+                  <Category fontSize='small' color='inherit' />
+                  <KeyboardArrowDown fontSize='small' color='inherit' />
                 </BazarButton>
               </FlexBox>
             </CategoryMenu>
           )}
         </FlexBox>
 
-        <FlexBox justifyContent="center" flex="1 1 0">
+        <FlexBox justifyContent='center' flex='1 1 0'>
           <SearchBox />
         </FlexBox>
 
-        <FlexBox alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <Box
-            component={IconButton}
-            ml={2}
-            p={1.25}
-            bgcolor="grey.200"
-            onClick={toggleDialog}
-          >
-            <PersonOutline />
-          </Box>
+        <FlexBox alignItems='center' sx={{ display: { xs: 'none', md: 'flex' } }}>
+          {Object.keys(userInfo || {}).length ? <Avatar src={userInfo?.google?.picture} sx={{ height: 50, width: 50 }} /> :
+            <Box
+              component={IconButton}
+              ml={2}
+              p={1.25}
+              bgcolor='grey.200'
+              onClick={toggleDialog}
+            >
+              <PersonOutline />
+            </Box>}
           {cartHandle}
         </FlexBox>
 
         <Dialog
           open={dialogOpen}
           fullWidth={isMobile}
-          scroll="body"
+          scroll='body'
           onClose={toggleDialog}
         >
           <Login />
         </Dialog>
 
-        <Drawer open={sidenavOpen} anchor="right" onClose={toggleSidenav}>
+        <Drawer open={sidenavOpen} anchor='right' onClose={toggleSidenav}>
           <MiniCart />
         </Drawer>
       </Container>
