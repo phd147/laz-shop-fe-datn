@@ -16,7 +16,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                                                children,
                                                navbar,
                                                title = 'Laz shop',
-                                               userInfo,
                                              }) => {
   const [isFixed, setIsFixed] = useState(false)
 
@@ -35,7 +34,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       <Topbar />
 
       <Sticky fixedOn={0} onSticky={toggleIsFixed}>
-        <Header userInfo={userInfo} isFixed={isFixed} />
+        <Header isFixed={isFixed} />
       </Sticky>
 
       {navbar && <div className='section-after-sticky'>{navbar}</div>}

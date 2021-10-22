@@ -31,7 +31,6 @@ import SearchBox from '../search-box/SearchBox'
 type HeaderProps = {
   className?: string
   isFixed?: boolean
-  userInfo: any
 }
 
 const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
@@ -124,7 +123,6 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         </FlexBox>
 
         <FlexBox alignItems='center' sx={{ display: { xs: 'none', md: 'flex' } }}>
-          {Object.keys(userInfo || {}).length ? <Avatar src={userInfo?.google?.picture} sx={{ height: 50, width: 50 }} /> :
             <Box
               component={IconButton}
               ml={2}
@@ -133,7 +131,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
               onClick={toggleDialog}
             >
               <PersonOutline />
-            </Box>}
+            </Box>
           {cartHandle}
         </FlexBox>
 

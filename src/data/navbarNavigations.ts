@@ -1,5 +1,3 @@
-import NoteAdd from '@material-ui/icons/NoteAdd'
-
 const navbarNavigations = [
   // {
   //   title: 'Nosotros',
@@ -56,17 +54,18 @@ const navbarNavigations = [
       },
       {
         title: 'Product',
-        child: [
-          {
-            title: 'All products',
-            url: '/vendor/products',
-          },
-          {
-            title: 'Add product',
-            url: '/vendor/add-product',
-            icon: NoteAdd
-          },
-        ],
+        url: '/vendor/products',
+        // child: [
+        //   {
+        //     title: 'All products',
+        //     url: '/vendor/products',
+        //   },
+        //   {
+        //     title: 'Add product',
+        //     url: '/vendor/add-product',
+        //     icon: NoteAdd
+        //   },
+        // ],
       },
     ],
   },
