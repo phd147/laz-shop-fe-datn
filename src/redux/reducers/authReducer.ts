@@ -14,6 +14,7 @@ const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case HYDRATE: {
       const { user } = payload.authReducer
+      console.log({user})
       const { user: userState } = state
       return {
         ...state,

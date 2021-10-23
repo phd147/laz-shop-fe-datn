@@ -49,14 +49,14 @@ const App = ({ Component, pageProps, initUser }: any) => {
 
   useEffect(() => {
     console.log({ initUser })
-    initUser()
+    // initUser()
     const { userInfo } = pageProps
     if (userInfo) {
       console.log({ userInfo })
-      dispatch({
-        type: 'INIT_USER_INFO',
-        data: userInfo,
-      })
+      // dispatch({
+      //   type: 'INIT_USER_INFO',
+      //   data: userInfo,
+      // })
     }
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
@@ -89,7 +89,7 @@ const App = ({ Component, pageProps, initUser }: any) => {
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
 //
-App.getInitialProps = async (appContext: any): Promise<any> => {
+App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any): Promise<any> => {
 
   console.log('[app.js] get initial props ')
   const { router, Component, ctx } = appContext
@@ -99,7 +99,6 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
   // TODO : if server side, set cookie, otherwise , not need set cookie
   // check route permission
   let userInfo: unknown = {}
-
 
   if (typeof window === 'undefined') {
     const { headers } = req
@@ -115,6 +114,10 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
       })
       console.log({ response })
       userInfo = response.data
+      store.dispatch({
+        type: 'INIT_USER_SAGA',
+        user: userInfo
+      })
 
     } catch (err) {
       console.log({ err })
@@ -129,6 +132,10 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
       const response = await instance.get('/me')
       console.log({ response })
       userInfo = response.data
+      store.dispatch({
+        type: 'INIT_USER_SAGA',
+        user: userInfo
+      })
 
     } catch (err) {
       console.log({ err })
@@ -141,9 +148,7 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
     // await appContext.ctx.store.sagaTask.toPromise()
   }
 
-  const pageProps = {
-    userInfo,
-  }
+  const pageProps = {}
   console.log({ pageProps })
   return {
     pageProps,
@@ -168,7 +173,7 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
 
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   // const appProps = await App.getInitialProps(appContext)
-}
+})
 
 // export async function getServerSideProps(context) {
 //   console.log({ context })
@@ -176,7 +181,7 @@ App.getInitialProps = async (appContext: any): Promise<any> => {
 //   return {
 //     props: {}, // will be passed to the page component as props
 //   }
-// }
+// })
 
 
 export default wrapper.withRedux(withConnect(App))

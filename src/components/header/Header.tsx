@@ -69,13 +69,10 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
   const { state } = useAppContext()
   const { cartList } = state.cart
-  const userInfo = state.user
-  console.log({ userInfo })
 
   const classes = useStyles()
 
   useEffect(() => {
-    console.log({ userInfo })
   }, [])
 
   const cartHandle = (
@@ -131,15 +128,18 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         </FlexBox>
 
         <FlexBox alignItems='center' sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <Box
-            component={IconButton}
-            ml={2}
-            p={1.25}
-            bgcolor='grey.200'
-            onClick={toggleDialog}
-          >
-            <PersonOutline />
-          </Box>
+          {
+            !user ?  <Box
+              component={IconButton}
+              ml={2}
+              p={1.25}
+              bgcolor='grey.200'
+              onClick={toggleDialog}
+            >
+              <PersonOutline />
+            </Box> : <Avatar src={'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png'}/>
+          }
+
           {cartHandle}
         </FlexBox>
 
