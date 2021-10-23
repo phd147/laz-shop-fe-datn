@@ -13,7 +13,9 @@ import Close from '@material-ui/icons/Close'
 import Remove from '@material-ui/icons/Remove'
 import { CartItem } from '@reducer/cartReducer'
 import Link from 'next/link'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux'
 
 type MiniCartProps = {
   toggleSidenav?: () => void
@@ -21,8 +23,12 @@ type MiniCartProps = {
 
 const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   const { palette } = useTheme()
-  const { state, dispatch } = useAppContext()
+  const { state } = useAppContext()
   const { cartList } = state.cart
+
+  const dispatch = useDispatch()
+  const cartReducer = useSelector(state => state.cartReducer)
+  console.log({ cartReducer })
 
   const handleCartAmountChange = useCallback(
     (amount, product) => () => {
@@ -34,32 +40,33 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
         },
       })
     },
-    []
+    [],
   )
 
   const getTotalPrice = () => {
     return (
       cartList.reduce(
         (accumulator, item) => accumulator + item.price * item.qty,
-        0
+        0,
       ) || 0
     )
   }
 
+
   return (
-    <Box width="380px">
+    <Box width='380px'>
       <Box
-        overflow="auto"
+        overflow='auto'
         height={`calc(100vh - ${!!cartList.length ? '80px - 3.25rem' : '0px'})`}
       >
         <FlexBox
-          alignItems="center"
-          m="0px 20px"
-          height="74px"
-          color="secondary.main"
+          alignItems='center'
+          m='0px 20px'
+          height='74px'
+          color='secondary.main'
         >
-          <ShoppingBagOutlined color="inherit" />
-          <Box fontWeight={600} fontSize="16px" ml={1}>
+          <ShoppingBagOutlined color='inherit' />
+          <Box fontWeight={600} fontSize='16px' ml={1}>
             {cartList.length} item
           </Box>
         </FlexBox>
@@ -68,22 +75,22 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
 
         {!!!cartList.length && (
           <FlexBox
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            height="calc(100% - 74px)"
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center'
+            height='calc(100% - 74px)'
           >
             <LazyImage
-              src="/assets/images/logos/shopping-bag.svg"
-              width="90px"
-              height="100%"
+              src='/assets/images/logos/shopping-bag.svg'
+              width='90px'
+              height='100%'
             />
             <Box
-              component="p"
+              component='p'
               mt={2}
-              color="grey.600"
-              textAlign="center"
-              maxWidth="200px"
+              color='grey.600'
+              textAlign='center'
+              maxWidth='200px'
             >
               Your shopping bag is empty. Start shopping
             </Box>
@@ -91,16 +98,16 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
         )}
         {cartList.map((item: CartItem) => (
           <FlexBox
-            alignItems="center"
+            alignItems='center'
             py={2}
             px={2.5}
             borderBottom={`1px solid ${palette.divider}`}
             key={item.id}
           >
-            <FlexBox alignItems="center" flexDirection="column">
+            <FlexBox alignItems='center' flexDirection='column'>
               <BazarButton
-                variant="outlined"
-                color="primary"
+                variant='outlined'
+                color='primary'
                 sx={{
                   height: '32px',
                   width: '32px',
@@ -108,14 +115,14 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                 }}
                 onClick={handleCartAmountChange(item.qty + 1, item)}
               >
-                <Add fontSize="small" />
+                <Add fontSize='small' />
               </BazarButton>
-              <Box fontWeight={600} fontSize="15px" my="3px">
+              <Box fontWeight={600} fontSize='15px' my='3px'>
                 {item.qty}
               </Box>
               <BazarButton
-                variant="outlined"
-                color="primary"
+                variant='outlined'
+                color='primary'
                 sx={{
                   height: '32px',
                   width: '32px',
@@ -124,7 +131,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                 onClick={handleCartAmountChange(item.qty - 1, item)}
                 disabled={item.qty === 1}
               >
-                <Remove fontSize="small" />
+                <Remove fontSize='small' />
               </BazarButton>
             </FlexBox>
 
@@ -140,28 +147,28 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
               </a>
             </Link>
 
-            <Box flex="1 1 0">
+            <Box flex='1 1 0'>
               <Link href={`/product/${item.id}`}>
                 <a>
-                  <H5 className="title" fontSize="14px">
+                  <H5 className='title' fontSize='14px'>
                     {item.name}
                   </H5>
                 </a>
               </Link>
-              <Tiny color="grey.600">
+              <Tiny color='grey.600'>
                 ${item.price.toFixed(2)} x {item.qty}
               </Tiny>
-              <Box fontWeight={600} fontSize="14px" color="primary.main" mt={0.5}>
+              <Box fontWeight={600} fontSize='14px' color='primary.main' mt={0.5}>
                 ${(item.qty * item.price).toFixed(2)}
               </Box>
             </Box>
 
             <BazarIconButton
               ml={2.5}
-              size="small"
+              size='small'
               onClick={handleCartAmountChange(0, item)}
             >
-              <Close fontSize="small" />
+              <Close fontSize='small' />
             </BazarIconButton>
           </FlexBox>
         ))}
@@ -169,10 +176,10 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
 
       {!!cartList.length && (
         <Box p={2.5}>
-          <Link href="/checkout">
+          <Link href='/checkout'>
             <BazarButton
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               sx={{
                 mb: '0.75rem',
                 height: '40px',
@@ -183,10 +190,10 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
               Checkout Now (${getTotalPrice().toFixed(2)})
             </BazarButton>
           </Link>
-          <Link href="/cart">
+          <Link href='/cart'>
             <BazarButton
-              color="primary"
-              variant="outlined"
+              color='primary'
+              variant='outlined'
               sx={{ height: 40 }}
               fullWidth
               onClick={toggleSidenav}
@@ -201,7 +208,8 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
 }
 
 MiniCart.defaultProps = {
-  toggleSidenav: () => {},
+  toggleSidenav: () => {
+  },
 }
 
 export default MiniCart

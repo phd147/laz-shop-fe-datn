@@ -11,7 +11,12 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
-const Profile = ({ userInfo }: any) => {
+import { useSelector } from 'react-redux'
+import { TypeLogin } from '../../src/constants/user'
+
+const Profile = () => {
+
+  const { user } = useSelector(state => state.authReducer)
 
   const [infor, setInfor] = useState({
     avatarUrl: '',
@@ -21,7 +26,6 @@ const Profile = ({ userInfo }: any) => {
   })
 
   useEffect(() => {
-    console.log({ userInfo })
   }, [])
 
   return (
@@ -29,12 +33,12 @@ const Profile = ({ userInfo }: any) => {
       <DashboardPageHeader
         icon={Person}
         title='My Profile'
-        button={
+        button={user.type === TypeLogin.LOCAL ?
           <Link href='/profile/edit'>
             <Button color='primary' sx={{ px: '2rem', bgcolor: 'primary.light' }}>
               Edit Profile
             </Button>
-          </Link>
+          </Link> : null
         }
         navigation={<CustomerDashboardNavigation />}
       />
@@ -51,7 +55,7 @@ const Profile = ({ userInfo }: any) => {
               }}
             >
               <Avatar
-                src={userInfo.google.picture}
+                src={user?.info?.picture}
                 sx={{ height: 64, width: 64 }}
               />
               <Box ml={1.5} flex='1 1 0'>
@@ -61,7 +65,7 @@ const Profile = ({ userInfo }: any) => {
                   alignItems='center'
                 >
                   <div>
-                    <H5 my='0px'>{userInfo.given_name}</H5>
+                    <H5 my='0px'>{user?.info?.name}</H5>
                     <FlexBox alignItems='center'>
                       <Typography color='grey.600'>Balance:</Typography>
                       <Typography ml={0.5} color='primary.main'>
@@ -71,7 +75,7 @@ const Profile = ({ userInfo }: any) => {
                   </div>
 
                   <Typography color='grey.600' letterSpacing='0.2em'>
-                    SILVER USER
+                   {user.type}
                   </Typography>
                 </FlexBox>
               </Box>
@@ -110,19 +114,19 @@ const Profile = ({ userInfo }: any) => {
           <Small color='grey.600' mb={0.5} textAlign='left'>
             First Name
           </Small>
-          <span>{userInfo.google.family_name}</span>
+          <span>{'family name'}</span>
         </FlexBox>
         <FlexBox flexDirection='column' p={1}>
           <Small color='grey.600' mb={0.5} textAlign='left'>
             Last Name
           </Small>
-          <span>{userInfo.google.given_name}</span>
+          <span>{'first name'}</span>
         </FlexBox>
         <FlexBox flexDirection='column' p={1}>
           <Small color='grey.600' mb={0.5} textAlign='left'>
             Email
           </Small>
-          <span>{userInfo.google.email}</span>
+          <span>{user?.info?.email}</span>
         </FlexBox>
         <FlexBox flexDirection='column' p={1}>
           <Small color='grey.600' mb={0.5} textAlign='left'>

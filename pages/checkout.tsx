@@ -4,11 +4,16 @@ import CheckoutNavLayout from '@component/layout/CheckoutNavLayout'
 import { Grid } from '@material-ui/core'
 import React from 'react'
 
-const Checkout = ({ userInfo } : any) => {
+import { useSelector } from 'react-redux'
+
+const Checkout = () => {
+
+  const user = useSelector(state => state.authReducer)
+  console.log({ user})
 
   return (
     <CheckoutNavLayout>
-      <h1>{userInfo.name}</h1>
+      <h1>{user?.info?.name}</h1>
       <Grid container flexWrap='wrap-reverse' spacing={3}>
         <Grid item lg={8} md={8} xs={12}>
           <CheckoutForm />

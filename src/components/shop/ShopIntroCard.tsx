@@ -11,21 +11,23 @@ import { Box } from '@material-ui/system'
 import React from 'react'
 
 export interface ShopIntroCardProps {
-  shop   : object
+  shop: object
 }
 
-const ShopIntroCard: React.FC<ShopIntroCardProps> = ({shop}) => {
+const ShopIntroCard: React.FC<ShopIntroCardProps> = ({
+                                                       shop = {},
+                                                     }) => {
   return (
     <Card sx={{ mb: '32px', pb: '20px' }}>
       <Box
-        height="202px"
+        height='202px'
         sx={{
           height: '202px',
           background: `url(${shop.coverUrl}) center/cover`,
         }}
       />
 
-      <FlexBox mt={-8} px={3.75} flexWrap="wrap">
+      <FlexBox mt={-8} px={3.75} flexWrap='wrap'>
         <Avatar
           src={shop.avatarUrl}
           sx={{
@@ -47,30 +49,30 @@ const ShopIntroCard: React.FC<ShopIntroCardProps> = ({shop}) => {
           }}
         >
           <FlexBox
-            flexWrap="wrap"
-            justifyContent="space-between"
-            alignItems="center"
+            flexWrap='wrap'
+            justifyContent='space-between'
+            alignItems='center'
             mt={0.375}
             mb={3}
           >
             <Box
-              bgcolor="secondary.main"
-              borderRadius="4px"
-              p="4px 16px"
-              display="inline-block"
-              my="8px"
+              bgcolor='secondary.main'
+              borderRadius='4px'
+              p='4px 16px'
+              display='inline-block'
+              my='8px'
             >
-              <H3 fontWeight="600">
+              <H3 fontWeight='600'>
                 {shop.name}
               </H3>
             </Box>
 
-            <FlexBox my="8px">
+            <FlexBox my='8px'>
               {socialLinks.map((item, ind) => (
                 <a
                   href={item.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  target='_blank'
+                  rel='noreferrer noopener'
                   key={ind}
                 >
                   <item.icon
@@ -85,35 +87,35 @@ const ShopIntroCard: React.FC<ShopIntroCardProps> = ({shop}) => {
           </FlexBox>
 
           <FlexBox
-            flexWrap="wrap"
-            justifyContent="space-between"
-            alignItems="center"
+            flexWrap='wrap'
+            justifyContent='space-between'
+            alignItems='center'
           >
             <Box>
-              <FlexBox alignItems="center" mb={2}>
-                <Rating color="warn" size="small" value={5} readOnly />
-                <Small color="grey.600" pl={1.5} display="block">
+              <FlexBox alignItems='center' mb={2}>
+                <Rating color='warn' size='small' value={5} readOnly />
+                <Small color='grey.600' pl={1.5} display='block'>
                   (45)
                 </Small>
               </FlexBox>
 
-              <FlexBox color="grey.600" mb={1} maxWidth="270px">
-                <Place fontSize="small" sx={{ fontSize: '18px', mt: '3px' }} />
-                <Span color="grey.600" ml={1.5}>
+              <FlexBox color='grey.600' mb={1} maxWidth='270px'>
+                <Place fontSize='small' sx={{ fontSize: '18px', mt: '3px' }} />
+                <Span color='grey.600' ml={1.5}>
                   {shop.address}
                 </Span>
               </FlexBox>
 
-              <FlexBox color="grey.600" mb={1}>
-                <Call fontSize="small" sx={{ fontSize: '18px', mt: '2px' }} />
-                <Span color="grey.600" ml={1.5}>
+              <FlexBox color='grey.600' mb={1}>
+                <Call fontSize='small' sx={{ fontSize: '18px', mt: '2px' }} />
+                <Span color='grey.600' ml={1.5}>
                   {shop.phoneNumber}
                 </Span>
               </FlexBox>
             </Box>
 
-            <a href="mailto:scarletbeauty@xmail.com">
-              <Button variant="outlined" color="primary" sx={{ my: '12px' }}>
+            <a href='mailto:scarletbeauty@xmail.com'>
+              <Button variant='outlined' color='primary' sx={{ my: '12px' }}>
                 Contact Vendor
               </Button>
             </a>

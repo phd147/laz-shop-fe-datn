@@ -30,8 +30,10 @@ export interface ProductCard1Props {
   style?: CSSProperties
   rating?: number
   hoverEffect?: boolean
-  imgUrl: string
-  title: string
+  // imgUrl: string
+  imageUrl : string ;
+  // title: string
+  name : string ;
   price: number
   off?: number
   id: string | number
@@ -119,21 +121,21 @@ const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
 }))
 
 const ProductCard1: React.FC<ProductCard1Props> = ({
-  id,
-  imgUrl,
-  title,
-  price,
-  off = 0,
-  rating,
-  hoverEffect,
-}) => {
+                                                     id,
+                                                     imageUrl,
+                                                     name,
+                                                     price,
+                                                     off = 0,
+                                                     rating = 5,
+                                                     hoverEffect,
+                                                   }) => {
   const [isFavorite, setIsFavorite] = useState(false)
   const [open, setOpen] = useState(false)
 
   const classes = useStyles({ hoverEffect })
   const { state, dispatch } = useAppContext()
   const cartItem: CartItem | undefined = state.cart.cartList.find(
-    (item) => item.id === id
+    (item) => item.id === id,
   )
 
   const toggleDialog = useCallback(() => {
@@ -149,38 +151,38 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
       dispatch({
         type: 'CHANGE_CART_AMOUNT',
         payload: {
-          name: title,
+          name,
           qty: amount,
           price,
-          imgUrl,
+          imageUrl,
           id,
         },
       })
     },
-    []
+    [],
   )
 
   return (
     <BazarCard className={classes.root} hoverEffect={hoverEffect}>
       <div className={classes.imageHolder}>
-        {!!off && (
-          <Chip
-            className={classes.offerChip}
-            color="primary"
-            size="small"
-            label={`${off}% off`}
-          />
-        )}
+        {/*{!!off && (*/}
+        {/*  <Chip*/}
+        {/*    className={classes.offerChip}*/}
+        {/*    color='primary'*/}
+        {/*    size='small'*/}
+        {/*    label={`${off}% off`}*/}
+        {/*  />*/}
+        {/*)}*/}
 
-        <div className="extra-icons">
+        <div className='extra-icons'>
           <IconButton sx={{ p: '6px' }} onClick={toggleDialog}>
-            <RemoveRedEye color="secondary" fontSize="small" />
+            <RemoveRedEye color='secondary' fontSize='small' />
           </IconButton>
           <IconButton sx={{ p: '6px' }} onClick={toggleIsFavorite}>
             {isFavorite ? (
-              <Favorite color="primary" fontSize="small" />
+              <Favorite color='primary' fontSize='small' />
             ) : (
-              <FavoriteBorder fontSize="small" />
+              <FavoriteBorder fontSize='small' />
             )}
           </IconButton>
         </div>
@@ -188,11 +190,12 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
         <Link href={`/product/${id}`}>
           <a>
             <LazyImage
-              src={imgUrl}
-              width="100%"
-              height="auto"
-              layout="responsive"
-              alt={title}
+              src={imageUrl}
+              width='100%'
+              height='auto'
+              layout='responsive'
+              alt={name}
+              // style={{backgroundSize : 'cover'}}
             />
           </a>
         </Link>
@@ -200,80 +203,80 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
       <div className={classes.details}>
         <FlexBox>
-          <Box flex="1 1 0" minWidth="0px" mr={1}>
+          <Box flex='1 1 0' minWidth='0px' mr={1}>
             <Link href={`/product/${id}`}>
               <a>
                 <H3
-                  className="title"
-                  fontSize="14px"
-                  textAlign="left"
-                  fontWeight="600"
-                  color="text.secondary"
+                  className='title'
+                  fontSize='14px'
+                  textAlign='left'
+                  fontWeight='600'
+                  color='text.secondary'
                   mb={1}
-                  title={title}
+                  title={name}
                 >
-                  {title}
+                  {name}
                 </H3>
               </a>
             </Link>
 
-            <BazarRating value={rating || 0} color="warn" readOnly />
+            <BazarRating value={rating || 0} color='warn' readOnly />
 
-            <FlexBox alignItems="center" mt={0.5}>
-              <Box pr={1} fontWeight="600" color="primary.main">
-                ${(price - (price * off) / 100).toFixed(2)}
-              </Box>
-              {!!off && (
-                <Box color="grey.600" fontWeight="600">
-                  <del>{price?.toFixed(2)}</del>
+            <FlexBox alignItems='center' mt={0.5}>
+              {/*<Box pr={1} fontWeight='600' color='primary.main'>*/}
+              {/*  ${(price - (price * off) / 100).toFixed(2)}*/}
+              {/*</Box>*/}
+              {
+                <Box pr={1} fontWeight='600' color='primary.main'>
+                 {price?.toFixed(2)} $
                 </Box>
-              )}
+              }
             </FlexBox>
           </Box>
 
-          <FlexBox
-            className="add-cart"
-            flexDirection="column-reverse"
-            alignItems="center"
-            justifyContent={!!cartItem?.qty ? 'space-between' : 'flex-start'}
-            width="30px"
-          >
-            <Button
-              variant="outlined"
-              color="primary"
-              sx={{ padding: '3px' }}
-              onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}
-            >
-              <Add fontSize="small" />
-            </Button>
+          {/*<FlexBox*/}
+          {/*  className='add-cart'*/}
+          {/*  flexDirection='column-reverse'*/}
+          {/*  alignItems='center'*/}
+          {/*  justifyContent={!!cartItem?.qty ? 'space-between' : 'flex-start'}*/}
+          {/*  width='30px'*/}
+          {/*>*/}
+          {/*  <Button*/}
+          {/*    variant='outlined'*/}
+          {/*    color='primary'*/}
+          {/*    sx={{ padding: '3px' }}*/}
+          {/*    onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}*/}
+          {/*  >*/}
+          {/*    <Add fontSize='small' />*/}
+          {/*  </Button>*/}
 
-            {!!cartItem?.qty && (
-              <Fragment>
-                <Box color="text.primary" fontWeight="600">
-                  {cartItem?.qty}
-                </Box>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{ padding: '3px' }}
-                  onClick={handleCartAmountChange(cartItem?.qty - 1)}
-                >
-                  <Remove fontSize="small" />
-                </Button>
-              </Fragment>
-            )}
-          </FlexBox>
+          {/*  {!!cartItem?.qty && (*/}
+          {/*    <Fragment>*/}
+          {/*      <Box color='text.primary' fontWeight='600'>*/}
+          {/*        {cartItem?.qty}*/}
+          {/*      </Box>*/}
+          {/*      <Button*/}
+          {/*        variant='outlined'*/}
+          {/*        color='primary'*/}
+          {/*        sx={{ padding: '3px' }}*/}
+          {/*        onClick={handleCartAmountChange(cartItem?.qty - 1)}*/}
+          {/*      >*/}
+          {/*        <Remove fontSize='small' />*/}
+          {/*      </Button>*/}
+          {/*    </Fragment>*/}
+          {/*  )}*/}
+          {/*</FlexBox>*/}
         </FlexBox>
       </div>
 
       <Dialog open={open} maxWidth={false} onClose={toggleDialog}>
         <DialogContent className={classes.dialogContent}>
-          <ProductIntro imgUrl={[imgUrl]} title={title} price={price} />
+          <ProductIntro imgUrl={[imageUrl]} title={name} price={price} />
           <IconButton
             sx={{ position: 'absolute', top: '0', right: '0' }}
             onClick={toggleDialog}
           >
-            <Close className="close" fontSize="small" color="primary" />
+            <Close className='close' fontSize='small' color='primary' />
           </IconButton>
         </DialogContent>
       </Dialog>

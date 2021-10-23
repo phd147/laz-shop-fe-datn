@@ -5,8 +5,22 @@ import React, { useEffect, useState } from 'react'
 import Carousel from '../carousel/Carousel'
 import CategorySectionCreator from '../CategorySectionCreator'
 import ProductCard1 from '../product-cards/ProductCard1'
+import { useDispatch, useSelector } from 'react-redux'
+import { INIT_GENERAL_ITEM_SAGA } from '../../redux/constants'
 
 const Section2 = () => {
+
+  // const dispatch = useDispatch()
+  //
+  // useEffect(() => {
+  //   dispatch({
+  //     type: INIT_GENERAL_ITEM_SAGA,
+  //   })
+  // }, [])
+
+
+  const { generalItem } = useSelector(state => state.itemReducer)
+
   const [visibleSlides, setVisibleSlides] = useState(4)
   const width = useWindowSize()
 
@@ -20,23 +34,23 @@ const Section2 = () => {
   return (
     <CategorySectionCreator
       icon={<Light color="primary" />}
-      title="Flash Deals"
+      title="Recommend for you"
       seeMoreLink="#"
     >
       <Box mt={-0.5} mb={-0.5}>
         <Carousel
-          totalSlides={productList.length}
+          totalSlides={generalItem.length}
           visibleSlides={visibleSlides}
           infinite={true}
         >
-          {productList.map((item, ind) => (
+          {generalItem.map((item, ind) => (
             <Box py={0.5} key={ind}>
               <ProductCard1
                 id={ind}
-                imgUrl={item.imgUrl}
-                title="Smart watch black"
+                imageUrl={item.imageUrl}
+                name={item.name}
                 rating={4}
-                price={250}
+                price={item.price}
                 off={20}
               />
             </Box>
@@ -47,37 +61,37 @@ const Section2 = () => {
   )
 }
 
-const productList = [
-  {
-    imgUrl: '/assets/images/products/flash-1.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-2.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-3.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-4.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-1.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-2.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-3.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-4.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-1.png',
-  },
-  {
-    imgUrl: '/assets/images/products/flash-2.png',
-  },
-]
+// const productList = [
+//   {
+//     imgUrl: '/assets/images/products/flash-1.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-2.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-3.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-4.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-1.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-2.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-3.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-4.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-1.png',
+//   },
+//   {
+//     imgUrl: '/assets/images/products/flash-2.png',
+//   },
+// ]
 
 export default Section2

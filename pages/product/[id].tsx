@@ -7,7 +7,10 @@ import ProductReview from '@component/products/ProductReview'
 import RelatedProducts from '@component/products/RelatedProducts'
 import { Box, Tab, Tabs } from '@material-ui/core'
 import { styled } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { instance } from '../../src/api/api'
+
+import { useRouter } from 'next/router'
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginTop: 80,
@@ -27,6 +30,26 @@ const ProductDetails = () => {
     price: 1135,
   }
 
+  const router = useRouter()
+
+  const { id } = router.query
+
+  const [product, setProduct] = useState({})
+
+  const fetchProductDetail = async () => {
+    try {
+      const res = await instance.get(`/items/${id}`)
+      console.log({ res })
+      setProduct(res.data);
+    } catch (err) {
+
+    }
+  }
+
+  useEffect(() => {
+    fetchProductDetail();
+  }, [])
+
   const [selectedOption, setSelectedOption] = useState(0)
   //   const classes = useStyles()
 
@@ -34,22 +57,26 @@ const ProductDetails = () => {
     setSelectedOption(newValue)
   }
 
+
+  const {imageUrl, price, shop, description,name} = product ;
+
+
   return (
     <NavbarLayout>
-      <ProductIntro {...state} />
+      <ProductIntro imageUrl={[imageUrl]} price={price}  shop={shop} name={name} />
 
       <StyledTabs
         value={selectedOption}
         onChange={handleOptionClick}
-        indicatorColor="primary"
-        textColor="primary"
+        indicatorColor='primary'
+        textColor='primary'
       >
-        <Tab className="inner-tab" label="Description" />
-        <Tab className="inner-tab" label="Review (3)" />
+        <Tab className='inner-tab' label='Description' />
+        <Tab className='inner-tab' label='Review (3)' />
       </StyledTabs>
 
       <Box mb={6}>
-        {selectedOption === 0 && <ProductDescription />}
+        {selectedOption === 0 && <ProductDescription description={description} />}
         {selectedOption === 1 && <ProductReview />}
       </Box>
 

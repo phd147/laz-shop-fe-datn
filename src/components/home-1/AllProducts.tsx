@@ -10,7 +10,7 @@ const AllProducts = () => {
   return (
     <CategorySectionCreator
       icon={<Category color='secondary' />}
-      // title='Todos nuestros productos'
+      title='More for you'
       seeMoreLink='#'
     >
       <BazarCard

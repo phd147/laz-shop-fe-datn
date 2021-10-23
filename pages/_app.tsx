@@ -1,3 +1,4 @@
+import '../public/global.css'
 import { AppProvider, useAppContext } from '@context/app/AppContext'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
@@ -10,26 +11,17 @@ import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import React, { Fragment, useEffect } from 'react'
 
-import { connect } from 'react-redux'
+import 'react-toastify/dist/ReactToastify.css'
+
+import { useDispatch, useSelector } from 'react-redux'
 // @ts-ignore
 import { wrapper } from '../src/redux/store'
 
-const mapDispatchToProps = (dispatch: any) => ({
-  initUser: () => {
-    dispatch({
-      type: 'INIT_USER',
-    })
-  },
-})
-
-const withConnect = connect(null, mapDispatchToProps)
-
 
 import cookie from 'cookie'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { instance } from '../src/api/api'
-import { END } from 'redux-saga'
+import { ToastContainer } from 'react-toastify'
 
 export const cache = createCache({ key: 'css', prepend: true })
 
@@ -44,8 +36,7 @@ nProgress.configure({ showSpinner: false })
 const App = ({ Component, pageProps, initUser }: any) => {
   const Layout = Component.layout || Fragment
 
-  const { dispatch } = useAppContext()
-
+  const dispatch = useDispatch()
 
   useEffect(() => {
     console.log({ initUser })
@@ -65,6 +56,16 @@ const App = ({ Component, pageProps, initUser }: any) => {
     }
   }, [])
 
+  const getCart = () => {
+    dispatch({
+      type: 'INIT_CART_SAGA',
+    })
+  }
+
+  useEffect(() => {
+    getCart()
+  }, [])
+
   return (
     <CacheProvider value={cache}>
       <Head>
@@ -76,6 +77,7 @@ const App = ({ Component, pageProps, initUser }: any) => {
       <AppProvider>
         <MuiTheme>
           <Layout>
+            <ToastContainer />
             <Component {...pageProps} />
           </Layout>
         </MuiTheme>
@@ -115,8 +117,8 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
       console.log({ response })
       userInfo = response.data
       store.dispatch({
-        type: 'INIT_USER_SAGA',
-        user: userInfo
+        type: 'INIT_USER',
+        user: userInfo,
       })
 
     } catch (err) {
@@ -133,8 +135,8 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
       console.log({ response })
       userInfo = response.data
       store.dispatch({
-        type: 'INIT_USER_SAGA',
-        user: userInfo
+        type: 'INIT_USER',
+        user: userInfo,
       })
 
     } catch (err) {
@@ -184,4 +186,4 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
 // })
 
 
-export default wrapper.withRedux(withConnect(App))
+export default wrapper.withRedux(App)

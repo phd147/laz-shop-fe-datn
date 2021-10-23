@@ -7,13 +7,16 @@ import React from 'react'
 import * as yup from 'yup'
 import ProductComment from './ProductComment'
 
-export interface ProductReviewProps {}
+export interface ProductReviewProps {
+}
 
 const ProductReview: React.FC<ProductReviewProps> = () => {
   const handleFormSubmit = async (values: any, { resetForm }: any) => {
     console.log(values)
     resetForm()
   }
+
+  // TODO : call api get reaction of item
 
   const {
     values,
@@ -37,22 +40,22 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
         <ProductComment {...item} key={ind} />
       ))}
 
-      <H2 fontWeight="600" mt={7} mb={2.5}>
+      <H2 fontWeight='600' mt={7} mb={2.5}>
         Write a Review for this product
       </H2>
 
       <form onSubmit={handleSubmit}>
         <Box mb={2.5}>
           <FlexBox mb={1.5}>
-            <H5 color="grey.700" mr={0.75}>
+            <H5 color='grey.700' mr={0.75}>
               Your Rating
             </H5>
-            <H5 color="error.main">*</H5>
+            <H5 color='error.main'>*</H5>
           </FlexBox>
 
           <Rating
-            color="warn"
-            size="medium"
+            color='warn'
+            size='medium'
             value={values.rating || 0}
             onChange={(_, value) => setFieldValue('rating', value)}
           />
@@ -60,16 +63,16 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
 
         <Box mb={3}>
           <FlexBox mb={1.5}>
-            <H5 color="grey.700" mr={0.75}>
+            <H5 color='grey.700' mr={0.75}>
               Your Review
             </H5>
-            <H5 color="error.main">*</H5>
+            <H5 color='error.main'>*</H5>
           </FlexBox>
 
           <TextField
-            name="comment"
-            placeholder="Write a review here..."
-            variant="outlined"
+            name='comment'
+            placeholder='Write a review here...'
+            variant='outlined'
             multiline
             fullWidth
             rows={8}
@@ -82,9 +85,9 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
         </Box>
 
         <Button
-          variant="contained"
-          color="primary"
-          type="submit"
+          variant='contained'
+          color='primary'
+          type='submit'
           disabled={!(dirty && isValid)}
         >
           Submit

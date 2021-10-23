@@ -56,6 +56,8 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [sidenavOpen, setSidenavOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
 
+  const dispatch = useDispatch()
+
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -63,17 +65,14 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const toggleDialog = () => setDialogOpen(!dialogOpen)
 
   // @ts-ignore
-  const user = useSelector(state => state.authReducer);
-  console.log({user})
+  const { user } = useSelector(state => state.authReducer)
+  console.log({ user })
 
 
   const { state } = useAppContext()
   const { cartList } = state.cart
 
   const classes = useStyles()
-
-  useEffect(() => {
-  }, [])
 
   const cartHandle = (
     <Badge badgeContent={cartList.length} color='primary'>
@@ -129,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
         <FlexBox alignItems='center' sx={{ display: { xs: 'none', md: 'flex' } }}>
           {
-            !user ?  <Box
+            !Object.keys(user).length ? <Box
               component={IconButton}
               ml={2}
               p={1.25}
@@ -137,7 +136,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
               onClick={toggleDialog}
             >
               <PersonOutline />
-            </Box> : <Avatar src={'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png'}/>
+            </Box> : <Avatar src={user?.info?.picture} />
           }
 
           {cartHandle}

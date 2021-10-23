@@ -80,8 +80,8 @@ const GrocerySection1 = () => {
               </Box>
               <Box flex="1 1 0" minWidth="285px" height="180px" position="relative">
                 <LazyImage
-                  // src="/assets/images/products/garlic.png"
-                  src={'https://www.iphonehacks.com/wp-content/uploads/2016/07/apple-com-homepage.png'}
+                  src="/assets/images/products/garlic.png"
+                  // src={'https://www.iphonehacks.com/wp-content/uploads/2016/07/apple-com-homepage.png'}
                   layout="fill"
                   objectFit="contain"
                 />

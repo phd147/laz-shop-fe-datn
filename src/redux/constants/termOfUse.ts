@@ -1,4 +1,0 @@
-export const termOfUseConstants = {
-  GET_TERMS_OF_USE: 'GET_TERMS_OF_USE',
-  CLEAR_FILTER_TERMS_OF_USE: 'CLEAR_FILTER_TERMS_OF_USE',
-};

@@ -1,9 +1,7 @@
-import { authConstants } from '../constants/auth'
-import { REQUEST, SUCCESS, FAILURE } from '../constants'
-// import { Action } from 'types/action';
-// import { AuthReducer, UserInfo } from 'types/author';
 import { HYDRATE } from 'next-redux-wrapper'
-// import { RouterPath } from 'shared/constant/common';
+
+import { INIT_USER } from '../constants'
+
 
 const initialState = {
   user: {},
@@ -14,14 +12,14 @@ const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case HYDRATE: {
       const { user } = payload.authReducer
-      console.log({user})
+      console.log('user in hydrate action ', user)
       const { user: userState } = state
       return {
         ...state,
         user: user?.id ? user : userState,
       }
     }
-    case 'INIT_USER_SAGA' : {
+    case INIT_USER : {
       return {
         ...state, user: action.user,
       }
