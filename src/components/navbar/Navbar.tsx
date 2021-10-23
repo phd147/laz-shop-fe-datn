@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/styles'
 import { MuiThemeProps } from '@theme/theme'
 import React from 'react'
 
+import { useDispatch, useSelector } from 'react-redux'
+
 export interface NavbarProps {
   navListOpen?: boolean
 }
@@ -74,6 +76,53 @@ interface Nav {
 
 const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
   const classes = useStyles()
+
+  const { user } = useSelector(state => state.authReducer)
+
+  const navbarNavigations = [
+
+    Object.keys(user).length &&
+    {
+      title: 'User account',
+      child: [
+        {
+          title: 'Orders',
+          url: '/orders',
+        },
+        {
+          title: 'Profile',
+          url: '/profile',
+        },
+        {
+          title: 'Address',
+          url: '/address',
+        },
+        {
+          title: 'Wish list',
+          url: '/wish-list',
+        },
+      ],
+    },
+    Object.keys(user.shop || {}).length &&
+    {
+      title: 'Vendor account',
+      child: [
+        {
+          title: 'Dashboard',
+          url: '/vendor/dashboard',
+        },
+        {
+          title: 'Product',
+          url: '/vendor/products',
+        },
+      ],
+    },
+    (Object.keys(user).length && !Object.keys(user.shop || {}).length) &&
+    {
+      title: 'Register shop',
+      url: '/vendor/register-shop',
+    },
+  ]
 
   const renderNestedNav = (list: any[], isRoot = false) => {
     return list?.map((nav: Nav) => {

@@ -10,15 +10,18 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { instance } from '../../../src/api/api'
 
+import { useSelector } from 'react-redux'
+
 const Products = () => {
 
+  const { user } = useSelector(state => state.authReducer)
 
   const [productList, setProductList] = useState([])
 
 
   const getProductList = async () => {
     try {
-      const res = await instance.get('/items')
+      const res = await instance.get(`/items?shopId=${user.shop.id}`)
       console.log({ res })
       setProductList(res.data.items)
     } catch (err) {
