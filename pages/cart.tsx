@@ -15,19 +15,14 @@ import {
 } from '@material-ui/core'
 import { CartItem } from '@reducer/cartReducer'
 import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
+import { DELETE_CART_ITEM_SAGA } from '../src/redux/constants'
 
 const Cart = () => {
-  const { state } = useAppContext()
-  const cartList: CartItem[] = state.cart.cartList
 
-  const getTotalPrice = () => {
-    return (
-      cartList.reduce(
-        (accumulator, item) => accumulator + item.price * item.qty,
-        0
-      ) || 0
-    )
-  }
+  const dispatch = useDispatch()
+  const { cartList, totalPrice } = useSelector(state => state.cartReducer)
+
 
   return (
     <CheckoutNavLayout>
@@ -50,7 +45,7 @@ const Cart = () => {
               <Span color="grey.600">Total:</Span>
               <FlexBox alignItems="flex-end">
                 <Span fontSize="18px" fontWeight="600" lineHeight="1">
-                  ${getTotalPrice().toFixed(2)}
+                  ${totalPrice.toFixed(2)}
                 </Span>
                 <Span fontWeight="600" fontSize="14px" lineHeight="1">
                   00

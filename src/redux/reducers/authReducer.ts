@@ -1,6 +1,6 @@
 import { HYDRATE } from 'next-redux-wrapper'
 
-import { INIT_USER } from '../constants'
+import { INIT_USER, LOGOUT } from '../constants'
 
 
 const initialState = {
@@ -12,6 +12,7 @@ const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case HYDRATE: {
       const { user } = payload.authReducer
+      const { cartList } = payload.cartReducer
       console.log('user in hydrate action ', user)
       const { user: userState } = state
       return {
@@ -22,6 +23,11 @@ const reducer = (state = initialState, action: any) => {
     case INIT_USER : {
       return {
         ...state, user: action.user,
+      }
+    }
+    case LOGOUT : {
+      return {
+        ...state, user: {},
       }
     }
     default:

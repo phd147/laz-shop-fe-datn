@@ -7,39 +7,117 @@ import CameraAlt from '@material-ui/icons/CameraAlt'
 import Settings from '@material-ui/icons/Settings'
 import { Box } from '@material-ui/system'
 import { Formik } from 'formik'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as yup from 'yup'
+import { instance } from '../../../src/api/api'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
 
 const AccountSettings = () => {
+
+  const { user } = useSelector(state => state.authReducer)
+
+  const [avatarUrl, setAvatarUrl] = useState('')
+  const [coverUrl, setCoverUrl] = useState('')
+
+  const formilkRef = useRef()
+
+  const getShopDetail = async () => {
+    try {
+      const res = await instance.get(`/shops/${user?.shop?.id}`)
+      const { data } = res
+      const { name, email, address, phoneNumber, description, avatarUrl: avatar, coverUrl: cover } = data
+      setAvatarUrl(avatar)
+      setCoverUrl(cover)
+      if (formilkRef.current) {
+        formilkRef.current.setFieldValue('name', name)
+        formilkRef.current.setFieldValue('email', email)
+        formilkRef.current.setFieldValue('address', address)
+        formilkRef.current.setFieldValue('phoneNumber', phoneNumber)
+        formilkRef.current.setFieldValue('description', description)
+      }
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    getShopDetail()
+  }, [])
+
+
+  const handleCoverChange = async (event: any) => {
+    const formData = new FormData()
+    formData.append('media', event.target.files[0])
+    try {
+      // @ts-ignore
+      const res = await instance.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      setCoverUrl(res.data)
+    } catch (err) {
+      console.log({ err })
+      toast.error('Error')
+    }
+  }
+
+  const handleAvatarChange = async (event: any) => {
+    const formData = new FormData()
+    formData.append('media', event.target.files[0])
+    try {
+      // @ts-ignore
+      const res = await instance.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      setAvatarUrl(res.data)
+    } catch (err) {
+      console.log({ err })
+      toast.error('Error')
+    }
+  }
+
   const handleFormSubmit = async (values: any) => {
     console.log(values)
+    try {
+      const res = await instance.patch('/shops', {
+        ...values,
+        avatarUrl, coverUrl,
+      })
+      toast.success('OK')
+    } catch (err) {
+      toast.error('Error')
+    }
   }
 
   return (
     <VendorDashboardLayout>
-      <DashboardPageHeader title="Account" icon={Settings} />
+      <DashboardPageHeader title='Account' icon={Settings} />
 
       {/* p="24px 30px" */}
       <Card1>
         <Box
-          borderRadius="10px"
-          overflow="hidden"
-          height="173px"
+          borderRadius='10px'
+          overflow='hidden'
+          height='173px'
           mb={3}
-          position="relative"
+          position='relative'
           style={{
-            background: 'url(/assets/images/banners/banner-10.png) center/cover',
+            background: `url(${coverUrl}) center/cover`,
           }}
         >
           <Box
-            display="flex"
-            alignItems="flex-end"
-            position="absolute"
-            bottom="20px"
-            left="24px"
+            display='flex'
+            alignItems='flex-end'
+            position='absolute'
+            bottom='20px'
+            left='24px'
           >
             <Avatar
-              src="/assets/images/faces/propic(9).png"
+              src={avatarUrl}
               sx={{
                 height: 80,
                 width: 80,
@@ -49,11 +127,11 @@ const AccountSettings = () => {
             />
 
             <Box ml={-2.5} zIndex={12}>
-              <label htmlFor="profile-image">
+              <label htmlFor='profile-image'>
                 <Button
-                  component="span"
-                  size="small"
-                  color="secondary"
+                  component='span'
+                  size='small'
+                  color='secondary'
                   sx={{
                     bgcolor: 'grey.300',
                     height: 'auto',
@@ -61,31 +139,36 @@ const AccountSettings = () => {
                     borderRadius: '50%',
                   }}
                 >
-                  <CameraAlt fontSize="small" />
+                  <CameraAlt fontSize='small' />
                 </Button>
               </label>
             </Box>
             <input
-              onChange={(e) => console.log(e.target.files)}
-              id="profile-image"
-              accept="image/*"
-              type="file"
-              style={{ display: 'none' }}
+              onChange={handleAvatarChange}
+              id='profile-image'
+              accept='image/*'
+              type='file'
+              style=
+                {
+                  {
+                    display: 'none',
+                  }
+                }
             />
           </Box>
 
           <Box
-            display="flex"
-            alignItems="flex-end"
-            position="absolute"
-            top="20px"
-            right="24px"
+            display='flex'
+            alignItems='flex-end'
+            position='absolute'
+            top='20px'
+            right='24px'
           >
-            <label htmlFor="cover-image">
+            <label htmlFor='cover-image'>
               <Button
-                component="span"
-                size="small"
-                color="secondary"
+                component='span'
+                size='small'
+                color='secondary'
                 sx={{
                   bgcolor: 'primary.light',
                   height: 'auto',
@@ -93,15 +176,15 @@ const AccountSettings = () => {
                   borderRadius: '50%',
                 }}
               >
-                <CameraAlt fontSize="small" color="primary" />
+                <CameraAlt fontSize='small' color='primary' />
               </Button>
             </label>
             <input
-              className="hidden"
-              onChange={(e) => console.log(e.target.files)}
-              id="cover-image"
-              accept="image/*"
-              type="file"
+              className='hidden'
+              onChange={handleCoverChange}
+              id='cover-image'
+              accept='image/*'
+              type='file'
               style={{ display: 'none' }}
             />
           </Box>
@@ -111,48 +194,49 @@ const AccountSettings = () => {
           initialValues={initialValues}
           validationSchema={accountSchema}
           onSubmit={handleFormSubmit}
+          innerRef={formilkRef}
         >
           {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-          }) => (
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+            }) => (
             <form onSubmit={handleSubmit}>
               <Box mb={4}>
                 <Grid container spacing={3}>
                   <Grid item md={6} xs={12}>
                     <TextField
-                      name="first_name"
-                      label="First Name"
+                      name='name'
+                      label='Name'
                       fullWidth
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={values.first_name || ''}
-                      error={!!touched.first_name && !!errors.first_name}
-                      helperText={touched.first_name && errors.first_name}
+                      value={values.name || ''}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
                     />
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
-                      name="last_name"
-                      label="Last Name"
+                      name='address'
+                      label='Address'
                       fullWidth
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={values.last_name || ''}
-                      error={!!touched.last_name && !!errors.last_name}
-                      helperText={touched.last_name && errors.last_name}
+                      value={values.address || ''}
+                      error={!!touched.address && !!errors.address}
+                      helperText={touched.address && errors.address}
                     />
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
-                      name="email"
-                      type="email"
-                      label="Email"
+                      name='email'
+                      type='email'
+                      label='Email'
                       fullWidth
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -163,51 +247,34 @@ const AccountSettings = () => {
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
-                      name="contact"
-                      label="Phone"
+                      name='phoneNumber'
+                      label='Phone number'
                       fullWidth
-                      type="tel"
+                      type='tel'
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={values.contact || ''}
-                      error={!!touched.contact && !!errors.contact}
-                      helperText={touched.contact && errors.contact}
+                      value={values.phoneNumber || ''}
+                      error={!!touched.phoneNumber && !!errors.phoneNumber}
+                      helperText={touched.phoneNumber && errors.phoneNumber}
                     />
                   </Grid>
-                  <Grid item md={6} xs={12}>
-                    <Autocomplete
-                      options={countryList}
-                      getOptionLabel={(option) => option.label || ''}
-                      value={values.country}
-                      fullWidth
-                      onChange={(_e, value) => setFieldValue('country', value)}
-                      renderInput={(params) => (
-                        <TextField
-                          label="Country"
-                          placeholder="Select Country"
-                          error={!!touched.country && !!errors.country}
-                          helperText={touched.country && errors.country}
-                          {...params}
-                        />
-                      )}
-                    />
-                  </Grid>
+
                   <Grid item md={6} xs={12}>
                     <TextField
-                      name="city"
-                      label="City"
+                      name='description'
+                      label='Description'
                       fullWidth
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={values.city || ''}
-                      error={!!touched.city && !!errors.city}
-                      helperText={touched.city && errors.city}
+                      value={values.description || ''}
+                      error={!!touched.description && !!errors.description}
+                      helperText={touched.description && errors.description} multiline
                     />
                   </Grid>
                 </Grid>
               </Box>
 
-              <Button type="submit" variant="contained" color="primary">
+              <Button type='submit' variant='contained' color='primary'>
                 Save Changes
               </Button>
             </form>
@@ -219,21 +286,19 @@ const AccountSettings = () => {
 }
 
 const initialValues = {
-  first_name: '',
-  last_name: '',
-  country: null,
-  city: '',
+  name: '',
   email: '',
-  contact: '',
+  address: null,
+  phoneNumber: '',
+  description: '',
 }
 
 const accountSchema = yup.object().shape({
-  first_name: yup.string().required('required'),
-  last_name: yup.string().required('required'),
-  country: yup.mixed().required('required'),
-  city: yup.string().required('required'),
+  name: yup.string().required('required'),
   email: yup.string().email('invalid email').required('required'),
-  contact: yup.string().required('required'),
+  address: yup.string().required('required'),
+  phoneNumber: yup.string().required('required'),
+  description: yup.string().required('required'),
 })
 
 export default AccountSettings

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 import { instance } from '../../src/api/api'
 
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginTop: 80,
@@ -25,29 +26,44 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 }))
 
 const ProductDetails = () => {
-  const state = {
-    title: 'Mi Note 11 Pro',
-    price: 1135,
-  }
+
+  const [totalReview, setTotalReview] = useState(0)
+
+  const [comments, setComments] = useState([])
+
+  const [lastPage, setLastPage] = useState(0)
 
   const router = useRouter()
+
 
   const { id } = router.query
 
   const [product, setProduct] = useState({})
+  const [error, setError] = useState(null)
+
+  const getComments = async (currentPage: number = 1) => {
+    try {
+      const res = await instance.get(`/items/${id}/comments?page=${currentPage}&limit=${10}`)
+      setComments(res.data.items)
+      setTotalReview(res.data.total)
+      setLastPage(res.data.last_page)
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
 
   const fetchProductDetail = async () => {
     try {
       const res = await instance.get(`/items/${id}`)
-      console.log({ res })
-      setProduct(res.data);
+      setProduct(res.data)
     } catch (err) {
-
+      toast.error('Error')
     }
   }
 
   useEffect(() => {
-    fetchProductDetail();
+    fetchProductDetail()
+    getComments()
   }, [])
 
   const [selectedOption, setSelectedOption] = useState(0)
@@ -58,12 +74,12 @@ const ProductDetails = () => {
   }
 
 
-  const {imageUrl, price, shop, description,name} = product ;
+  const { imageUrl, price, shop, description, name } = product
 
 
   return (
     <NavbarLayout>
-      <ProductIntro imageUrl={[imageUrl]} price={price}  shop={shop} name={name} />
+      <ProductIntro imageUrl={[imageUrl]} price={price} shop={shop} name={name} />
 
       <StyledTabs
         value={selectedOption}
@@ -72,12 +88,14 @@ const ProductDetails = () => {
         textColor='primary'
       >
         <Tab className='inner-tab' label='Description' />
-        <Tab className='inner-tab' label='Review (3)' />
+        <Tab className='inner-tab' label={`Review (${totalReview})`} />
       </StyledTabs>
 
       <Box mb={6}>
         {selectedOption === 0 && <ProductDescription description={description} />}
-        {selectedOption === 1 && <ProductReview />}
+        {selectedOption === 1 && <ProductReview lastPage={lastPage} itemId={id} action={{
+          getComments, setComments, setTotalReview, setLastPage,
+        }} comments={comments} />}
       </Box>
 
       {/*<FrequentlyBought />*/}

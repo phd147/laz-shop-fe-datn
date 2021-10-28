@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import * as yup from 'yup'
 import { instance } from '../../api/api'
+import { toast } from 'react-toastify'
 
 const fbStyle = {
   background: '#3B5998',
@@ -28,7 +29,7 @@ type StyledCardProps = {
 }
 
 const StyledCard = styled<React.FC<StyledCardProps & CardProps>>(
-  ({ children, passwordVisibility, ...rest }) => <Card {...rest}>{children}</Card>
+  ({ children, passwordVisibility, ...rest }) => <Card {...rest}>{children}</Card>,
 )<CardProps>(({ theme, passwordVisibility }) => ({
   width: 500,
   [theme.breakpoints.down('sm')]: {
@@ -60,7 +61,7 @@ const StyledCard = styled<React.FC<StyledCardProps & CardProps>>(
   },
 }))
 
-const Login = () => {
+const Login = ({ toggleDialog }: any) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false)
 
   const router = useRouter()
@@ -70,20 +71,28 @@ const Login = () => {
   }, [])
 
   const handleFormSubmit = async (values: any) => {
-    router.push('/profile')
-    console.log(values)
+    try {
+      await instance.post('/login/local', values)
+      if (router.pathname === '/') {
+        toggleDialog()
+      }
+      router.push('/')
+    } catch (err) {
+      toast.error('Error')
+    }
+
   }
 
   const handleGoogleLogin = async () => {
     const res = await instance.get('/google-login-url')
     console.log({ res })
-    router.push(res.data.url);
+    router.push(res.data.url)
   }
 
   const handleFacebookLogin = async () => {
     const res = await instance.get('/facebook-login-url')
     console.log({ res })
-    router.push(res.data.url);
+    router.push(res.data.url)
   }
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -95,58 +104,58 @@ const Login = () => {
 
   return (
     <StyledCard elevation={3} passwordVisibility={passwordVisibility}>
-      <form className="content" onSubmit={handleSubmit}>
-        <H3 textAlign="center" mb={1}>
+      <form className='content' onSubmit={handleSubmit}>
+        <H3 textAlign='center' mb={1}>
           Welcome To Ecommerce
         </H3>
         <Small
-          fontWeight="600"
-          fontSize="12px"
-          color="grey.800"
-          textAlign="center"
+          fontWeight='600'
+          fontSize='12px'
+          color='grey.800'
+          textAlign='center'
           mb={4.5}
-          display="block"
+          display='block'
         >
           Log in with email & password
         </Small>
 
         <BazarTextField
           mb={1.5}
-          name="email"
-          label="Email or Phone Number"
-          placeholder="exmple@mail.com"
-          variant="outlined"
-          size="small"
-          type="email"
+          name='loginId'
+          label='Email'
+          placeholder='exmple@mail.com'
+          variant='outlined'
+          size='small'
+          type='email'
           fullWidth
           onBlur={handleBlur}
           onChange={handleChange}
-          value={values.email || ''}
-          error={!!touched.email && !!errors.email}
-          helperText={touched.email && errors.email}
+          value={values.loginId || ''}
+          error={!!touched.loginId && !!errors.loginId}
+          helperText={touched.loginId && errors.loginId}
         />
 
         <BazarTextField
           mb={2}
-          name="password"
-          label="Password"
-          placeholder="*********"
-          autoComplete="on"
+          name='password'
+          label='Password'
+          placeholder='*********'
+          autoComplete='on'
           type={passwordVisibility ? 'text' : 'password'}
-          variant="outlined"
-          size="small"
+          variant='outlined'
+          size='small'
           fullWidth
           InputProps={{
             endAdornment: (
               <IconButton
-                size="small"
-                type="button"
+                size='small'
+                type='button'
                 onClick={togglePasswordVisibility}
               >
                 {passwordVisibility ? (
-                  <Visibility className="passwordEye" fontSize="small" />
+                  <Visibility className='passwordEye' fontSize='small' />
                 ) : (
-                  <VisibilityOff className="passwordEye" fontSize="small" />
+                  <VisibilityOff className='passwordEye' fontSize='small' />
                 )}
               </IconButton>
             ),
@@ -159,9 +168,9 @@ const Login = () => {
         />
 
         <BazarButton
-          variant="contained"
-          color="primary"
-          type="submit"
+          variant='contained'
+          color='primary'
+          type='submit'
           fullWidth
           sx={{
             mb: '1.65rem',
@@ -172,20 +181,20 @@ const Login = () => {
         </BazarButton>
 
         <Box mb={2}>
-          <Box width="200px" mx="auto">
+          <Box width='200px' mx='auto'>
             <Divider />
           </Box>
 
-          <FlexBox justifyContent="center" mt={-1.625}>
-            <Box color="grey.600" bgcolor="background.paper" px={2}>
+          <FlexBox justifyContent='center' mt={-1.625}>
+            <Box color='grey.600' bgcolor='background.paper' px={2}>
               on
             </Box>
           </FlexBox>
         </Box>
 
         <BazarButton
-          className="facebookButton"
-          size="medium"
+          className='facebookButton'
+          size='medium'
           fullWidth
           sx={{
             mb: '10px',
@@ -194,33 +203,33 @@ const Login = () => {
           onClick={handleFacebookLogin}
         >
           <Image
-            src="/assets/images/icons/facebook-filled-white.svg"
-            alt="facebook"
+            src='/assets/images/icons/facebook-filled-white.svg'
+            alt='facebook'
           />
-          <Box fontSize="12px" ml={1}>
+          <Box fontSize='12px' ml={1}>
             Continue with Facebook
           </Box>
         </BazarButton>
         <BazarButton
-          className="googleButton"
-          size="medium"
+          className='googleButton'
+          size='medium'
           fullWidth
           sx={{
             height: 44,
           }}
           onClick={handleGoogleLogin}
         >
-          <Image src="/assets/images/icons/google-1.svg" alt="facebook" />
-          <Box fontSize="12px" ml={1}>
+          <Image src='/assets/images/icons/google-1.svg' alt='facebook' />
+          <Box fontSize='12px' ml={1}>
             Continue with Google
           </Box>
         </BazarButton>
 
-        <FlexBox justifyContent="center" alignItems="center" my="1.25rem">
+        <FlexBox justifyContent='center' alignItems='center' my='1.25rem'>
           <Box>Don’t have account?</Box>
-          <Link href="/signup">
+          <Link href='/signup'>
             <a>
-              <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+              <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
                 Sign Up
               </H6>
             </a>
@@ -228,11 +237,11 @@ const Login = () => {
         </FlexBox>
       </form>
 
-      <FlexBox justifyContent="center" bgcolor="grey.200" py={2.5}>
+      <FlexBox justifyContent='center' bgcolor='grey.200' py={2.5}>
         Forgot your password?
-        <Link href="/">
+        <Link href='/'>
           <a>
-            <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+            <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
               Reset It
             </H6>
           </a>
@@ -243,12 +252,12 @@ const Login = () => {
 }
 
 const initialValues = {
-  email: '',
+  loginId: '',
   password: '',
 }
 
 const formSchema = yup.object().shape({
-  email: yup.string().email('invalid email').required('${path} is required'),
+  loginId: yup.string().email('invalid email').required('${path} is required'),
   password: yup.string().required('${path} is required'),
 })
 

@@ -46,7 +46,7 @@ const linkList = [
     href: '/vendor/products',
     title: 'Products',
     icon: Assignment,
-    count: 300,
+    // count: 300,
   },
   {
     href: '/vendor/add-product',
@@ -57,11 +57,11 @@ const linkList = [
     href: '/vendor/orders',
     title: 'Orders',
     icon: ShoppingCart,
-    count: 40,
+    // count: 40,
   },
   {
     href: '/vendor/account-settings',
-    title: 'Account Settings',
+    title: 'Shop Settings',
     icon: Settings,
   },
 ]

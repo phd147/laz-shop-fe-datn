@@ -66,8 +66,6 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
   // @ts-ignore
   const { user } = useSelector(state => state.authReducer)
-  console.log({ user })
-
 
   const { state } = useAppContext()
   const { cartList } = state.cart
@@ -148,7 +146,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
           scroll='body'
           onClose={toggleDialog}
         >
-          <Login />
+          <Login toggleDialog={toggleDialog} />
         </Dialog>
 
         <Drawer open={sidenavOpen} anchor='right' onClose={toggleSidenav}>

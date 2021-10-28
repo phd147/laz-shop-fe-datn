@@ -12,7 +12,8 @@ function* initGeneralItem(action: Action) {
   console.log({ action })
   try {
     // @ts-ignore
-    const res: any = yield instance.get('/items')
+    const res: any = yield instance.get(`/items?limit=${action.perPage}&page=${action.currentPage}`)
+    action.setLastPage(res.data.last_page)
     yield put({
       type: INIT_GENERAL_ITEM,
       generalItem: res.data.items,

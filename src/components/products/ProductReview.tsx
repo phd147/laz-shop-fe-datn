@@ -1,20 +1,39 @@
 import FlexBox from '@component/FlexBox'
 import { H2, H5 } from '@component/Typography'
-import { Box, Button, TextField } from '@material-ui/core'
+import { Box, Button, Pagination, TextField } from '@material-ui/core'
 import { Rating } from '@material-ui/lab'
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import ProductComment from './ProductComment'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
 
 export interface ProductReviewProps {
+  itemId: number,
+  comments: [],
+  action: object,
+  lastPage: number
 }
 
-const ProductReview: React.FC<ProductReviewProps> = () => {
+const ProductReview: React.FC<ProductReviewProps> = ({ comments, itemId, action, lastPage }) => {
   const handleFormSubmit = async (values: any, { resetForm }: any) => {
     console.log(values)
-    resetForm()
+    try {
+      const res = await instance.post(`/items/${itemId}/comments`, values)
+      resetForm()
+      action.setComments(state => {
+        const newState = [...state]
+        newState.push(res.data)
+        return newState
+      })
+      action.setTotalReview(state => state + 1)
+      action.setLastPage(res.data.last_page)
+    } catch (err) {
+      toast.error('Error')
+    }
   }
+
 
   // TODO : call api get reaction of item
 
@@ -36,9 +55,21 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
 
   return (
     <Box>
-      {commentList.map((item, ind) => (
-        <ProductComment {...item} key={ind} />
+      {comments.map((item, ind) => (
+        <ProductComment name={item.user.info.name} content={item.content} star={item.star} createdAt={item.createdAt}
+                        picture={item.user.info.picture} key={ind} />
       ))}
+      <FlexBox justifyContent='center' mt={5}>
+        {!comments.length ? <h3>There are no reviews yet</h3> : <Pagination
+          count={lastPage}
+          variant='outlined'
+          color='primary'
+          onChange={(event, value) => {
+            console.log(value)
+            action.getComments(value)
+          }}
+        />}
+      </FlexBox>
 
       <H2 fontWeight='600' mt={7} mb={2.5}>
         Write a Review for this product
@@ -52,12 +83,11 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
             </H5>
             <H5 color='error.main'>*</H5>
           </FlexBox>
-
           <Rating
             color='warn'
             size='medium'
-            value={values.rating || 0}
-            onChange={(_, value) => setFieldValue('rating', value)}
+            value={values.star || 0}
+            onChange={(_, value) => setFieldValue('star', value)}
           />
         </Box>
 
@@ -70,7 +100,7 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
           </FlexBox>
 
           <TextField
-            name='comment'
+            name='content'
             placeholder='Write a review here...'
             variant='outlined'
             multiline
@@ -78,9 +108,9 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
             rows={8}
             onBlur={handleBlur}
             onChange={handleChange}
-            value={values.comment || ''}
-            error={!!touched.comment && !!errors.comment}
-            helperText={touched.comment && errors.comment}
+            value={values.content || ''}
+            error={!!touched.content && !!errors.content}
+            helperText={touched.content && errors.content}
           />
         </Box>
 
@@ -125,14 +155,13 @@ const commentList = [
 ]
 
 const initialValues = {
-  rating: 0,
-  comment: '',
-  date: new Date().toISOString(),
+  star: 0,
+  content: '',
 }
 
 const reviewSchema = yup.object().shape({
-  rating: yup.number().required('required'),
-  comment: yup.string().required('required'),
+  star: yup.number().required('required'),
+  content: yup.string().required('required'),
 })
 
 export default ProductReview

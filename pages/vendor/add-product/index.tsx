@@ -13,6 +13,9 @@ import SaveIcon from '@material-ui/icons/Save'
 import Card from '@material-ui/core/Card'
 
 import { instance } from '../../../src/api/api'
+import { routes } from '../../../src/constants/route'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 const OrderDetails = () => {
   const [subCategoryDisabled, setSubCategoryDisabled] = useState(true)
@@ -20,6 +23,10 @@ const OrderDetails = () => {
   // const [subCategorySelected, setSubCategorySelected] = useState('0')
   const [imageUrl, setImageUrl] = useState(null)
   const [categories, setCategories] = useState([])
+
+  const router = useRouter()
+
+  const [categoryName, setCategoryName] = useState('');
 
 
   useEffect(() => {
@@ -42,6 +49,8 @@ const OrderDetails = () => {
     try {
       const res = await instance.post('/items', values)
       console.log({ res })
+      toast.success('OK')
+      router.push('/vendor/products')
     } catch (err) {
       console.log({ err })
     }
@@ -53,7 +62,7 @@ const OrderDetails = () => {
     formData.append('media', files[0])
     try {
       // @ts-ignore
-      const res = await instance.post('/upload', formData, {
+      const res = await instance.post('/avatar/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -132,12 +141,15 @@ const OrderDetails = () => {
                       // setCategorySelected(e.target.value)
                       // setSubCategoryDisabled(false)
                       setFieldValue('categoryId', e.target.value)
+                      const name = categories.filter(category => category.id === values.categoryId)[0]?.name
+                      setCategoryName(name)
                     }}
-                    value={values.category || ''}
-                    error={!!touched.category && !!errors.category}
-                    helperText={touched.category && errors.category}
+                    value={categoryName}
+                    error={!!touched.categoryId && !!errors.categoryId}
+                    helperText={touched.categoryId && errors.categoryId}
                   >
-                    {categories.map(category => <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)}
+                    {categories.map(category => <MenuItem key={category.id}
+                                                          value={category.id}>{category.name}</MenuItem>)}
                   </TextField>
                 </Grid>
                 {/*<Grid item sm={4} xs={12}>*/}

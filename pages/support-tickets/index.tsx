@@ -15,20 +15,20 @@ const TicketList = () => {
   return (
     <CustomerDashboardLayout>
       <DashboardPageHeader
-        title="Support Ticket"
+        title='Support Ticket'
         icon={CustomerService}
         navigation={<CustomerDashboardNavigation />}
       />
 
       {[1, 2, 3].map((item) => (
-        <Link href="/support-tickets/xkssThds6h37sd" key={item}>
+        <Link href='/support-tickets/xkssThds6h37sd' key={item}>
           <TableRow sx={{ my: '1rem', p: '15px 24px' }}>
             <div>
               <span>My product is broken. I need refund</span>
-              <FlexBox alignItems="center" flexWrap="wrap" pt={1} m={-0.75}>
+              <FlexBox alignItems='center' flexWrap='wrap' pt={1} m={-0.75}>
                 <Chip
-                  label="Urgent"
-                  size="small"
+                  label='Urgent'
+                  size='small'
                   sx={{
                     height: 26,
                     px: '0.25rem',
@@ -38,8 +38,8 @@ const TicketList = () => {
                   }}
                 />
                 <Chip
-                  label="Open"
-                  size="small"
+                  label='Open'
+                  size='small'
                   sx={{
                     height: 26,
                     px: '0.25rem',
@@ -48,31 +48,30 @@ const TicketList = () => {
                     m: '6px',
                   }}
                 />
-                <Span className="pre" m={0.75} color="grey.600">
+                <Span className='pre' m={0.75} color='grey.600'>
                   {format(new Date('2020/10/12'), 'MMM dd, yyyy')}
                 </Span>
-                <Span m={0.75} color="grey.600">
+                <Span m={0.75} color='grey.600'>
                   Website Problem
                 </Span>
               </FlexBox>
             </div>
 
-            <Typography flex="0 0 0 !important" textAlign="center" color="grey.600">
+            <Typography flex='0 0 0 !important' textAlign='center' color='grey.600'>
               <IconButton>
-                <East fontSize="small" color="inherit" />
+                <East fontSize='small' color='inherit' />
               </IconButton>
             </Typography>
           </TableRow>
         </Link>
       ))}
 
-      <FlexBox justifyContent="center" mt={5}>
+      <FlexBox justifyContent='center' mt={5}>
         <Pagination
           count={5}
-          variant="outlined"
-          color="primary"
+          variant='outlined'
+          color='primary'
           onChange={(data) => {
-            console.log(data)
           }}
         />
       </FlexBox>

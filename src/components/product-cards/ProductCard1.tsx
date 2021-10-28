@@ -24,6 +24,8 @@ import Link from 'next/link'
 import React, { Fragment, useCallback, useState } from 'react'
 import FlexBox from '../FlexBox'
 import ProductIntro from '../products/ProductIntro'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
 
 export interface ProductCard1Props {
   className?: string
@@ -31,12 +33,14 @@ export interface ProductCard1Props {
   rating?: number
   hoverEffect?: boolean
   // imgUrl: string
-  imageUrl : string ;
+  imageUrl: string;
   // title: string
-  name : string ;
+  name: string;
   price: number
   off?: number
   id: string | number
+  shop?: object,
+  disableAddToCart?: boolean
 }
 
 const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
@@ -128,39 +132,27 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                                                      off = 0,
                                                      rating = 5,
                                                      hoverEffect,
+                                                     shop,
                                                    }) => {
   const [isFavorite, setIsFavorite] = useState(false)
   const [open, setOpen] = useState(false)
 
+  console.log({ id })
+
   const classes = useStyles({ hoverEffect })
-  const { state, dispatch } = useAppContext()
-  const cartItem: CartItem | undefined = state.cart.cartList.find(
-    (item) => item.id === id,
-  )
 
   const toggleDialog = useCallback(() => {
     setOpen((open) => !open)
   }, [])
 
   const toggleIsFavorite = async () => {
-    setIsFavorite((fav) => !fav)
+    try {
+      await instance.post(`/items/${id}/favorite`)
+      setIsFavorite((fav) => !fav)
+    } catch (err) {
+      toast.error('Error')
+    }
   }
-
-  const handleCartAmountChange = useCallback(
-    (amount) => () => {
-      dispatch({
-        type: 'CHANGE_CART_AMOUNT',
-        payload: {
-          name,
-          qty: amount,
-          price,
-          imageUrl,
-          id,
-        },
-      })
-    },
-    [],
-  )
 
   return (
     <BazarCard className={classes.root} hoverEffect={hoverEffect}>
@@ -175,9 +167,9 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
         {/*)}*/}
 
         <div className='extra-icons'>
-          <IconButton sx={{ p: '6px' }} onClick={toggleDialog}>
-            <RemoveRedEye color='secondary' fontSize='small' />
-          </IconButton>
+          {/*<IconButton sx={{ p: '6px' }} onClick={toggleDialog}>*/}
+          {/*  <RemoveRedEye color='secondary' fontSize='small' />*/}
+          {/*</IconButton>*/}
           <IconButton sx={{ p: '6px' }} onClick={toggleIsFavorite}>
             {isFavorite ? (
               <Favorite color='primary' fontSize='small' />
@@ -228,7 +220,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
               {/*</Box>*/}
               {
                 <Box pr={1} fontWeight='600' color='primary.main'>
-                 {price?.toFixed(2)} $
+                  {price?.toFixed(2)} $
                 </Box>
               }
             </FlexBox>
@@ -271,7 +263,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
       <Dialog open={open} maxWidth={false} onClose={toggleDialog}>
         <DialogContent className={classes.dialogContent}>
-          <ProductIntro imgUrl={[imageUrl]} title={name} price={price} />
+          <ProductIntro disableAddToCart shop={shop} id={id} imageUrl={[imageUrl]} name={name} price={price} />
           <IconButton
             sx={{ position: 'absolute', top: '0', right: '0' }}
             onClick={toggleDialog}

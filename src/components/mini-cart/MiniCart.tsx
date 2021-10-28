@@ -5,7 +5,6 @@ import FlexBox from '@component/FlexBox'
 import ShoppingBagOutlined from '@component/icons/ShoppingBagOutlined'
 import LazyImage from '@component/LazyImage'
 import { H5, Tiny } from '@component/Typography'
-import { useAppContext } from '@context/app/AppContext'
 import { Box, Divider } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import Add from '@material-ui/icons/Add'
@@ -13,9 +12,11 @@ import Close from '@material-ui/icons/Close'
 import Remove from '@material-ui/icons/Remove'
 import { CartItem } from '@reducer/cartReducer'
 import Link from 'next/link'
-import React, { useCallback, useEffect } from 'react'
+import React from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
+import { CHANGE_AMOUNT_CART_ITEM_SAGA, DELETE_CART_ITEM_SAGA } from '../../redux/constants'
+import { ChangeAmount } from '../../constants/cart'
 
 type MiniCartProps = {
   toggleSidenav?: () => void
@@ -23,33 +24,24 @@ type MiniCartProps = {
 
 const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   const { palette } = useTheme()
-  const { state } = useAppContext()
-  const { cartList } = state.cart
 
   const dispatch = useDispatch()
-  const cartReducer = useSelector(state => state.cartReducer)
-  console.log({ cartReducer })
+  const { cartList, totalPrice } = useSelector(state => state.cartReducer)
 
-  const handleCartAmountChange = useCallback(
-    (amount, product) => () => {
-      dispatch({
-        type: 'CHANGE_CART_AMOUNT',
-        payload: {
-          ...product,
-          qty: amount,
-        },
-      })
-    },
-    [],
-  )
+  const handleCartAmountChange = (type: ChangeAmount, id, itemId) => {
+    dispatch({
+      type: CHANGE_AMOUNT_CART_ITEM_SAGA,
+      data: {
+        type, itemId, cartItemId: id,
+      },
+    })
+  }
 
-  const getTotalPrice = () => {
-    return (
-      cartList.reduce(
-        (accumulator, item) => accumulator + item.price * item.qty,
-        0,
-      ) || 0
-    )
+  const deleteCartItemHandler = (cartItemId: number) => {
+    dispatch({
+      type: DELETE_CART_ITEM_SAGA,
+      cartItemId,
+    })
   }
 
 
@@ -96,13 +88,13 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
             </Box>
           </FlexBox>
         )}
-        {cartList.map((item: CartItem) => (
+        {cartList.map((cartItem: CartItem) => (
           <FlexBox
             alignItems='center'
             py={2}
             px={2.5}
             borderBottom={`1px solid ${palette.divider}`}
-            key={item.id}
+            key={cartItem.id}
           >
             <FlexBox alignItems='center' flexDirection='column'>
               <BazarButton
@@ -113,12 +105,12 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                   width: '32px',
                   borderRadius: '300px',
                 }}
-                onClick={handleCartAmountChange(item.qty + 1, item)}
+                onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT, cartItem.id, cartItem.item.id)}
               >
                 <Add fontSize='small' />
               </BazarButton>
               <Box fontWeight={600} fontSize='15px' my='3px'>
-                {item.qty}
+                {cartItem.quantity}
               </Box>
               <BazarButton
                 variant='outlined'
@@ -128,19 +120,19 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                   width: '32px',
                   borderRadius: '300px',
                 }}
-                onClick={handleCartAmountChange(item.qty - 1, item)}
-                disabled={item.qty === 1}
+                onClick={() => handleCartAmountChange(ChangeAmount.DECREMENT, cartItem.id, cartItem.item.id)}
+                disabled={cartItem.quantity === 1}
               >
                 <Remove fontSize='small' />
               </BazarButton>
             </FlexBox>
 
-            <Link href={`/product/${item.id}`}>
+            <Link href={`/product/${cartItem.item.id}`}>
               <a>
                 <BazarAvatar
-                  src={item.imgUrl || '/assets/images/products/iphone-x.png'}
+                  src={cartItem.item.imageUrl || '/assets/images/products/iphone-x.png'}
                   mx={2}
-                  alt={item.name}
+                  alt={cartItem.item.name}
                   height={76}
                   width={76}
                 />
@@ -148,25 +140,25 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
             </Link>
 
             <Box flex='1 1 0'>
-              <Link href={`/product/${item.id}`}>
+              <Link href={`/product/${cartItem.item.id}`}>
                 <a>
                   <H5 className='title' fontSize='14px'>
-                    {item.name}
+                    {cartItem.item.name}
                   </H5>
                 </a>
               </Link>
               <Tiny color='grey.600'>
-                ${item.price.toFixed(2)} x {item.qty}
+                ${cartItem.item.price.toFixed(2)} x {cartItem.quantity}
               </Tiny>
               <Box fontWeight={600} fontSize='14px' color='primary.main' mt={0.5}>
-                ${(item.qty * item.price).toFixed(2)}
+                ${(cartItem.quantity * cartItem.item.price).toFixed(2)}
               </Box>
             </Box>
 
             <BazarIconButton
               ml={2.5}
               size='small'
-              onClick={handleCartAmountChange(0, item)}
+              onClick={() => deleteCartItemHandler(cartItem.id)}
             >
               <Close fontSize='small' />
             </BazarIconButton>
@@ -187,7 +179,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
               fullWidth
               onClick={toggleSidenav}
             >
-              Checkout Now (${getTotalPrice().toFixed(2)})
+              Checkout Now (${totalPrice.toFixed(2)})
             </BazarButton>
           </Link>
           <Link href='/cart'>

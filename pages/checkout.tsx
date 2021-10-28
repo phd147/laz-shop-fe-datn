@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux'
 const Checkout = () => {
 
   const user = useSelector(state => state.authReducer)
-  console.log({ user})
 
   return (
     <CheckoutNavLayout>

@@ -6,16 +6,42 @@ import ProductCard1 from '@component/product-cards/ProductCard1'
 import productDatabase from '@data/product-database'
 import { Button, Grid, Pagination } from '@material-ui/core'
 import Favorite from '@material-ui/icons/Favorite'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { instance } from '../src/api/api'
+import { toast } from 'react-toastify'
 
 const WishList = () => {
+
+  const [wishedItems, setWishedListItems] = useState([])
+
+  const [lastPage, setLastPage] = useState(1)
+
+  const [perPage, setPerPage] = useState(10);
+
+
+  const getWishedListItems = async (currentPage: number) => {
+    try {
+      const res = await instance.get(`/items/favorites?limit=${perPage}&page=${currentPage}`)
+      setWishedListItems(res.data.items)
+      setLastPage(res.data.last_page)
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    getWishedListItems(1)
+
+  }, [])
+
+
   return (
     <CustomerDashboardLayout>
       <DashboardPageHeader
-        title="My Wish List"
+        title='My Wish List'
         icon={Favorite}
         button={
-          <Button color="primary" sx={{ px: '2rem', bgcolor: 'primary.light' }}>
+          <Button color='primary' sx={{ px: '2rem', bgcolor: 'primary.light' }}>
             Add All to Cart
           </Button>
         }
@@ -23,20 +49,21 @@ const WishList = () => {
       />
 
       <Grid container spacing={3}>
-        {productDatabase.slice(53, 59).map((item) => (
+        {wishedItems.map((item) => (
           <Grid item lg={4} sm={6} xs={12} key={item.id}>
             <ProductCard1 {...item} />
           </Grid>
         ))}
       </Grid>
 
-      <FlexBox justifyContent="center" mt={5}>
+      <FlexBox justifyContent='center' mt={5}>
         <Pagination
-          count={5}
-          variant="outlined"
-          color="primary"
-          onChange={(data) => {
-            console.log(data)
+          count={lastPage}
+          variant='outlined'
+          color='primary'
+          onChange={(event, value) => {
+            console.log(value)
+            getWishedListItems(value)
           }}
         />
       </FlexBox>

@@ -18,27 +18,30 @@ const Products = () => {
 
   const [productList, setProductList] = useState([])
 
+  const [lastPage, setLastPage] = useState(1)
 
-  const getProductList = async () => {
+  const [perPage, setPerPage] = useState(10);
+
+
+  const getProductList = async (currentPage: number) => {
     try {
-      const res = await instance.get(`/items?shopId=${user.shop.id}`)
+      const res = await instance.get(`/items?shopId=${user.shop.id}&page=${currentPage}&limit=${perPage}`)
       console.log({ res })
       setProductList(res.data.items)
+      setLastPage(res.data.last_page)
     } catch (err) {
       console.log({ err })
     }
-
   }
 
   useEffect(() => {
-    getProductList()
+    getProductList(1)
   }, [])
 
   return (
     <VendorDashboardLayout>
       <DashboardPageHeader title='Products' icon={DeliveryBox} />
-
-      <TableRow
+      {productList.length === 0 ? null : <TableRow
         sx={{
           display: { xs: 'none', md: 'flex' },
           padding: '0px 18px',
@@ -62,7 +65,7 @@ const Products = () => {
         {/*  Sale Price*/}
         {/*</H5>*/}
         <H5 flex='0 0 0 !important' color='grey.600' px={2.75} my='0px'></H5>
-      </TableRow>
+      </TableRow>}
 
       {productList.map((item, ind) => (
         <Link href={`/vendor/products/${item.id}`} key={ind}>
@@ -110,14 +113,14 @@ const Products = () => {
         </Link>
       ))}
 
-      <FlexBox justifyContent='center' mt={5}>
+      {productList.length === 0 ? <h3>Products is empty</h3> : <FlexBox justifyContent='center' mt={5}>
         <Pagination
-          count={5}
-          onChange={(data) => {
-            console.log(data)
+          count={lastPage}
+          onChange={(event, value) => {
+            getProductList(value)
           }}
         />
-      </FlexBox>
+      </FlexBox>}
     </VendorDashboardLayout>
   )
 }

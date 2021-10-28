@@ -1,4 +1,5 @@
 import { INIT_CART } from '../constants'
+import { HYDRATE } from 'next-redux-wrapper'
 
 const initialState = {
   cartList: [],
@@ -6,19 +7,28 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action: any) => {
+  const { payload } = action
   switch (action.type) {
-    case INIT_CART : {
+
+    case HYDRATE: {
+      const { cartList } = payload.cartReducer
       return {
-        ...state, cartList: action.cartList,
-        totalPrice: action.cartList.reduce((total: number, cartItem: { price: number; amount: number }) => {
-          return total + cartItem.price * cartItem.amount
+        ...state, cartList,
+        totalPrice: cartList.reduce((total: number, cartItem: any) => {
+          total = total + cartItem.item.price * cartItem.quantity
+          return total
         }, 0),
       }
     }
 
-    case 'CHANGE_QUANTITY' : {
+    case INIT_CART : {
+      console.log('init cartttttt ')
       return {
-        ...state,
+        ...state, cartList: action.cartList,
+        totalPrice: action.cartList.reduce((total: number, cartItem: any) => {
+          total = total + cartItem.item.price * cartItem.quantity
+          return total
+        }, 0),
       }
     }
     default:

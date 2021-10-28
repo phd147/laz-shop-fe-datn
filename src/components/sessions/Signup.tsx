@@ -22,6 +22,7 @@ import React, { useCallback, useState } from 'react'
 import * as yup from 'yup'
 
 import { instance } from '../../api/api'
+import { toast } from 'react-toastify'
 
 const fbStyle = {
   background: '#3B5998',
@@ -78,20 +79,26 @@ const Signup = () => {
   }, [])
 
   const handleFormSubmit = async (values: any) => {
-    router.push('/profile')
-    console.log(values)
+    // router.push('/profile')
+    delete values.re_password
+    try {
+      const res = await instance.post('/users', values)
+      router.push('/login')
+    } catch (err) {
+      toast.error('Error')
+    }
   }
 
   const handleGoogleLogin = async () => {
     const res = await instance.get('/google-login-url')
     console.log({ res })
-    router.push(res.data.url);
+    router.push(res.data.url)
   }
 
   const handleFacebookLogin = async () => {
     const res = await instance.get('/facebook-login-url')
     console.log({ res })
-    router.push(res.data.url);
+    router.push(res.data.url)
   }
 
 
@@ -122,8 +129,8 @@ const Signup = () => {
         <BazarTextField
           mb={1.5}
           name='name'
-          label='Full Name'
-          placeholder='Ralph Adwards'
+          label='Name'
+          placeholder='Phan Huynh Duc'
           variant='outlined'
           size='small'
           fullWidth
@@ -136,8 +143,8 @@ const Signup = () => {
 
         <BazarTextField
           mb={1.5}
-          name='email'
-          label='Email or Phone Number'
+          name='loginId'
+          label='Email'
           placeholder='exmple@mail.com'
           variant='outlined'
           size='small'
@@ -145,9 +152,24 @@ const Signup = () => {
           fullWidth
           onBlur={handleBlur}
           onChange={handleChange}
-          value={values.email || ''}
-          error={!!touched.email && !!errors.email}
-          helperText={touched.email && errors.email}
+          value={values.loginId || ''}
+          error={!!touched.loginId && !!errors.loginId}
+          helperText={touched.loginId && errors.loginId}
+        />
+
+        <BazarTextField
+          mb={1.5}
+          name='address'
+          label='Address'
+          placeholder='Tuy Loan'
+          variant='outlined'
+          size='small'
+          fullWidth
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.address || ''}
+          error={!!touched.address && !!errors.address}
+          helperText={touched.address && errors.address}
         />
 
         <BazarTextField
@@ -213,28 +235,28 @@ const Signup = () => {
           helperText={touched.re_password && errors.re_password}
         />
 
-        <FormControlLabel
-          className='agreement'
-          name='agreement'
-          onChange={handleChange}
-          control={
-            <Checkbox
-              size='small'
-              color='secondary'
-              checked={values.agreement || false}
-            />
-          }
-          label={
-            <FlexBox flexWrap='wrap' alignItems='center' justifyContent='flex-start'>
-              By signing up, you agree to
-              <a href='/' target='_blank' rel='noreferrer noopener'>
-                <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>
-                  Terms & Condtion
-                </H6>
-              </a>
-            </FlexBox>
-          }
-        />
+        {/*<FormControlLabel*/}
+        {/*  className='agreement'*/}
+        {/*  name='agreement'*/}
+        {/*  onChange={handleChange}*/}
+        {/*  control={*/}
+        {/*    <Checkbox*/}
+        {/*      size='small'*/}
+        {/*      color='secondary'*/}
+        {/*      checked={values.agreement || false}*/}
+        {/*    />*/}
+        {/*  }*/}
+        {/*  label={*/}
+        {/*    <FlexBox flexWrap='wrap' alignItems='center' justifyContent='flex-start'>*/}
+        {/*      By signing up, you agree to*/}
+        {/*      <a href='/' target='_blank' rel='noreferrer noopener'>*/}
+        {/*        <H6 ml={1} borderBottom='1px solid' borderColor='grey.900'>*/}
+        {/*          Terms & Condtion*/}
+        {/*        </H6>*/}
+        {/*      </a>*/}
+        {/*    </FlexBox>*/}
+        {/*  }*/}
+        {/*/>*/}
 
         <BazarButton
           variant='contained'
@@ -320,28 +342,30 @@ const Signup = () => {
 
 const initialValues = {
   name: '',
-  email: '',
+  loginId: '',
   password: '',
   re_password: '',
-  agreement: false,
+  // agreement: false,
+  address: '',
 }
 
 const formSchema = yup.object().shape({
   name: yup.string().required('${path} is required'),
-  email: yup.string().email('invalid email').required('${path} is required'),
+  loginId: yup.string().email('invalid email').required('${path} is required'),
   password: yup.string().required('${path} is required'),
   re_password: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Please re-type password'),
-  agreement: yup
-    .bool()
-    .test(
-      'agreement',
-      'You have to agree with our Terms and Conditions!',
-      (value) => value === true,
-    )
-    .required('You have to agree with our Terms and Conditions!'),
+  // agreement: yup
+  //   .bool()
+  //   .test(
+  //     'agreement',
+  //     'You have to agree with our Terms and Conditions!',
+  //     (value) => value === true,
+  //   )
+  //   .required('You have to agree with our Terms and Conditions!'),
+  address: yup.string(),
 })
 
 export default Signup

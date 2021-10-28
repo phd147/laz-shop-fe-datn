@@ -13,6 +13,10 @@ import { MuiThemeProps } from '@theme/theme'
 import React from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
+import { useRouter } from 'next/router'
+import { LOGOUT_SAGA } from '../../redux/constants'
 
 export interface NavbarProps {
   navListOpen?: boolean
@@ -79,6 +83,10 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
 
   const { user } = useSelector(state => state.authReducer)
 
+  const router = useRouter()
+
+  const dispatch = useDispatch()
+
   const navbarNavigations = [
 
     Object.keys(user).length &&
@@ -122,11 +130,33 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
       title: 'Register shop',
       url: '/vendor/register-shop',
     },
+    Object.keys(user).length &&
+    {
+      title: 'Logout',
+    },
   ]
 
   const renderNestedNav = (list: any[], isRoot = false) => {
     return list?.map((nav: Nav) => {
       if (isRoot) {
+
+        if (nav.title === 'Logout') {
+          return (<a key={nav.title} style={{ cursor: 'pointer' }} onClick={async () => {
+            try {
+              await instance.get('/logout')
+              dispatch({
+                type: LOGOUT_SAGA,
+              })
+              router.push('/')
+            } catch (err) {
+              toast.error('Error')
+            }
+          }}>
+            Logout
+          </a>)
+        }
+
+
         if (nav.url && nav.extLink)
           return (
             <NavLink
@@ -145,7 +175,7 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
               {nav.title}
             </NavLink>
           )
-        if (nav.child)
+        if (nav.child) {
           return (
             <FlexBox
               className={classes.root}
@@ -169,6 +199,7 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
               </Box>
             </FlexBox>
           )
+        }
       } else {
         if (nav.url)
           return (

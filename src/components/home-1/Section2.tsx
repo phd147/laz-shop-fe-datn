@@ -33,9 +33,9 @@ const Section2 = () => {
 
   return (
     <CategorySectionCreator
-      icon={<Light color="primary" />}
-      title="Recommend for you"
-      seeMoreLink="#"
+      icon={<Light color='primary' />}
+      title='Recommend for you'
+      seeMoreLink='#'
     >
       <Box mt={-0.5} mb={-0.5}>
         <Carousel
@@ -46,12 +46,14 @@ const Section2 = () => {
           {generalItem.map((item, ind) => (
             <Box py={0.5} key={ind}>
               <ProductCard1
-                id={ind}
+                shop={item.shop}
+                id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
                 rating={4}
                 price={item.price}
                 off={20}
+                disableAddToCart={true}
               />
             </Box>
           ))}

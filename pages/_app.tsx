@@ -22,6 +22,7 @@ import cookie from 'cookie'
 
 import { instance } from '../src/api/api'
 import { ToastContainer } from 'react-toastify'
+import { INIT_CART } from '../src/redux/constants'
 
 export const cache = createCache({ key: 'css', prepend: true })
 
@@ -33,13 +34,12 @@ Router.events.on('routeChangeError', () => nProgress.done())
 
 nProgress.configure({ showSpinner: false })
 
-const App = ({ Component, pageProps, initUser }: any) => {
+const App = ({ Component, pageProps }: any) => {
   const Layout = Component.layout || Fragment
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log({ initUser })
     // initUser()
     const { userInfo } = pageProps
     if (userInfo) {
@@ -56,15 +56,15 @@ const App = ({ Component, pageProps, initUser }: any) => {
     }
   }, [])
 
-  const getCart = () => {
-    dispatch({
-      type: 'INIT_CART_SAGA',
-    })
-  }
-
-  useEffect(() => {
-    getCart()
-  }, [])
+  // const getCart = () => {
+  //   dispatch({
+  //     type: 'INIT_CART_SAGA',
+  //   })
+  // }
+  //
+  // useEffect(() => {
+  //   getCart()
+  // }, [])
 
   return (
     <CacheProvider value={cache}>
@@ -114,6 +114,18 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
           Cookie: headers.cookie,
         } : {},
       })
+
+      const cartResponse = await instance.get('/cart-items', {
+        headers: headers.cookie ? {
+          Cookie: headers.cookie,
+        } : {},
+      })
+
+      store.dispatch({
+        type: INIT_CART,
+        cartList: cartResponse.data.rows,
+      })
+
       console.log({ response })
       userInfo = response.data
       store.dispatch({
@@ -134,9 +146,17 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
       const response = await instance.get('/me')
       console.log({ response })
       userInfo = response.data
+
+      const cartResponse = await instance.get('/cart-items')
+
       store.dispatch({
         type: 'INIT_USER',
         user: userInfo,
+      })
+
+      store.dispatch({
+        type: INIT_CART,
+        cartList: cartResponse.data.rows,
       })
 
     } catch (err) {

@@ -13,13 +13,18 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import ImageViewer from 'react-simple-image-viewer'
 import FlexBox from '../FlexBox'
+import { ChangeAmount } from '../../constants/cart'
+import { useDispatch, useSelector } from 'react-redux'
+import cartReducer from '../../redux/reducers/cartReducer'
+import { CHANGE_AMOUNT_CART_ITEM_SAGA } from '../../redux/constants'
+
 
 export interface ProductIntroProps {
   imageUrl?: string[]
   name: string
   price: number
   id?: string | number
-  shop: object
+  shop?: object
 }
 
 const ProductIntro: React.FC<ProductIntroProps> = ({
@@ -33,11 +38,17 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   const [isViewerOpen, setIsViewerOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
 
-  const { state, dispatch } = useAppContext()
-  const cartList: CartItem[] = state.cart.cartList
   const router = useRouter()
-  const routerId = router.query.id as string
-  const cartItem = cartList.find((item) => item.id === id || item.id === routerId)
+  const itemId = router.query.id
+
+  const dispatch = useDispatch()
+  const { cartList } = useSelector(state => state.cartReducer)
+
+  const cartItem = cartList.filter(cartItem => cartItem.item.id.toString() === itemId)[0]
+  console.log({ cartItem })
+
+  const [isFirst, setIsFirst] = useState(true)
+
 
   const handleImageClick = (ind: number) => () => {
     setSelectedImage(ind)
@@ -53,21 +64,36 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
     setIsViewerOpen(false)
   }
 
-  const handleCartAmountChange = useCallback(
-    (amount) => () => {
-      dispatch({
-        type: 'CHANGE_CART_AMOUNT',
-        payload: {
-          qty: amount,
-          name: title,
-          price,
-          imgUrl: imgUrl[0],
-          id: id || routerId,
-        },
-      })
-    },
-    [],
-  )
+  // const handleCartAmountChange = useCallback(
+  //   (amount) => () => {
+  //     dispatch({
+  //       type: 'CHANGE_CART_AMOUNT',
+  //       payload: {
+  //         qty: amount,
+  //         name: title,
+  //         price,
+  //         imgUrl: imgUrl[0],
+  //         id: id || routerId,
+  //       },
+  //     })
+  //   },
+  //   [],
+  // )
+
+
+  const handleCartAmountChange = async (type: ChangeAmount) => {
+    console.log(type)
+    if (isFirst) {
+      setIsFirst(false)
+    }
+
+    dispatch({
+      type: CHANGE_AMOUNT_CART_ITEM_SAGA,
+      data: {
+        type, itemId, cartItemId: cartItem?.id,
+      },
+    })
+  }
 
   return (
     <Box width='100%'>
@@ -77,9 +103,9 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             <FlexBox justifyContent='center' mb={6}>
               <LazyImage
                 src={imageUrl[selectedImage]}
-                onClick={() =>
-                  openImageViewer(imageUrl.indexOf(imageUrl[selectedImage]))
-                }
+                // onClick={() =>
+                //   openImageViewer(imageUrl.indexOf(imageUrl[selectedImage]))
+                // }
                 alt={name}
                 height='300px'
                 width='auto'
@@ -146,7 +172,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             <Box color='inherit'>Stock Available</Box>
           </Box>
 
-          {!cartItem?.qty ? (
+          {(isFirst || !cartItem) ? (
             <BazarButton
               variant='contained'
               color='primary'
@@ -155,7 +181,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 px: '1.75rem',
                 height: '40px',
               }}
-              onClick={handleCartAmountChange(1)}
+              onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT)}
             >
               Add to Cart
             </BazarButton>
@@ -166,19 +192,22 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 variant='outlined'
                 size='small'
                 color='primary'
-                onClick={handleCartAmountChange(cartItem?.qty - 1)}
+                onClick={() => handleCartAmountChange(ChangeAmount.DECREMENT)}
+                disabled={ cartItem?.quantity === 1}
               >
                 <Remove fontSize='small' />
               </BazarButton>
               <H3 fontWeight='600' mx={2.5}>
-                {cartItem?.qty.toString().padStart(2, '0')}
+                {cartItem?.quantity}
+                {/*{cartItem?.qty.toString().padStart(2, '0')}*/}
+                {/*{'????'}*/}
               </H3>
               <BazarButton
                 sx={{ p: '9px' }}
                 variant='outlined'
                 size='small'
                 color='primary'
-                onClick={handleCartAmountChange(cartItem?.qty + 1)}
+                onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT)}
               >
                 <Add fontSize='small' />
               </BazarButton>
