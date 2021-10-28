@@ -30,6 +30,8 @@ import SearchBox from '../search-box/SearchBox'
 
 import { useDispatch, useSelector } from 'react-redux'
 import authReducer from '../../redux/reducers/authReducer'
+import layoutReducer from '../../redux/reducers/layoutReducer'
+import { toggleLoginPopup } from '../../redux/actions'
 
 type HeaderProps = {
   className?: string
@@ -55,6 +57,8 @@ const useStyles = makeStyles(({ palette, ...theme }: MuiThemeProps) => ({
 const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [sidenavOpen, setSidenavOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const { isPopUpLogin } = useSelector(state => state.layoutReducer)
 
   const dispatch = useDispatch()
 
@@ -131,7 +135,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
               ml={2}
               p={1.25}
               bgcolor='grey.200'
-              onClick={toggleDialog}
+              onClick={() => dispatch(toggleLoginPopup())}
             >
               <PersonOutline />
             </Box> : <Avatar src={user?.info?.picture} />
@@ -141,12 +145,12 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         </FlexBox>
 
         <Dialog
-          open={dialogOpen}
+          open={isPopUpLogin}
           fullWidth={isMobile}
           scroll='body'
-          onClose={toggleDialog}
+          onClose={() => dispatch(toggleLoginPopup())}
         >
-          <Login toggleDialog={toggleDialog} />
+          <Login toggleDialog={() => dispatch(toggleLoginPopup())} />
         </Dialog>
 
         <Drawer open={sidenavOpen} anchor='right' onClose={toggleSidenav}>

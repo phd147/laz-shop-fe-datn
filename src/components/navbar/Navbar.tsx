@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { instance } from '../../api/api'
 import { useRouter } from 'next/router'
-import { LOGOUT_SAGA } from '../../redux/constants'
+import { DESTROY_CART, LOGOUT_SAGA } from '../../redux/constants'
 
 export interface NavbarProps {
   navListOpen?: boolean
@@ -146,6 +146,9 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
               await instance.get('/logout')
               dispatch({
                 type: LOGOUT_SAGA,
+              })
+              dispatch({
+                type: DESTROY_CART,
               })
               router.push('/')
             } catch (err) {

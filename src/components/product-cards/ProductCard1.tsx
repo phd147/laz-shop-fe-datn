@@ -26,6 +26,8 @@ import FlexBox from '../FlexBox'
 import ProductIntro from '../products/ProductIntro'
 import { toast } from 'react-toastify'
 import { instance } from '../../api/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleLoginPopup } from '../../redux/actions'
 
 export interface ProductCard1Props {
   className?: string
@@ -134,8 +136,14 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                                                      hoverEffect,
                                                      shop,
                                                    }) => {
+
+  const dispatch = useDispatch();
+
   const [isFavorite, setIsFavorite] = useState(false)
   const [open, setOpen] = useState(false)
+
+  const {isLogin} = useSelector(state => state.authReducer);
+
 
   console.log({ id })
 
@@ -170,7 +178,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
           {/*<IconButton sx={{ p: '6px' }} onClick={toggleDialog}>*/}
           {/*  <RemoveRedEye color='secondary' fontSize='small' />*/}
           {/*</IconButton>*/}
-          <IconButton sx={{ p: '6px' }} onClick={toggleIsFavorite}>
+          <IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>
             {isFavorite ? (
               <Favorite color='primary' fontSize='small' />
             ) : (

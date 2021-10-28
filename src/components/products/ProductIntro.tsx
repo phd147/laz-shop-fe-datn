@@ -17,6 +17,7 @@ import { ChangeAmount } from '../../constants/cart'
 import { useDispatch, useSelector } from 'react-redux'
 import cartReducer from '../../redux/reducers/cartReducer'
 import { CHANGE_AMOUNT_CART_ITEM_SAGA } from '../../redux/constants'
+import { toggleLoginPopup } from '../../redux/actions'
 
 
 export interface ProductIntroProps {
@@ -25,8 +26,8 @@ export interface ProductIntroProps {
   price: number
   id?: string | number
   shop?: object
-  averageStar : string
-  totalReview : number
+  averageStar: string
+  totalReview: number
 }
 
 const ProductIntro: React.FC<ProductIntroProps> = ({
@@ -36,7 +37,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                                                      id,
                                                      shop,
                                                      averageStar,
-                                                     totalReview
+                                                     totalReview,
                                                    }) => {
   const [selectedImage, setSelectedImage] = useState(0)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -47,6 +48,8 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
 
   const dispatch = useDispatch()
   const { cartList } = useSelector(state => state.cartReducer)
+
+  const { isLogin } = useSelector(state => state.authReducer)
 
   const cartItem = cartList.filter(cartItem => cartItem.item.id.toString() === itemId)[0]
   console.log({ cartItem })
@@ -185,7 +188,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 px: '1.75rem',
                 height: '40px',
               }}
-              onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT)}
+              onClick={ isLogin ? () => handleCartAmountChange(ChangeAmount.INCREMENT) : () => dispatch(toggleLoginPopup())}
             >
               Add to Cart
             </BazarButton>
@@ -197,7 +200,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 size='small'
                 color='primary'
                 onClick={() => handleCartAmountChange(ChangeAmount.DECREMENT)}
-                disabled={ cartItem?.quantity === 1}
+                disabled={cartItem?.quantity === 1}
               >
                 <Remove fontSize='small' />
               </BazarButton>

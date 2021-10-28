@@ -1,4 +1,4 @@
-import { INIT_CART } from '../constants'
+import { DESTROY_CART, INIT_CART } from '../constants'
 import { HYDRATE } from 'next-redux-wrapper'
 
 const initialState = {
@@ -31,6 +31,14 @@ const reducer = (state = initialState, action: any) => {
         }, 0),
       }
     }
+
+    case DESTROY_CART : {
+      return {
+        ...state, cartList: [],
+        totalPrice: 0,
+      }
+    }
+
     default:
       return state
   }

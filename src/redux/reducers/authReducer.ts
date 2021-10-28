@@ -5,6 +5,7 @@ import { INIT_USER, LOGOUT } from '../constants'
 
 const initialState = {
   user: {},
+  isLogin: false,
 }
 
 const reducer = (state = initialState, action: any) => {
@@ -17,17 +18,17 @@ const reducer = (state = initialState, action: any) => {
       const { user: userState } = state
       return {
         ...state,
-        user: user?.id ? user : userState,
+        user: user?.id ? user : userState, isLogin: !!user?.id,
       }
     }
     case INIT_USER : {
       return {
-        ...state, user: action.user,
+        ...state, user: action.user, isLogin: true,
       }
     }
     case LOGOUT : {
       return {
-        ...state, user: {},
+        ...state, user: {}, isLogin: false,
       }
     }
     default:
