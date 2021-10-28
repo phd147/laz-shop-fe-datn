@@ -25,6 +25,8 @@ export interface ProductIntroProps {
   price: number
   id?: string | number
   shop?: object
+  averageStar : string
+  totalReview : number
 }
 
 const ProductIntro: React.FC<ProductIntroProps> = ({
@@ -33,6 +35,8 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                                                      price = 200,
                                                      id,
                                                      shop,
+                                                     averageStar,
+                                                     totalReview
                                                    }) => {
   const [selectedImage, setSelectedImage] = useState(0)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -160,9 +164,9 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
           <FlexBox alignItems='center' mb={2}>
             <Box lineHeight='1'>Rated:</Box>
             <Box mx={1} lineHeight='1'>
-              <BazarRating color='warn' fontSize='1.25rem' value={4} readOnly />
+              <BazarRating color='warn' fontSize='1.25rem' value={Math.floor(Number(averageStar))} readOnly />
             </Box>
-            <H6 lineHeight='1'>(50)</H6>
+            <H6 lineHeight='1'>({totalReview})</H6>
           </FlexBox>
 
           <Box mb={3}>

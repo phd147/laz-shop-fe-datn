@@ -74,12 +74,12 @@ const ProductDetails = () => {
   }
 
 
-  const { imageUrl, price, shop, description, name } = product
+  const { imageUrl, price, shop, description, name, averageStar, totalReview  :  totalReviews} = product
 
 
   return (
     <NavbarLayout>
-      <ProductIntro imageUrl={[imageUrl]} price={price} shop={shop} name={name} />
+      <ProductIntro totalReview={totalReviews}  averageStar={averageStar} imageUrl={[imageUrl]} price={price} shop={shop} name={name} />
 
       <StyledTabs
         value={selectedOption}
@@ -94,7 +94,7 @@ const ProductDetails = () => {
       <Box mb={6}>
         {selectedOption === 0 && <ProductDescription description={description} />}
         {selectedOption === 1 && <ProductReview lastPage={lastPage} itemId={id} action={{
-          getComments, setComments, setTotalReview, setLastPage,
+          getComments, setComments, setTotalReview, setLastPage,fetchProductDetail
         }} comments={comments} />}
       </Box>
 

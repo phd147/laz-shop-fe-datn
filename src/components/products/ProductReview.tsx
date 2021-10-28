@@ -29,6 +29,7 @@ const ProductReview: React.FC<ProductReviewProps> = ({ comments, itemId, action,
       })
       action.setTotalReview(state => state + 1)
       action.setLastPage(res.data.last_page)
+      action.fetchProductDetail()
     } catch (err) {
       toast.error('Error')
     }

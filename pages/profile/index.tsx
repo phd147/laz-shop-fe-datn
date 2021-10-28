@@ -18,13 +18,6 @@ const Profile = () => {
 
   const { user } = useSelector(state => state.authReducer)
 
-  const [infor, setInfor] = useState({
-    avatarUrl: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-  })
-
   useEffect(() => {
   }, [])
 

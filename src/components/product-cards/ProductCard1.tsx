@@ -30,7 +30,7 @@ import { instance } from '../../api/api'
 export interface ProductCard1Props {
   className?: string
   style?: CSSProperties
-  rating?: number
+  averageStar?: string
   hoverEffect?: boolean
   // imgUrl: string
   imageUrl: string;
@@ -130,7 +130,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                                                      name,
                                                      price,
                                                      off = 0,
-                                                     rating = 5,
+                                                     averageStar = 0,
                                                      hoverEffect,
                                                      shop,
                                                    }) => {
@@ -212,7 +212,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
               </a>
             </Link>
 
-            <BazarRating value={rating || 0} color='warn' readOnly />
+            <BazarRating value={Math.floor(Number(averageStar)) || 0} color='warn' readOnly />
 
             <FlexBox alignItems='center' mt={0.5}>
               {/*<Box pr={1} fontWeight='600' color='primary.main'>*/}

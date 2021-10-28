@@ -50,7 +50,7 @@ const Section2 = () => {
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
-                rating={4}
+                averageStar={item.averageStar}
                 price={item.price}
                 off={20}
                 disableAddToCart={true}
