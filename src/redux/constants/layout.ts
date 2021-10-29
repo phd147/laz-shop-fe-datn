@@ -2,3 +2,5 @@ export const POP_UP_LOGIN_SAGA = 'POP_UP_LOGIN_SAGA'
 
 export const POP_UP_LOGIN = 'POP_UP_LOGIN'
 
+export const TOGGLE_SHOW_CHAT = 'TOGGLE_SHOW_CHAT'
+

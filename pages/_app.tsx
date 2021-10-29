@@ -24,7 +24,12 @@ import cookie from 'cookie'
 
 import { instance } from '../src/api/api'
 import { ToastContainer } from 'react-toastify'
-import { INIT_CART } from '../src/redux/constants'
+import { INIT_CART, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
+import { ChangeAmount } from '../src/constants/cart'
+import { toggleLoginPopup } from '../src/redux/actions'
+import BazarButton from '@component/BazarButton'
+import layoutReducer from '../src/redux/reducers/layoutReducer'
+import Chat from '@component/chat/chat'
 
 export const cache = createCache({ key: 'css', prepend: true })
 
@@ -40,6 +45,9 @@ const App = ({ Component, pageProps }: any) => {
   const Layout = Component.layout || Fragment
 
   const dispatch = useDispatch()
+
+  const { isShowChat } = useSelector(state => state.layoutReducer)
+
 
   useEffect(() => {
     // initUser()
@@ -81,6 +89,25 @@ const App = ({ Component, pageProps }: any) => {
           <Layout>
             <ToastContainer />
             <Component {...pageProps} />
+            <BazarButton
+              variant='contained'
+              color='primary'
+              style={{ position: 'fixed', bottom: '10px', right: '10px' }}
+              sx={{
+                mb: '36px',
+                px: '1.75rem',
+                height: '40px',
+              }}
+              onClick={() => dispatch({type : TOGGLE_SHOW_CHAT})}
+            >
+              Messages
+            </BazarButton>
+            {
+              isShowChat ? <div style={{ position: 'fixed', bottom: '0px', right: '20px' }}>
+                <Chat width={'650px'} height={'500px'} />
+              </div> : null
+            }
+
           </Layout>
         </MuiTheme>
       </AppProvider>
