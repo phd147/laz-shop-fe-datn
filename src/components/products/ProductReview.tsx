@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import ProductComment from './ProductComment'
 import { toast } from 'react-toastify'
 import { instance } from '../../api/api'
+import { useSelector } from 'react-redux'
 
 export interface ProductReviewProps {
   itemId: number,
@@ -17,8 +18,12 @@ export interface ProductReviewProps {
 }
 
 const ProductReview: React.FC<ProductReviewProps> = ({ comments, itemId, action, lastPage }) => {
+
+  const { isLogin } = useSelector(state => state.authReducer)
+
   const handleFormSubmit = async (values: any, { resetForm }: any) => {
     console.log(values)
+
     try {
       const res = await instance.post(`/items/${itemId}/comments`, values)
       resetForm()
@@ -71,59 +76,63 @@ const ProductReview: React.FC<ProductReviewProps> = ({ comments, itemId, action,
           }}
         />}
       </FlexBox>
+      {isLogin ?
+        <>
+          <H2 fontWeight='600' mt={7} mb={2.5}>
+            Write a Review for this product
+          </H2>
 
-      <H2 fontWeight='600' mt={7} mb={2.5}>
-        Write a Review for this product
-      </H2>
+          <form onSubmit={handleSubmit}>
+            <Box mb={2.5}>
+              <FlexBox mb={1.5}>
+                <H5 color='grey.700' mr={0.75}>
+                  Your Rating
+                </H5>
+                <H5 color='error.main'>*</H5>
+              </FlexBox>
+              <Rating
+                color='warn'
+                size='medium'
+                value={values.star || 0}
+                onChange={(_, value) => setFieldValue('star', value)}
+              />
+            </Box>
 
-      <form onSubmit={handleSubmit}>
-        <Box mb={2.5}>
-          <FlexBox mb={1.5}>
-            <H5 color='grey.700' mr={0.75}>
-              Your Rating
-            </H5>
-            <H5 color='error.main'>*</H5>
-          </FlexBox>
-          <Rating
-            color='warn'
-            size='medium'
-            value={values.star || 0}
-            onChange={(_, value) => setFieldValue('star', value)}
-          />
-        </Box>
+            <Box mb={3}>
+              <FlexBox mb={1.5}>
+                <H5 color='grey.700' mr={0.75}>
+                  Your Review
+                </H5>
+                <H5 color='error.main'>*</H5>
+              </FlexBox>
 
-        <Box mb={3}>
-          <FlexBox mb={1.5}>
-            <H5 color='grey.700' mr={0.75}>
-              Your Review
-            </H5>
-            <H5 color='error.main'>*</H5>
-          </FlexBox>
+              <TextField
+                name='content'
+                placeholder='Write a review here...'
+                variant='outlined'
+                multiline
+                fullWidth
+                rows={8}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.content || ''}
+                error={!!touched.content && !!errors.content}
+                helperText={touched.content && errors.content}
+              />
+            </Box>
 
-          <TextField
-            name='content'
-            placeholder='Write a review here...'
-            variant='outlined'
-            multiline
-            fullWidth
-            rows={8}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.content || ''}
-            error={!!touched.content && !!errors.content}
-            helperText={touched.content && errors.content}
-          />
-        </Box>
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              disabled={!(dirty && isValid)}
+            >
+              Submit
+            </Button>
+          </form>
+        </> : null
+      }
 
-        <Button
-          variant='contained'
-          color='primary'
-          type='submit'
-          disabled={!(dirty && isValid)}
-        >
-          Submit
-        </Button>
-      </form>
     </Box>
   )
 }
