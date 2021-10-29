@@ -13,7 +13,6 @@ const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case HYDRATE: {
       const { user } = payload.authReducer
-      const { cartList } = payload.cartReducer
       console.log('user in hydrate action ', user)
       const { user: userState } = state
       return {

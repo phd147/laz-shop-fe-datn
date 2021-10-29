@@ -1,5 +1,5 @@
 import '../public/global.css'
-import { AppProvider, useAppContext } from '@context/app/AppContext'
+import { AppProvider } from '@context/app/AppContext'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import MuiTheme from '@theme/MuiTheme'
@@ -24,12 +24,11 @@ import cookie from 'cookie'
 
 import { instance } from '../src/api/api'
 import { ToastContainer } from 'react-toastify'
-import { INIT_CART, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
-import { ChangeAmount } from '../src/constants/cart'
-import { toggleLoginPopup } from '../src/redux/actions'
+import { INIT_CART, INIT_SOCKET_CLIENT, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
 import BazarButton from '@component/BazarButton'
-import layoutReducer from '../src/redux/reducers/layoutReducer'
 import Chat from '@component/chat/chat'
+import { ChatType } from '../src/constants/chat'
+import { createSocketClient } from '../src/socket/socket-client'
 
 export const cache = createCache({ key: 'css', prepend: true })
 
@@ -47,18 +46,36 @@ const App = ({ Component, pageProps }: any) => {
   const dispatch = useDispatch()
 
   const { isShowChat } = useSelector(state => state.layoutReducer)
+  const { isLogin } = useSelector(state => state.authReducer)
 
 
   useEffect(() => {
-    // initUser()
-    const { userInfo } = pageProps
-    if (userInfo) {
-      console.log({ userInfo })
-      // dispatch({
-      //   type: 'INIT_USER_INFO',
-      //   data: userInfo,
-      // })
+
+
+    // connect socket
+
+    const socket = createSocketClient()
+
+    dispatch({
+      type: INIT_SOCKET_CLIENT,
+      socketClient: socket,
+    })
+
+    // TODO : declare listen global event
+    if (socket) {
+      console.log('socket is change')
+      console.log('socket client is dispatched', socket)
+
+      socket.on('connect', () => {
+        console.log('connected successfully')
+      })
+
+      socket.on('hello', data => {
+        console.log({ data })
+      })
     }
+
+
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
@@ -89,22 +106,24 @@ const App = ({ Component, pageProps }: any) => {
           <Layout>
             <ToastContainer />
             <Component {...pageProps} />
-            <BazarButton
-              variant='contained'
-              color='primary'
-              style={{ position: 'fixed', bottom: '10px', right: '10px' }}
-              sx={{
-                mb: '36px',
-                px: '1.75rem',
-                height: '40px',
-              }}
-              onClick={() => dispatch({type : TOGGLE_SHOW_CHAT})}
-            >
-              Messages
-            </BazarButton>
             {
-              isShowChat ? <div style={{ position: 'fixed', bottom: '0px', right: '20px' }}>
-                <Chat width={'650px'} height={'500px'} />
+              (!isShowChat ) ? <BazarButton
+                variant='contained'
+                color='primary'
+                style={{ position: 'fixed', bottom: '10px', right: '10px' }}
+                sx={{
+                  mb: '36px',
+                  px: '1.75rem',
+                  height: '40px',
+                }}
+                onClick={() => dispatch({ type: TOGGLE_SHOW_CHAT })}
+              >
+                Messages
+              </BazarButton> : null
+            }
+            {
+              isShowChat ? <div style={{ position: 'fixed', bottom: '0px', right: '20px', zIndex: 1000 }}>
+                <Chat chatType={ChatType.USER} height={'500px'} />
               </div> : null
             }
 
@@ -136,6 +155,9 @@ App.getInitialProps = wrapper.getInitialAppProps(store => async (appContext: any
     const cookies = cookie.parse(headers.cookie || '')
     console.log({ cookies })
     console.log('real cookie ', headers.cookie)
+
+    const cookieHeader = headers.cookie
+
     // SERVER SIDE
     try {
       const response = await instance.get('/me', {

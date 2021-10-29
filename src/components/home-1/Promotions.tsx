@@ -26,7 +26,7 @@ const Promotions = () => {
               showArrow={true}
               spacing='0px'
             >
-              <CarouselCard1 imageUrl={'https://icms-image.slatic.net/images/ims-web/e3e28fdb-1089-4897-9894-e261812503e4.jpg'}  content={'Test'}/>
+              <CarouselCard1 imageUrl={'https://icms-image.slatic.net/images/ims-web/20f69816-a808-4d4f-97ea-9513698716ef.jpg'}  content={'Test'}/>
               <CarouselCard1 imageUrl={'https://icms-image.slatic.net/images/ims-web/49f6510d-46a5-4449-87c1-78324160e69c.jpg'}  content={'Test'}/>
               <CarouselCard1 imageUrl={'https://icms-image.slatic.net/images/ims-web/3cc7e9cb-f3b0-4a13-b9ca-fb339a6a2e60.jpg'}  content={'Test'}/>
               {/*<CarouselCard1 />*/}

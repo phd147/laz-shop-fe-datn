@@ -4,9 +4,10 @@ import cartReducer from './reducers/cartReducer'
 import itemReducer from './reducers/itemReducer'
 import categoryReducer from './reducers/categoryReducer'
 import layoutReducer from './reducers/layoutReducer'
+import chatReducer from './reducers/chatReducer'
 
 const combine = combineReducers({
-  authReducer, cartReducer, itemReducer, categoryReducer, layoutReducer,
+  authReducer, cartReducer, itemReducer, categoryReducer, layoutReducer, chatReducer,
 })
 
 export default combine

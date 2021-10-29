@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   MainContainer,
   ChatContainer,
@@ -20,10 +20,24 @@ import {
   // ExpansionPanel,
 } from '@chatscope/chat-ui-kit-react'
 import { TOGGLE_SHOW_CHAT } from '../../redux/constants'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { ChatType } from '../../constants/chat'
+
+import { socket } from '../../socket/socket-client'
+import chatReducer from '../../redux/reducers/chatReducer'
+
+interface ChatProps {
+  width?: string;
+  height: string;
+  chatType: ChatType
+}
 
 
-export default function Chat({ height = '600px', width = 'auto' }: any) {
+export default function Chat({ height = '600px', width = 'auto', chatType }: ChatProps) {
+
+  const { socketClient: socket } = useSelector(state => state.chatReducer)
+  console.log({ socket })
 
   const dispatch = useDispatch()
 
@@ -38,6 +52,22 @@ export default function Chat({ height = '600px', width = 'auto' }: any) {
   const inputChangeHandler = event => {
     console.log(event.target.files)
   }
+
+
+  const sendMessageHandler = () => {
+    socket.emit('SHOP_CHAT', {
+      name: 'phd',
+      content: messageInputValue,
+    }, res => {
+      console.log('socket res', res)
+    })
+    setMessageInputValue('')
+  }
+  // check socket is dispatched or not
+
+  useEffect(() => {
+  }, [])
+
 
   const lillyIco = 'https://cdn-icons-png.flaticon.com/512/147/147144.png'
   const joeIco = 'https://cdn1.vectorstock.com/i/1000x1000/31/95/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg'
@@ -210,7 +240,7 @@ export default function Chat({ height = '600px', width = 'auto' }: any) {
           </MessageList>
           <MessageInput onAttachClick={onClickHandler} attachButton={true}
                         placeholder='Type message here' value={messageInputValue}
-                        onChange={val => setMessageInputValue(val)} onSend={() => setMessageInputValue('')} />
+                        onChange={val => setMessageInputValue(val)} onSend={sendMessageHandler} />
         </ChatContainer>
 
         {/*<Sidebar position="right">*/}

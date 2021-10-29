@@ -1,0 +1,1 @@
+export const INIT_SOCKET_CLIENT = 'INIT_SOCKET_CLIENT';

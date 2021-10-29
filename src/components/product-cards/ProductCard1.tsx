@@ -144,9 +144,6 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
   const {isLogin} = useSelector(state => state.authReducer);
 
-
-  console.log({ id })
-
   const classes = useStyles({ hoverEffect })
 
   const toggleDialog = useCallback(() => {
