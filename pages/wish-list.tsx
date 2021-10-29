@@ -40,11 +40,11 @@ const WishList = () => {
       <DashboardPageHeader
         title='My Wish List'
         icon={Favorite}
-        button={
-          <Button color='primary' sx={{ px: '2rem', bgcolor: 'primary.light' }}>
-            Add All to Cart
-          </Button>
-        }
+        // button={
+        //   <Button color='primary' sx={{ px: '2rem', bgcolor: 'primary.light' }}>
+        //     Add All to Cart
+        //   </Button>
+        // }
         navigation={<CustomerDashboardNavigation />}
       />
 
