@@ -13,6 +13,8 @@ import React, { Fragment, useEffect } from 'react'
 
 import 'react-toastify/dist/ReactToastify.css'
 
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
+
 import { useDispatch, useSelector } from 'react-redux'
 // @ts-ignore
 import { wrapper } from '../src/redux/store'

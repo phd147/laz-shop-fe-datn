@@ -3,7 +3,10 @@ import { Paragraph } from '@component/Typography'
 import { Box, Button, Grid, styled } from '@material-ui/core'
 import React from 'react'
 
-export interface CarouselCard1Props {}
+export interface CarouselCard1Props {
+  imageUrl: string
+  content: string
+}
 
 const StyledBox = styled(Box)(({ theme }) => ({
   textAlign: 'left',
@@ -48,34 +51,34 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }))
 
-const CarouselCard1: React.FC<CarouselCard1Props> = () => {
+const CarouselCard1: React.FC<CarouselCard1Props> = ({imageUrl, content}) => {
   return (
     <StyledBox>
-      <Grid container spacing={3} alignItems="center" justifyContent="center">
-        <Grid item className="grid-item" sm={5} xs={12}>
-          <h1 className="title">50% de descuento en tu primer compra</h1>
-          <Paragraph color="secondary.main" mb={2.7}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis lobortis
-            consequat eu, quam etiam at quis ut convalliss.
-          </Paragraph>
-          <Button
-            className="button-link"
-            variant="contained"
-            color="primary"
-            disableElevation
-            sx={{
-              px: '1.75rem',
-              height: '44px',
-              borderRadius: '8px',
-            }}
-          >
-            Compra ahora
-          </Button>
-        </Grid>
-        <Grid item sm={5} xs={12}>
+      <Grid container spacing={3} alignItems='center' justifyContent='center'>
+      {/*  <Grid item className='grid-item' sm={5} xs={12}>*/}
+      {/*    <h1 className='title'>50% sales</h1>*/}
+      {/*    <Paragraph color='secondary.main' mb={2.7}>*/}
+      {/*      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis lobortis*/}
+      {/*      consequat eu, quam etiam at quis ut convalliss.*/}
+      {/*    </Paragraph>*/}
+      {/*    <Button*/}
+      {/*      className='button-link'*/}
+      {/*      variant='contained'*/}
+      {/*      color='primary'*/}
+      {/*      disableElevation*/}
+      {/*      sx={{*/}
+      {/*        px: '1.75rem',*/}
+      {/*        height: '44px',*/}
+      {/*        borderRadius: '8px',*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      ENJOY*/}
+      {/*    </Button>*/}
+      {/*  </Grid>*/}
+        <Grid item sm={12} xs={12}>
           <BazarImage
-            src="/assets/images/grocery/1.jpg"
-            alt="imagen1"
+            src={imageUrl}
+            alt='imagen1'
             sx={{
               display: 'block',
               mx: 'auto',
