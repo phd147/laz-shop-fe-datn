@@ -16,8 +16,9 @@ import FlexBox from '../FlexBox'
 import { ChangeAmount } from '../../constants/cart'
 import { useDispatch, useSelector } from 'react-redux'
 import cartReducer from '../../redux/reducers/cartReducer'
-import { CHANGE_AMOUNT_CART_ITEM_SAGA } from '../../redux/constants'
+import { CHANGE_AMOUNT_CART_ITEM_SAGA, CHANGE_USER_CHAT_HEADER_INFO, TOGGLE_SHOW_CHAT } from '../../redux/constants'
 import { toggleLoginPopup } from '../../redux/actions'
+import chatReducer from '../../redux/reducers/chatReducer'
 
 
 export interface ProductIntroProps {
@@ -50,6 +51,9 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   const { cartList } = useSelector(state => state.cartReducer)
 
   const { isLogin } = useSelector(state => state.authReducer)
+
+  const { user } = useSelector(state => state.chatReducer)
+
 
   const cartItem = cartList.filter(cartItem => cartItem.item.id.toString() === itemId)[0]
   console.log({ cartItem })
@@ -86,6 +90,30 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   //   },
   //   [],
   // )
+
+  const chatWithShopHandler = () => {
+
+    dispatch({
+      type: 'INIT_CONVERSATION_WITH_SHOP',
+      shop,
+    })
+
+    dispatch({
+      type: CHANGE_USER_CHAT_HEADER_INFO,
+      currentHeaderInfo: {
+        id: shop.id,
+        name: shop.name,
+        avatarUrl: shop.avatarUrl,
+        type: 'SHOP',
+        queryId: `SHOP_${shop.id}`,
+      },
+    })
+    dispatch({
+      type: TOGGLE_SHOW_CHAT,
+    })
+
+
+  }
 
 
   const handleCartAmountChange = async (type: ChangeAmount) => {
@@ -188,7 +216,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 px: '1.75rem',
                 height: '40px',
               }}
-              onClick={ isLogin ? () => handleCartAmountChange(ChangeAmount.INCREMENT) : () => dispatch(toggleLoginPopup())}
+              onClick={isLogin ? () => handleCartAmountChange(ChangeAmount.INCREMENT) : () => dispatch(toggleLoginPopup())}
             >
               Add to Cart
             </BazarButton>
@@ -218,6 +246,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
               >
                 <Add fontSize='small' />
               </BazarButton>
+
             </FlexBox>
           )}
 
@@ -228,6 +257,18 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 <H6 ml={1}>{shop?.name}</H6>
               </a>
             </Link>
+            <BazarButton
+              variant='contained'
+              color='primary'
+              sx={{
+                mb: '36px',
+                px: '1.75rem',
+                height: '40px',
+              }}
+              onClick={chatWithShopHandler}
+            >
+              Chat with shop
+            </BazarButton>
           </FlexBox>
         </Grid>
       </Grid>

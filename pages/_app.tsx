@@ -24,11 +24,12 @@ import cookie from 'cookie'
 
 import { instance } from '../src/api/api'
 import { ToastContainer } from 'react-toastify'
-import { INIT_CART, INIT_SOCKET_CLIENT, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
+import { CHAT_WITH_SHOP, CHAT_WITH_USER, INIT_CART, INIT_SOCKET_CLIENT, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
 import BazarButton from '@component/BazarButton'
-import Chat from '@component/chat/chat'
+import UserChat from '@component/chat/user_chat'
 import { ChatType } from '../src/constants/chat'
 import { createSocketClient } from '../src/socket/socket-client'
+import { toggleLoginPopup } from '../src/redux/actions'
 
 export const cache = createCache({ key: 'css', prepend: true })
 
@@ -48,12 +49,12 @@ const App = ({ Component, pageProps }: any) => {
   const { isShowChat } = useSelector(state => state.layoutReducer)
   const { isLogin } = useSelector(state => state.authReducer)
 
+  const { user } = useSelector(state => state.authReducer)
+
+  const { socketClient: socketClient } = useSelector(state => state.chatReducer)
 
   useEffect(() => {
-
-
     // connect socket
-
     const socket = createSocketClient()
 
     dispatch({
@@ -62,20 +63,6 @@ const App = ({ Component, pageProps }: any) => {
     })
 
     // TODO : declare listen global event
-    if (socket) {
-      console.log('socket is change')
-      console.log('socket client is dispatched', socket)
-
-      socket.on('connect', () => {
-        console.log('connected successfully')
-      })
-
-      socket.on('hello', data => {
-        console.log({ data })
-      })
-    }
-
-
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
@@ -93,6 +80,28 @@ const App = ({ Component, pageProps }: any) => {
   //   getCart()
   // }, [])
 
+  useEffect(() => {
+    console.log('use effect socketClient', socketClient)
+    if (socketClient) {
+      socketClient.on('CHAT_WITH_SHOP', data => {
+        console.log('receive CHAT_WITH_SHOP event', data)
+        dispatch({
+          type: CHAT_WITH_SHOP,
+          data,
+        })
+      })
+
+      socketClient.on('CHAT_WITH_USER', data => {
+        console.log('receive CHAT_WITH_USER event', data)
+        dispatch({
+          type: CHAT_WITH_USER,
+          data,
+        })
+      })
+    }
+  }, [socketClient])
+
+
   return (
     <CacheProvider value={cache}>
       <Head>
@@ -107,7 +116,7 @@ const App = ({ Component, pageProps }: any) => {
             <ToastContainer />
             <Component {...pageProps} />
             {
-              (!isShowChat ) ? <BazarButton
+              (!isShowChat) ? <BazarButton
                 variant='contained'
                 color='primary'
                 style={{ position: 'fixed', bottom: '10px', right: '10px' }}
@@ -116,14 +125,14 @@ const App = ({ Component, pageProps }: any) => {
                   px: '1.75rem',
                   height: '40px',
                 }}
-                onClick={() => dispatch({ type: TOGGLE_SHOW_CHAT })}
+                onClick={isLogin ? () => dispatch({ type: TOGGLE_SHOW_CHAT }) : () => dispatch(toggleLoginPopup())}
               >
                 Messages
               </BazarButton> : null
             }
             {
               isShowChat ? <div style={{ position: 'fixed', bottom: '0px', right: '20px', zIndex: 1000 }}>
-                <Chat chatType={ChatType.USER} height={'500px'} />
+                <UserChat chatType={ChatType.USER} height={'500px'} />
               </div> : null
             }
 
