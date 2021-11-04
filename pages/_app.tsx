@@ -98,6 +98,11 @@ const App = ({ Component, pageProps }: any) => {
           data,
         })
       })
+
+      socketClient.on('connect_error', () => {
+        console.log('connect_error EVENT')
+      })
+
     }
   }, [socketClient])
 
