@@ -22,7 +22,7 @@ import {
 import {
   CHANGE_SHOP_CHAT_HEADER_INFO,
   CHANGE_USER_CHAT_HEADER_INFO,
-  CHAT_WITH_SHOP_SUCCESS, INIT_USER_CONVERSATION_LIST, INIT_USER_MESSAGE_LIST,
+  CHAT_WITH_SHOP_SUCCESS, CHAT_WITH_USER_SUCCESS, INIT_USER_CONVERSATION_LIST, INIT_USER_MESSAGE_LIST,
   TOGGLE_SHOW_CHAT,
 } from '../../redux/constants'
 import { useDispatch, useSelector } from 'react-redux'
@@ -67,8 +67,36 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
     console.log(fileInput.current.click())
   }
 
-  const inputChangeHandler = event => {
+  const inputChangeHandler = async event => {
     console.log(event.target.files)
+
+    const formData = new FormData()
+    formData.append('media', event.target.files[0])
+
+    const res = await instance.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    socket.emit('CHAT_WITH_SHOP', {
+        receiver: {
+          id,
+          type,
+          avatarUrl,
+          name,
+        },
+      content: '',
+      attachment: {
+        url: res.data,
+      },
+      type: 'IMAGE',
+    }, res => {
+      dispatch({
+        type: CHAT_WITH_SHOP_SUCCESS,
+        data: res,
+      })
+    })
   }
 
 
@@ -121,7 +149,7 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
       position: 'relative',
       width: width,
     }}>
-      <input onChange={inputChangeHandler} ref={fileInput} style={{ display: 'none' }} type='file' id='file-input' />
+      <input onChange={inputChangeHandler} ref={fileInput} style={{ display: 'none' }} type='file' id='file-input' accept="image/*" />
       <MainContainer responsive>
         <Sidebar position={'left'} scrollable={false}>
           {/*<Search placeholder='Search...' />*/}
@@ -265,20 +293,39 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
 
               {
                 user.messageList[user.currentHeaderInfo?.queryId]?.map(message => {
-                  console.log({ message })
-                  return (
-                    <Message key={nanoid()} model={{
-                      message: message.content,
-                      // sentTime: '15 mins ago',
-                      sender: message.sender.name,
-                      // direction: 'incoming',
-                      direction: message.sender.type === 'USER' ? 'outgoing' : 'incoming',
-                      position: 'single',
-                    }} avatarSpacer={message.sender.type === 'USER'}>
-                      {message.sender.type === 'USER' ? null :
-                        <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
-                    </Message>
-                  )
+
+                  switch (message.messageType){
+                    case 'TEXT' :
+                      return (
+                        <Message key={nanoid()} model={{
+                          message: message.content,
+                          // sentTime: '15 mins ago',
+                          sender: message.sender.name,
+                          // direction: 'incoming',
+                          direction: message.sender.type === 'USER' ? 'outgoing' : 'incoming',
+                          position: 'single',
+                        }} avatarSpacer={message.sender.type === 'USER'}>
+                          {message.sender.type === 'USER' ? null :
+                            <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
+                        </Message>
+                      )
+                    case 'IMAGE' :
+                      return (
+                        <Message key={nanoid()} model={{
+                          // message: message.content,
+                          // sentTime: '15 mins ago',
+                          sender: message.sender.name,
+                          // direction: 'incoming',
+                          direction: message.sender.type === 'USER' ? 'outgoing' : 'incoming',
+                          // position: 'single',
+                        }} avatarSpacer={message.sender.type === 'USER'}>
+                          {message.sender.type === 'USER' ? null :
+                            <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
+                          <Message.ImageContent src={message.attachment.url} width={400}   />
+                        </Message>
+                      )
+                  }
+
                 })
               }
 

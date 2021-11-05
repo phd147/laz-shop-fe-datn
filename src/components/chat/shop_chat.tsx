@@ -64,8 +64,37 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
     console.log(fileInput.current.click())
   }
 
-  const inputChangeHandler = event => {
+  const inputChangeHandler = async event => {
     console.log(event.target.files)
+
+    const formData = new FormData()
+    formData.append('media', event.target.files[0])
+
+    const res = await instance.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    socket.emit('CHAT_WITH_USER', {
+      receiver: {
+        id: shop.currentHeaderInfo.id,
+        type: 'USER',
+        avatarUrl: shop.currentHeaderInfo.avatarUrl,
+        name: shop.currentHeaderInfo.name,
+        queryId: `USER_${shop.currentHeaderInfo.id}`,
+      },
+      content: '',
+      attachment: {
+        url: res.data,
+      },
+      type: 'IMAGE',
+    }, res => {
+      dispatch({
+        type: CHAT_WITH_USER_SUCCESS,
+        data: res,
+      })
+    })
   }
 
 
@@ -102,20 +131,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
     }
   }, [socket])
 
-
-  const lillyIco = 'https://cdn-icons-png.flaticon.com/512/147/147144.png'
-  const joeIco = 'https://cdn1.vectorstock.com/i/1000x1000/31/95/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg'
-
-  const emilyIco = 'https://toigingiuvedep.vn/wp-content/uploads/2021/05/hinh-anh-avatar-trang-dep-1.jpg'
-  const kaiIco = 'https://allimages.sgp1.digitaloceanspaces.com/photographercomvn/2020/09/Tong-hop-hinh-anh-avatar-hai-huoc-nhin-la-bat.jpg'
-  const akaneIco = 'https://i.ytimg.com/vi/8_Skx7B7MwQ/hqdefault.jpg'
-  const eliotIco = 'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg'
-
-  const patrikIco = 'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/4203820/original/cfef84cf8b38aaf4c40a5dadec562ce5fee498bf/create-a-flat-vector-avatar-of-you.jpg'
-  const zoeIco = 'https://i2.wp.com/www.cssscript.com/wp-content/uploads/2020/12/Customizable-SVG-Avatar-Generator-In-JavaScript-Avataaars.js.png?fit=438%2C408&ssl=1'
-
-
-  const onClickConversationItem = async(currentHeaderInfo) => {
+  const onClickConversationItem = async (currentHeaderInfo) => {
     dispatch({
       type: CHANGE_SHOP_CHAT_HEADER_INFO,
       currentHeaderInfo,
@@ -159,7 +175,8 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
       position: 'relative',
       width: width,
     }}>
-      <input onChange={inputChangeHandler} ref={fileInput} style={{ display: 'none' }} type='file' id='file-input' />
+      <input onChange={inputChangeHandler} ref={fileInput} style={{ display: 'none' }} type='file' id='file-input'
+             accept='image/*' />
       <MainContainer responsive>
         <Sidebar position='left' scrollable={false}>
           {/*<Search placeholder='Search...' />*/}
@@ -238,18 +255,38 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
               {/*<MessageSeparator content='Saturday, 30 November 2019' />*/}
               {
                 shop.messageList[shop.currentHeaderInfo?.queryId]?.map(message => {
-                  console.log({ message })
-                  return (
-                    <Message key={nanoid()} model={{
-                      message: message.content,
-                      // sentTime: '15 mins ago',
-                      sender: message.sender.name,
-                      direction: message.sender.type === 'SHOP' ?  'outgoing' : 'incoming',
-                      position: 'single',
-                    }} avatarSpacer={message.sender.type === 'SHOP'}>
-                      {message.sender.type === 'SHOP' ? null :  <Avatar src={message.sender.avatarUrl} name={message.sender.name} /> }
-                    </Message>
-                  )
+
+                  switch(message.messageType){
+                    case 'TEXT' :
+                      return (
+                        <Message key={nanoid()} model={{
+                          message: message.content,
+                          // sentTime: '15 mins ago',
+                          sender: message.sender.name,
+                          direction: message.sender.type === 'SHOP' ? 'outgoing' : 'incoming',
+                          position: 'single',
+                        }} avatarSpacer={message.sender.type === 'SHOP'}>
+                          {message.sender.type === 'SHOP' ? null :
+                            <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
+                        </Message>
+                      )
+
+                    case 'IMAGE' :
+                      return (
+                        <Message key={nanoid()} model={{
+                          // sentTime: '15 mins ago',
+                          sender: message.sender.name,
+                          direction: message.sender.type === 'SHOP' ? 'outgoing' : 'incoming',
+                          position: 'single',
+                        }} avatarSpacer={message.sender.type === 'SHOP'}>
+                          {message.sender.type === 'SHOP' ? null :
+                            <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
+                          <Message.ImageContent src={message.attachment.url} width={400}  />
+                        </Message>
+                      )
+                  }
+
+
                 })
               }
 
@@ -341,7 +378,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
             <MessageInput onAttachClick={onClickHandler} attachButton={true}
                           placeholder='Type message here' value={messageInputValue}
                           onChange={val => setMessageInputValue(val)} onSend={sendMessageHandler} />
-          </ChatContainer> : 'EMPTY'
+          </ChatContainer> : <p>Khi bạn bắt đầu một cuộc trò chuyện mới</p>
         }
 
 

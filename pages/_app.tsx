@@ -68,7 +68,7 @@ const App = ({ Component, pageProps }: any) => {
         conversationList: res.data,
       })
     } catch (err) {
-      toast.error('Error')
+      // toast.error('Error')
     }
   }
 
