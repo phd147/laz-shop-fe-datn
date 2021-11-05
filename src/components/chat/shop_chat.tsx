@@ -22,7 +22,11 @@ import {
 import {
   CHANGE_SHOP_CHAT_HEADER_INFO,
   CHANGE_USER_CHAT_HEADER_INFO,
-  CHAT_WITH_SHOP, CHAT_WITH_SHOP_SUCCESS, CHAT_WITH_USER_SUCCESS,
+  CHAT_WITH_SHOP,
+  CHAT_WITH_SHOP_SUCCESS,
+  CHAT_WITH_USER_SUCCESS,
+  INIT_SHOP_CONVERSATION_LIST, INIT_SHOP_MESSAGE_LIST,
+  INIT_USER_CONVERSATION_LIST, INIT_USER_MESSAGE_LIST,
   TOGGLE_SHOW_CHAT,
 } from '../../redux/constants'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,6 +37,8 @@ import { socket } from '../../socket/socket-client'
 import chatReducer from '../../redux/reducers/chatReducer'
 
 import { nanoid } from 'nanoid'
+import { instance } from '../../api/api'
+import { toast } from 'react-toastify'
 
 
 interface ChatProps {
@@ -109,12 +115,43 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
   const zoeIco = 'https://i2.wp.com/www.cssscript.com/wp-content/uploads/2020/12/Customizable-SVG-Avatar-Generator-In-JavaScript-Avataaars.js.png?fit=438%2C408&ssl=1'
 
 
-  const onClickConversationItem = (currentHeaderInfo) => {
+  const onClickConversationItem = async(currentHeaderInfo) => {
     dispatch({
       type: CHANGE_SHOP_CHAT_HEADER_INFO,
       currentHeaderInfo,
     })
+    const currentMessageList = shop.messageList[currentHeaderInfo.queryId]
+    if (!currentMessageList) {
+      try {
+        const res = await instance.get(`/chat/shops/messages?userId=${currentHeaderInfo.id}`)
+        dispatch({
+          type: INIT_SHOP_MESSAGE_LIST,
+          messages: res.data,
+          userId: currentHeaderInfo.id,
+        })
+      } catch (err) {
+        toast.error('Error')
+      }
+    }
   }
+
+  const fetchConversationList = async () => {
+    try {
+      const res = await instance.get('/chat/shops/conversations')
+      dispatch({
+        type: INIT_SHOP_CONVERSATION_LIST,
+        conversationList: res.data,
+      })
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    // fetch conversation list
+    fetchConversationList()
+
+  }, [])
 
   return (
     <div style={{

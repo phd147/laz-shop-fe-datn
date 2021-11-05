@@ -23,8 +23,15 @@ import { wrapper } from '../src/redux/store'
 import cookie from 'cookie'
 
 import { instance } from '../src/api/api'
-import { ToastContainer } from 'react-toastify'
-import { CHAT_WITH_SHOP, CHAT_WITH_USER, INIT_CART, INIT_SOCKET_CLIENT, TOGGLE_SHOW_CHAT } from '../src/redux/constants'
+import { toast, ToastContainer } from 'react-toastify'
+import {
+  CHAT_WITH_SHOP,
+  CHAT_WITH_USER,
+  INIT_CART,
+  INIT_SOCKET_CLIENT,
+  INIT_USER_CONVERSATION_LIST,
+  TOGGLE_SHOW_CHAT,
+} from '../src/redux/constants'
 import BazarButton from '@component/BazarButton'
 import UserChat from '@component/chat/user_chat'
 import { ChatType } from '../src/constants/chat'
@@ -53,6 +60,18 @@ const App = ({ Component, pageProps }: any) => {
 
   const { socketClient: socketClient } = useSelector(state => state.chatReducer)
 
+  const fetchConversationList = async () => {
+    try {
+      const res = await instance.get('/chat/users/conversations')
+      dispatch({
+        type: INIT_USER_CONVERSATION_LIST,
+        conversationList: res.data,
+      })
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
   useEffect(() => {
     // connect socket
     const socket = createSocketClient()
@@ -68,6 +87,12 @@ const App = ({ Component, pageProps }: any) => {
     if (jssStyles) {
       jssStyles.parentElement!.removeChild(jssStyles)
     }
+
+      // fetch conversation list
+      fetchConversationList()
+
+
+
   }, [])
 
   // const getCart = () => {

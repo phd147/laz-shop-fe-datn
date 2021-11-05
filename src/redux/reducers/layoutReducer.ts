@@ -15,6 +15,12 @@ const layoutReducer = (state = initialState, action: any) => {
       }
 
     case TOGGLE_SHOW_CHAT :
+      if (action.isShow) {
+        return {
+          ...state,
+          isShowChat: true,
+        }
+      }
       return {
         ...state, isShowChat: !state.isShowChat,
       }

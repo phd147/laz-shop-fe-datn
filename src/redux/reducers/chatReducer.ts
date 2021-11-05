@@ -1,8 +1,15 @@
 import {
   CHANGE_SHOP_CHAT_HEADER_INFO,
   CHANGE_USER_CHAT_HEADER_INFO,
-  CHAT_WITH_SHOP, CHAT_WITH_SHOP_SUCCESS, CHAT_WITH_USER, CHAT_WITH_USER_SUCCESS,
+  CHAT_WITH_SHOP,
+  CHAT_WITH_SHOP_SUCCESS,
+  CHAT_WITH_USER,
+  CHAT_WITH_USER_SUCCESS,
+  INIT_CONVERSATION_WITH_SHOP,
+  INIT_SHOP_CONVERSATION_LIST, INIT_SHOP_MESSAGE_LIST,
   INIT_SOCKET_CLIENT,
+  INIT_USER_CONVERSATION_LIST,
+  INIT_USER_MESSAGE_LIST,
 } from '../constants'
 import { HYDRATE } from 'next-redux-wrapper'
 
@@ -139,7 +146,7 @@ const chatReducer = (state = initialState, action: any) => {
       }
 
 
-    case 'INIT_CONVERSATION_WITH_SHOP' :
+    case INIT_CONVERSATION_WITH_SHOP :
 
       const newUser3 = { ...state.user }
 
@@ -166,6 +173,52 @@ const chatReducer = (state = initialState, action: any) => {
       return {
         ...state, user: newUser3,
       }
+
+    case INIT_USER_CONVERSATION_LIST :
+      const newUser5 = {
+        ...state.user,
+      }
+      newUser5.conversationList = action.conversationList
+
+      return {
+        ...state, user: newUser5,
+      }
+
+    case INIT_SHOP_CONVERSATION_LIST:
+      const newShop3 = {
+        ...state.shop,
+      }
+
+      newShop3.conversationList = action.conversationList
+
+      return {
+        ...state, shop: newShop3,
+      }
+    case INIT_USER_MESSAGE_LIST :
+      const newUser6 = {
+        ...state.user,
+      }
+
+      const { shopId, messages } = action
+
+      newUser6.messageList[`SHOP_${shopId}`] = messages
+
+      return {
+        ...state, user: newUser6,
+      }
+    case INIT_SHOP_MESSAGE_LIST :
+      const newShop6 = {
+        ...state.shop,
+      }
+
+      const { userId, messages : shopMessage } = action
+
+      newShop6.messageList[`USER_${userId}`] = shopMessage
+
+      return {
+        ...state, shop: newShop6,
+      }
+
 
     default:
       return state

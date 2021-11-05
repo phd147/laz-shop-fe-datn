@@ -22,7 +22,7 @@ import {
 import {
   CHANGE_SHOP_CHAT_HEADER_INFO,
   CHANGE_USER_CHAT_HEADER_INFO,
-  CHAT_WITH_SHOP_SUCCESS,
+  CHAT_WITH_SHOP_SUCCESS, INIT_USER_CONVERSATION_LIST, INIT_USER_MESSAGE_LIST,
   TOGGLE_SHOW_CHAT,
 } from '../../redux/constants'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,6 +32,8 @@ import { ChatType } from '../../constants/chat'
 import { socket } from '../../socket/socket-client'
 import chatReducer from '../../redux/reducers/chatReducer'
 import { nanoid } from 'nanoid'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
 
 interface ChatProps {
   width?: string;
@@ -49,7 +51,9 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
 
   const { user: userInfo } = useSelector(state => state.authReducer)
 
-  const { currentHeaderInfo } = user
+  let { currentHeaderInfo } = user
+
+  currentHeaderInfo = currentHeaderInfo || {}
 
   const { id, name, type, avatarUrl } = currentHeaderInfo
 
@@ -82,36 +86,33 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
     }, res => {
       console.log('socket res', res)
       dispatch({
-        type : CHAT_WITH_SHOP_SUCCESS,
-        data : res
+        type: CHAT_WITH_SHOP_SUCCESS,
+        data: res,
       })
     })
     setMessageInputValue('')
   }
   // check socket is dispatched or not
 
-  useEffect(() => {
-  }, [])
-
-
-  const lillyIco = 'https://cdn-icons-png.flaticon.com/512/147/147144.png'
-  const joeIco = 'https://cdn1.vectorstock.com/i/1000x1000/31/95/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg'
-
-  const emilyIco = 'https://toigingiuvedep.vn/wp-content/uploads/2021/05/hinh-anh-avatar-trang-dep-1.jpg'
-  const kaiIco = 'https://allimages.sgp1.digitaloceanspaces.com/photographercomvn/2020/09/Tong-hop-hinh-anh-avatar-hai-huoc-nhin-la-bat.jpg'
-  const akaneIco = 'https://i.ytimg.com/vi/8_Skx7B7MwQ/hqdefault.jpg'
-  const eliotIco = 'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg'
-
-  const patrikIco = 'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/4203820/original/cfef84cf8b38aaf4c40a5dadec562ce5fee498bf/create-a-flat-vector-avatar-of-you.jpg'
-  const zoeIco = 'https://i2.wp.com/www.cssscript.com/wp-content/uploads/2020/12/Customizable-SVG-Avatar-Generator-In-JavaScript-Avataaars.js.png?fit=438%2C408&ssl=1'
-
-  const onClickConversationItem = (currentHeaderInfo) => {
+  const onClickConversationItem = async (currentHeaderInfo) => {
     dispatch({
       type: CHANGE_USER_CHAT_HEADER_INFO,
       currentHeaderInfo,
     })
+    const currentMessageList = user.messageList[currentHeaderInfo.queryId]
+    if (!currentMessageList) {
+      try {
+        const res = await instance.get(`/chat/users/messages?shopId=${currentHeaderInfo.id}`)
+        dispatch({
+          type: INIT_USER_MESSAGE_LIST,
+          messages: res.data,
+          shopId: currentHeaderInfo.id,
+        })
+      } catch (err) {
+        toast.error('Error')
+      }
+    }
   }
-
 
 
   return (
@@ -183,7 +184,8 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
 
 
                 return (
-                  <Conversation onClick={() => onClickConversationItem(targetInfo)} name={targetInfo.name}
+                  <Conversation key={nanoid()} onClick={() => onClickConversationItem(targetInfo)}
+                                name={targetInfo.name}
                                 lastSenderName={message.sender.name} info={info}
                                 active={targetInfo?.queryId === user.currentHeaderInfo?.queryId}>
                     <Avatar src={targetInfo.avatarUrl} name={targetInfo.name} />
@@ -270,10 +272,11 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
                       // sentTime: '15 mins ago',
                       sender: message.sender.name,
                       // direction: 'incoming',
-                      direction: message.sender.type === 'USER' ?  'outgoing' : 'incoming',
+                      direction: message.sender.type === 'USER' ? 'outgoing' : 'incoming',
                       position: 'single',
                     }} avatarSpacer={message.sender.type === 'USER'}>
-                      {message.sender.type === 'USER' ? null :  <Avatar src={message.sender.avatarUrl} name={message.sender.name} /> }
+                      {message.sender.type === 'USER' ? null :
+                        <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
                     </Message>
                   )
                 })

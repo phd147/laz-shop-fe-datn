@@ -16,9 +16,16 @@ import FlexBox from '../FlexBox'
 import { ChangeAmount } from '../../constants/cart'
 import { useDispatch, useSelector } from 'react-redux'
 import cartReducer from '../../redux/reducers/cartReducer'
-import { CHANGE_AMOUNT_CART_ITEM_SAGA, CHANGE_USER_CHAT_HEADER_INFO, TOGGLE_SHOW_CHAT } from '../../redux/constants'
+import {
+  CHANGE_AMOUNT_CART_ITEM_SAGA,
+  CHANGE_USER_CHAT_HEADER_INFO, CHANGE_USER_CHAT_HEADER_INFO_SAGA,
+  INIT_CONVERSATION_WITH_SHOP, INIT_USER_MESSAGE_LIST,
+  TOGGLE_SHOW_CHAT,
+} from '../../redux/constants'
 import { toggleLoginPopup } from '../../redux/actions'
 import chatReducer from '../../redux/reducers/chatReducer'
+import { instance } from '../../api/api'
+import { toast } from 'react-toastify'
 
 
 export interface ProductIntroProps {
@@ -91,10 +98,10 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   //   [],
   // )
 
-  const chatWithShopHandler = () => {
+  const chatWithShopHandler = async () => {
 
     dispatch({
-      type: 'INIT_CONVERSATION_WITH_SHOP',
+      type: INIT_CONVERSATION_WITH_SHOP,
       shop,
     })
 
@@ -108,8 +115,24 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
         queryId: `SHOP_${shop.id}`,
       },
     })
+    const currentMessageList = user.messageList[`SHOP_${shop.id}`]
+    if (!currentMessageList) {
+      try {
+        const res = await instance.get(`/chat/users/messages?shopId=${shop.id}`)
+        dispatch({
+          type: INIT_USER_MESSAGE_LIST,
+          messages: res.data,
+          shopId: shop.id,
+        })
+      } catch (err) {
+        toast.error('Error')
+      }
+    }
+
+
     dispatch({
       type: TOGGLE_SHOW_CHAT,
+      isShow: true,
     })
 
 
