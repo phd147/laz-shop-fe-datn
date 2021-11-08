@@ -181,7 +181,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
         <Sidebar position='left' scrollable={false}>
           {/*<Search placeholder='Search...' />*/}
           <ConversationList>
-            {
+            {shop.conversationList.length ?
               shop.conversationList.map(message => {
 
                 console.log({ message })
@@ -206,7 +206,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
                                       active={targetInfo?.queryId === shop.currentHeaderInfo?.queryId}>
                   <Avatar src={targetInfo.avatarUrl} name={targetInfo.name} />
                 </Conversation>)
-              })
+              }) : <p>There are no conversations</p>
             }
 
 
@@ -378,7 +378,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
             <MessageInput onAttachClick={onClickHandler} attachButton={true}
                           placeholder='Type message here' value={messageInputValue}
                           onChange={val => setMessageInputValue(val)} onSend={sendMessageHandler} />
-          </ChatContainer> : <p>Khi bạn bắt đầu một cuộc trò chuyện mới</p>
+          </ChatContainer> : <p>When you start a new conversation</p>
         }
 
 

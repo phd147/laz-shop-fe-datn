@@ -139,7 +139,6 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
   const dispatch = useDispatch();
 
-  const [isFavorite, setIsFavorite] = useState(false)
   const [open, setOpen] = useState(false)
 
   const {isLogin} = useSelector(state => state.authReducer);
@@ -149,15 +148,6 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
   const toggleDialog = useCallback(() => {
     setOpen((open) => !open)
   }, [])
-
-  const toggleIsFavorite = async () => {
-    try {
-      await instance.post(`/items/${id}/favorite`)
-      setIsFavorite((fav) => !fav)
-    } catch (err) {
-      toast.error('Error')
-    }
-  }
 
   return (
     <BazarCard className={classes.root} hoverEffect={hoverEffect}>
@@ -175,13 +165,13 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
           {/*<IconButton sx={{ p: '6px' }} onClick={toggleDialog}>*/}
           {/*  <RemoveRedEye color='secondary' fontSize='small' />*/}
           {/*</IconButton>*/}
-          <IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>
-            {isFavorite ? (
-              <Favorite color='primary' fontSize='small' />
-            ) : (
-              <FavoriteBorder fontSize='small' />
-            )}
-          </IconButton>
+          {/*<IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>*/}
+          {/*  {isFavorite ? (*/}
+          {/*    <Favorite color='primary' fontSize='small' />*/}
+          {/*  ) : (*/}
+          {/*    <FavoriteBorder fontSize='small' />*/}
+          {/*  )}*/}
+          {/*</IconButton>*/}
         </div>
 
         <Link href={`/product/${id}`}>

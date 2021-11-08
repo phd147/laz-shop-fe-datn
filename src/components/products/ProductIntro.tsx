@@ -4,13 +4,13 @@ import BazarRating from '@component/BazarRating'
 import LazyImage from '@component/LazyImage'
 import { H1, H2, H3, H6 } from '@component/Typography'
 import { useAppContext } from '@context/app/AppContext'
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, IconButton } from '@material-ui/core'
 import Add from '@material-ui/icons/Add'
 import Remove from '@material-ui/icons/Remove'
 import { CartItem } from '@reducer/cartReducer'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ImageViewer from 'react-simple-image-viewer'
 import FlexBox from '../FlexBox'
 import { ChangeAmount } from '../../constants/cart'
@@ -26,6 +26,8 @@ import { toggleLoginPopup } from '../../redux/actions'
 import chatReducer from '../../redux/reducers/chatReducer'
 import { instance } from '../../api/api'
 import { toast } from 'react-toastify'
+import Favorite from '@material-ui/icons/Favorite'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 
 
 export interface ProductIntroProps {
@@ -51,13 +53,24 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   const [isViewerOpen, setIsViewerOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
 
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const { isLogin } = useSelector(state => state.authReducer)
+
+  const toggleIsFavorite = async () => {
+    try {
+      const res = await instance.post(`/items/${id}/favorite`)
+      setIsFavorite(res.data.favorite)
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
   const router = useRouter()
   const itemId = router.query.id
 
   const dispatch = useDispatch()
   const { cartList } = useSelector(state => state.cartReducer)
-
-  const { isLogin } = useSelector(state => state.authReducer)
 
   const { user } = useSelector(state => state.chatReducer)
 
@@ -152,6 +165,21 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
       },
     })
   }
+
+  const getIsFavorite = async () => {
+    try {
+      const res = await instance.get(`/items/${id}/isFavorite`)
+      setIsFavorite(!!res.data);
+    } catch (err) {
+      toast.error('Error');
+    }
+  }
+
+  useEffect(async() => {
+    if(isLogin){
+      getIsFavorite();
+    }
+  }, [])
 
   return (
     <Box width='100%'>
@@ -269,10 +297,17 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
               >
                 <Add fontSize='small' />
               </BazarButton>
-
             </FlexBox>
           )}
-
+          <FlexBox alignItems='center' mb={1}>
+          <IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>
+            {isFavorite ? (
+              <Favorite color='primary' fontSize='large' />
+            ) : (
+              <FavoriteBorder fontSize='large' />
+            )}
+          </IconButton>
+          </FlexBox>
           <FlexBox alignItems='center' mb={2}>
             <Box>Sold By:</Box>
             <Link href={`/shop/${shop?.id}`}>
@@ -280,15 +315,16 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                 <H6 ml={1}>{shop?.name}</H6>
               </a>
             </Link>
+          </FlexBox>
+          <FlexBox alignItems='center' mb={2}>
             <BazarButton
               variant='contained'
-              color='primary'
               sx={{
                 mb: '36px',
                 px: '1.75rem',
                 height: '40px',
               }}
-              onClick={chatWithShopHandler}
+              onClick={isLogin ? chatWithShopHandler : () => dispatch(toggleLoginPopup())}
             >
               Chat with shop
             </BazarButton>
