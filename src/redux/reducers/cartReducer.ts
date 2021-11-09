@@ -22,7 +22,6 @@ const reducer = (state = initialState, action: any) => {
     }
 
     case INIT_CART : {
-      console.log('init cartttttt ')
       return {
         ...state, cartList: action.cartList,
         totalPrice: action.cartList.reduce((total: number, cartItem: any) => {

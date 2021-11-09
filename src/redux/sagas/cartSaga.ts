@@ -10,12 +10,9 @@ import { instance } from '../../api/api'
 import { ChangeAmount } from '../../constants/cart'
 
 function* initCart(action: Action) {
-  console.log({ action })
   try {
     // @ts-ignore
     const res: any = yield instance.get('/cart-items')
-    toast.success('ok')
-    console.log({ res })
     yield put({
       type: INIT_CART,
       cartList: res.data.rows,
@@ -63,7 +60,6 @@ function* deleteCartItem(action: Action) {
       type: INIT_CART,
       cartList: res.data.rows,
     })
-    toast.success('OK')
   } catch (err) {
     toast.error('Error')
   }

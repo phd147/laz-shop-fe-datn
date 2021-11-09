@@ -34,6 +34,7 @@ import chatReducer from '../../redux/reducers/chatReducer'
 import { nanoid } from 'nanoid'
 import { toast } from 'react-toastify'
 import { instance } from '../../api/api'
+import FlexBox from '@component/FlexBox'
 
 interface ChatProps {
   width?: string;
@@ -108,7 +109,7 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
         avatarUrl,
         name,
       },
-      content: messageInputValue,
+      content: messageInputValue.trim(),
       attachment: null,
       type: 'TEXT',
     }, res => {
@@ -321,7 +322,7 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
                         }} avatarSpacer={message.sender.type === 'USER'}>
                           {message.sender.type === 'USER' ? null :
                             <Avatar src={message.sender.avatarUrl} name={message.sender.name} />}
-                          <Message.ImageContent src={message.attachment.url} width={400}   />
+                          <Message.ImageContent src={message.attachment.url} width={300}   />
                         </Message>
                       )
                   }
@@ -378,7 +379,10 @@ export default function UserChat({ height = '600px', width = 'auto', chatType }:
             <MessageInput onAttachClick={onClickHandler} attachButton={true}
                           placeholder='Type message here' value={messageInputValue}
                           onChange={val => setMessageInputValue(val)} onSend={sendMessageHandler} />
-          </ChatContainer> : <p>Khi bạn bắt đầu một cuộc trò chuyện mới</p>
+          </ChatContainer> : <FlexBox flexDirection={'column'}>
+            <p>When you start a new conversation</p>
+            <ArrowButton direction='down' onClick={() => dispatch({ type: TOGGLE_SHOW_CHAT })} />
+          </FlexBox>
         }
 
 

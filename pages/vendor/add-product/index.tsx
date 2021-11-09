@@ -141,10 +141,10 @@ const OrderDetails = () => {
                       // setCategorySelected(e.target.value)
                       // setSubCategoryDisabled(false)
                       setFieldValue('categoryId', e.target.value)
-                      const name = categories.filter(category => category.id === values.categoryId)[0]?.name
-                      setCategoryName(name)
+                      // const name = categories.filter(category => category.id === values.categoryId)[0]?.name
+                      // setCategoryName(name)
                     }}
-                    value={categoryName}
+                    value={values.categoryId}
                     error={!!touched.categoryId && !!errors.categoryId}
                     helperText={touched.categoryId && errors.categoryId}
                   >

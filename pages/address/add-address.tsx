@@ -5,12 +5,9 @@ import { useRouter } from 'next/router'
 
 const AddressUpdater = () => {
 
-  const router = useRouter();
-
-  const {id} = router.query ;
   return (
     <DashboardLayout>
-      <AddressEditor id={id} type={'EDIT'} />
+      <AddressEditor type={'ADD'} />
     </DashboardLayout>
   )
 }

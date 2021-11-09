@@ -6,17 +6,7 @@ import Category from '@component/icons/Category'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import MiniCart from '@component/mini-cart/MiniCart'
 import Login from '@component/sessions/Login'
-import { useAppContext } from '@context/app/AppContext'
-import {
-  Avatar,
-  Badge,
-  Box,
-  Container,
-  Dialog,
-  Drawer,
-  IconButton,
-  useMediaQuery,
-} from '@material-ui/core'
+import { Avatar, Badge, Box, Container, Dialog, Drawer, IconButton, useMediaQuery } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 import PersonOutline from '@material-ui/icons/PersonOutline'
@@ -25,12 +15,10 @@ import { MuiThemeProps } from '@theme/theme'
 import { layoutConstant } from '@utils/constants'
 import clsx from 'clsx'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import SearchBox from '../search-box/SearchBox'
 
 import { useDispatch, useSelector } from 'react-redux'
-import authReducer from '../../redux/reducers/authReducer'
-import layoutReducer from '../../redux/reducers/layoutReducer'
 import { toggleLoginPopup } from '../../redux/actions'
 
 type HeaderProps = {
@@ -70,14 +58,16 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
   // @ts-ignore
   const { user } = useSelector(state => state.authReducer)
+  const { cartList } = useSelector(state => state.cartReducer)
 
-  const { state } = useAppContext()
-  const { cartList } = state.cart
+  const totalItems = cartList.reduce((total, item) => {
+    return total + item.quantity
+  }, 0)
 
   const classes = useStyles()
 
   const cartHandle = (
-    <Badge badgeContent={cartList.length} color='primary'>
+    <Badge badgeContent={totalItems} color='primary'>
       <Box
         component={IconButton}
         ml={2.5}

@@ -107,7 +107,7 @@ export default function ShopChat({ height = '600px', width = 'auto', chatType }:
         name: shop.currentHeaderInfo.name,
         queryId: `USER_${shop.currentHeaderInfo.id}`,
       },
-      content: messageInputValue,
+      content: messageInputValue.trim(),
       attachment: null,
       type: 'TEXT',
     }, res => {

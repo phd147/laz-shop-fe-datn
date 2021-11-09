@@ -8,36 +8,63 @@ import Delete from '@material-ui/icons/Delete'
 import Edit from '@material-ui/icons/Edit'
 import Place from '@material-ui/icons/Place'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+import { instance } from '../../src/api/api'
 
 const AddressList = () => {
+
+  const router = useRouter();
+
+  const [addresses, setAddresses] = useState([]);
+
+  const [totalPage, setTotalPage] = useState(0);
+
+  const [perPage, setPerPage] = useState(10);
+
+  const fetchAddress =  async (page  : number = 1) => {
+    try {
+      const res = await instance.get(`/addresses?page=${page}&limit=${perPage}`);
+      setAddresses(res.data.items);
+      setTotalPage(res.data.last_page);
+    }catch(err){
+      toast.error('Error');
+    }
+  }
+
+  useEffect(() => {
+    fetchAddress();
+  },[])
+
+
   return (
     <DashboardLayout>
       <DashboardPageHeader
         title="My Addresses"
         icon={Place}
         button={
-          <Button color="primary" sx={{ bgcolor: 'primary.light', px: '2rem' }}>
+          <Button color="primary" sx={{ bgcolor: 'primary.light', px: '2rem' }} onClick={() => router.push('/address/add-address')}>
             Add New Address
           </Button>
         }
         navigation={<CustomerDashboardNavigation />}
       />
 
-      {orderList.map((_, ind) => (
+      {addresses.map((item, ind) => (
         <TableRow sx={{ my: '1rem', padding: '6px 18px' }} key={ind}>
           <Typography whiteSpace="pre" m={0.75} textAlign="left">
-            Ralf Edward
+            {item.name}
           </Typography>
           <Typography flex="1 1 260px !important" m={0.75} textAlign="left">
-            777 Brockton Avenue, Abington MA 2351
+            {item.address}
           </Typography>
           <Typography whiteSpace="pre" m={0.75} textAlign="left">
-            +1927987987498
+            {item.phoneNumber}
           </Typography>
 
           <Typography whiteSpace="pre" textAlign="center" color="grey.600">
-            <Link href="/address/xkssThds6h37sd">
+            <Link href={`/address/${item.id}`}>
               <IconButton>
                 <Edit fontSize="small" color="inherit" />
               </IconButton>
@@ -51,47 +78,14 @@ const AddressList = () => {
 
       <FlexBox justifyContent="center" mt={5}>
         <Pagination
-          count={5}
-          onChange={(data) => {
-            console.log(data)
+          count={totalPage}
+          onChange={(event,value) => {
+            fetchAddress(value);
           }}
         />
       </FlexBox>
     </DashboardLayout>
   )
 }
-
-const orderList = [
-  {
-    orderNo: '1050017AS',
-    status: 'Pending',
-    purchaseDate: new Date(),
-    price: 350,
-  },
-  {
-    orderNo: '1050017AS',
-    status: 'Processing',
-    purchaseDate: new Date(),
-    price: 500,
-  },
-  {
-    orderNo: '1050017AS',
-    status: 'Delivered',
-    purchaseDate: '2020/12/23',
-    price: 700,
-  },
-  {
-    orderNo: '1050017AS',
-    status: 'Delivered',
-    purchaseDate: '2020/12/23',
-    price: 700,
-  },
-  {
-    orderNo: '1050017AS',
-    status: 'Cancelled',
-    purchaseDate: '2020/12/15',
-    price: 300,
-  },
-]
 
 export default AddressList
