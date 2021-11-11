@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import * as yup from 'yup'
+import { instance } from '../../api/api'
 
 const PaymentForm = () => {
   const [paymentMethod, setPaymentMethod] = useState('credit-card')
@@ -32,6 +33,20 @@ const PaymentForm = () => {
   const handlePaymentMethodChange = ({ target: { name } }: any) => {
     setPaymentMethod(name)
   }
+
+
+  const paymentWithZalo = async () => {
+    try {
+      const res = await instance.get('/payment/zalo');
+      console.log({res})
+      router.push(res.data.orderurl);
+    }catch(err){
+
+    }
+  }
+
+
+
 
   return (
     <Fragment>
@@ -177,6 +192,13 @@ const PaymentForm = () => {
           onChange={handlePaymentMethodChange}
         />
       </Card1>
+
+
+      <div>
+        <Button onClick={() => {
+          paymentWithZalo();
+        }}>payment with zalo</Button>
+      </div>
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>

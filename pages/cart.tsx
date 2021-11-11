@@ -103,53 +103,53 @@ const Cart = () => {
 
             <Divider sx={{ mb: '1rem' }} />
 
-            <Span fontWeight="600" mb={2} display="block">
-              Shipping Estimates
-            </Span>
+            {/*<Span fontWeight="600" mb={2} display="block">*/}
+            {/*  Shipping Estimates*/}
+            {/*</Span>*/}
 
-            <Autocomplete
-              options={countryList}
-              getOptionLabel={(option) => option.label}
-              fullWidth
-              sx={{ mb: '1rem' }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Country"
-                  placeholder="Select Country"
-                  variant="outlined"
-                  size="small"
-                />
-              )}
-            />
+            {/*<Autocomplete*/}
+            {/*  options={countryList}*/}
+            {/*  getOptionLabel={(option) => option.label}*/}
+            {/*  fullWidth*/}
+            {/*  sx={{ mb: '1rem' }}*/}
+            {/*  renderInput={(params) => (*/}
+            {/*    <TextField*/}
+            {/*      {...params}*/}
+            {/*      label="Country"*/}
+            {/*      placeholder="Select Country"*/}
+            {/*      variant="outlined"*/}
+            {/*      size="small"*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*/>*/}
 
-            <TextField
-              label="State"
-              placeholder="Select State"
-              select
-              variant="outlined"
-              size="small"
-              fullWidth
-            >
-              {stateList.map((item) => (
-                <MenuItem value={item.value} key={item.label}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            {/*<TextField*/}
+            {/*  label="State"*/}
+            {/*  placeholder="Select State"*/}
+            {/*  select*/}
+            {/*  variant="outlined"*/}
+            {/*  size="small"*/}
+            {/*  fullWidth*/}
+            {/*>*/}
+            {/*  {stateList.map((item) => (*/}
+            {/*    <MenuItem value={item.value} key={item.label}>*/}
+            {/*      {item.label}*/}
+            {/*    </MenuItem>*/}
+            {/*  ))}*/}
+            {/*</TextField>*/}
 
-            <TextField
-              label="Zip Code"
-              placeholder="3100"
-              variant="outlined"
-              size="small"
-              fullWidth
-              sx={{ mt: '1rem' }}
-            />
+            {/*<TextField*/}
+            {/*  label="Zip Code"*/}
+            {/*  placeholder="3100"*/}
+            {/*  variant="outlined"*/}
+            {/*  size="small"*/}
+            {/*  fullWidth*/}
+            {/*  sx={{ mt: '1rem' }}*/}
+            {/*/>*/}
 
-            <Button variant="outlined" color="primary" fullWidth sx={{ my: '1rem' }}>
-              Calculate Shipping
-            </Button>
+            {/*<Button variant="outlined" color="primary" fullWidth sx={{ my: '1rem' }}>*/}
+            {/*  Calculate Shipping*/}
+            {/*</Button>*/}
 
             <Link href="/checkout">
               <Button variant="contained" color="primary" fullWidth>

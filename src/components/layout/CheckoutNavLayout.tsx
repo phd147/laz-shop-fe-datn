@@ -73,17 +73,17 @@ const stepperList = [
     disabled: false,
   },
   {
-    title: 'Details',
+    title: 'Address',
     disabled: false,
   },
   {
     title: 'Payment',
     disabled: false,
   },
-  {
-    title: 'Review',
-    disabled: true,
-  },
+  // {
+  //   title: 'Review',
+  //   disabled: true,
+  // },
 ]
 
 export default CheckoutNavLayout
