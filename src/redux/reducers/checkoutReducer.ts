@@ -1,39 +1,35 @@
-
-import { HYDRATE } from 'next-redux-wrapper'
-
-import { INIT_USER, LOGOUT } from '../constants'
+import { INIT_CHECKOUT, INIT_USER, LOGOUT, RESET_CHECKOUT } from '../constants'
 
 
 const initialState = {
-  isBuyNow: false,
+  checkoutType: null,
   addressId: null,
-  cartItems : [],
-  comments : '',
-
+  cartItems: [],
+  additionalComment: '',
+    buyNowItem: {
+    itemId: null,
+    quantity: null,
+  },
 }
 
 const reducer = (state = initialState, action: any) => {
   const { payload } = action
   switch (action.type) {
-    case HYDRATE: {
-      const { user } = payload.authReducer
-      console.log('user in hydrate action ', user)
-      const { user: userState } = state
+    case INIT_CHECKOUT : {
+
+      const { data } = action
+
       return {
-        ...state,
-        user: user?.id ? user : userState, isLogin: !!user?.id,
+        ...state, ...data
       }
     }
-    case INIT_USER : {
+
+    case RESET_CHECKOUT : {
       return {
-        ...state, user: action.user, isLogin: true,
+        ...initialState
       }
     }
-    case LOGOUT : {
-      return {
-        ...state, user: {}, isLogin: false,
-      }
-    }
+
     default:
       return state
   }

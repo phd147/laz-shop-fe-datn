@@ -43,7 +43,7 @@ const ProductDetails = () => {
 
   const getComments = async (currentPage: number = 1) => {
     try {
-      const res = await instance.get(`/items/${id}/comments?page=${currentPage}&limit=${10}`)
+      const res = await instance.get(`/items/${id}/comments?page=${currentPage}&limit=${5}`)
       setComments(res.data.items)
       setTotalReview(res.data.total)
       setLastPage(res.data.last_page)

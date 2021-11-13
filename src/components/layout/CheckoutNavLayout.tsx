@@ -5,9 +5,23 @@ import { Box } from '@material-ui/system'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import AppLayout from './AppLayout'
+import { useSelector } from 'react-redux'
 
 const CheckoutNavLayout: React.FC = ({ children }) => {
   const [selectedStep, setSelectedStep] = useState(0)
+
+  const { checkoutType  } = useSelector(state => state.checkoutReducer)
+
+  const stepperList = [
+    {
+      title: 'Cart',
+      disabled: false,
+    },
+    {
+      title: 'Checkout',
+      disabled:  false
+    },
+  ]
 
   const router = useRouter()
   const { pathname } = router
@@ -67,23 +81,6 @@ const CheckoutNavLayout: React.FC = ({ children }) => {
   )
 }
 
-const stepperList = [
-  {
-    title: 'Cart',
-    disabled: false,
-  },
-  {
-    title: 'Address',
-    disabled: false,
-  },
-  {
-    title: 'Payment',
-    disabled: false,
-  },
-  // {
-  //   title: 'Review',
-  //   disabled: true,
-  // },
-]
+
 
 export default CheckoutNavLayout

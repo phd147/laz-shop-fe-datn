@@ -3,4 +3,8 @@ enum ChangeAmount {
   DECREMENT = 'DECREMENT'
 }
 
-export { ChangeAmount }
+enum CheckoutType {
+  BUYNOW = 'BUYNOW', CART = 'CART'
+}
+
+export { ChangeAmount, CheckoutType }

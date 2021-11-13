@@ -16,12 +16,33 @@ import {
 import { CartItem } from '@reducer/cartReducer'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
-import { DELETE_CART_ITEM_SAGA } from '../src/redux/constants'
+import { DELETE_CART_ITEM_SAGA, INIT_CHECKOUT } from '../src/redux/constants'
+
+import { CheckoutType } from '../src/constants/cart'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const Cart = () => {
 
+  const router  = useRouter();
+
   const dispatch = useDispatch()
   const { cartList, totalPrice } = useSelector(state => state.cartReducer)
+
+  const [additionalComment, setAdditionalComment] = useState('')
+
+
+  const checkoutHandler = () => {
+    dispatch({
+      type: INIT_CHECKOUT,
+      data: {
+        checkoutType: CheckoutType.CART,
+        cartItems: cartList.map(cartItem => cartItem.id),
+        additionalComment:additionalComment,
+      },
+    })
+    router.push('/checkout');
+  }
 
 
   return (
@@ -41,13 +62,13 @@ const Cart = () => {
               },
             }}
           >
-            <FlexBox justifyContent="space-between" alignItems="center" mb={2}>
-              <Span color="grey.600">Total:</Span>
-              <FlexBox alignItems="flex-end">
-                <Span fontSize="18px" fontWeight="600" lineHeight="1">
+            <FlexBox justifyContent='space-between' alignItems='center' mb={2}>
+              <Span color='grey.600'>Total:</Span>
+              <FlexBox alignItems='flex-end'>
+                <Span fontSize='18px' fontWeight='600' lineHeight='1'>
                   ${totalPrice.toFixed(2)}
                 </Span>
-                <Span fontWeight="600" fontSize="14px" lineHeight="1">
+                <Span fontWeight='600' fontSize='14px' lineHeight='1'>
                   00
                 </Span>
               </FlexBox>
@@ -55,43 +76,44 @@ const Cart = () => {
 
             <Divider sx={{ mb: '1rem' }} />
 
-            <FlexBox alignItems="center" mb={2}>
-              <Span fontWeight="600" mr={1.25}>
+            <FlexBox alignItems='center' mb={2}>
+              <Span fontWeight='600' mr={1.25}>
                 Additional Comments
               </Span>
               <Span
-                fontSize="12px"
-                color="primary.main"
-                lineHeight="1"
-                p="6px 10px"
-                bgcolor="primary.light"
-                borderRadius="3px"
+                fontSize='12px'
+                color='primary.main'
+                lineHeight='1'
+                p='6px 10px'
+                bgcolor='primary.light'
+                borderRadius='3px'
               >
                 Note
               </Span>
             </FlexBox>
 
             <TextField
-              variant="outlined"
+              variant='outlined'
               rows={6}
               fullWidth
               multiline
               sx={{ mb: '1rem' }}
+              onChange={(e) => setAdditionalComment(e.target.value)}
             />
 
             <Divider sx={{ mb: '1rem' }} />
 
             <TextField
-              label="Voucher"
-              placeholder="Voucher"
-              size="small"
-              variant="outlined"
+              label='Voucher'
+              placeholder='Voucher'
+              size='small'
+              variant='outlined'
               fullWidth
             />
 
             <Button
-              variant="outlined"
-              color="primary"
+              variant='outlined'
+              color='primary'
               fullWidth
               sx={{
                 mt: '1rem',
@@ -151,11 +173,11 @@ const Cart = () => {
             {/*  Calculate Shipping*/}
             {/*</Button>*/}
 
-            <Link href="/checkout">
-              <Button variant="contained" color="primary" fullWidth>
+
+              <Button onClick={checkoutHandler} variant='contained' color='primary' fullWidth>
                 Checkout Now
               </Button>
-            </Link>
+
           </Card>
         </Grid>
       </Grid>

@@ -15,8 +15,10 @@ import Link from 'next/link'
 import React from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { CHANGE_AMOUNT_CART_ITEM_SAGA, DELETE_CART_ITEM_SAGA } from '../../redux/constants'
-import { ChangeAmount } from '../../constants/cart'
+import { CHANGE_AMOUNT_CART_ITEM_SAGA, DELETE_CART_ITEM_SAGA, INIT_CHECKOUT } from '../../redux/constants'
+import { ChangeAmount, CheckoutType } from '../../constants/cart'
+import { router } from 'next/client'
+import { useRouter } from 'next/router'
 
 type MiniCartProps = {
   toggleSidenav?: () => void
@@ -24,6 +26,8 @@ type MiniCartProps = {
 
 const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   const { palette } = useTheme()
+
+  const router = useRouter();
 
   const dispatch = useDispatch()
   const { cartList, totalPrice } = useSelector(state => state.cartReducer)
@@ -42,6 +46,19 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
       type: DELETE_CART_ITEM_SAGA,
       cartItemId,
     })
+  }
+
+
+  const checkoutHandler = () => {
+    toggleSidenav();
+    dispatch({
+      type : INIT_CHECKOUT,
+      data : {
+        checkoutType : CheckoutType.CART,
+        cartItems : cartList.map(cartItem => cartItem.id)
+      }
+    })
+    router.push('/checkout');
   }
 
 
@@ -168,7 +185,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
 
       {!!cartList.length && (
         <Box p={2.5}>
-          <Link href='/checkout'>
+
             <BazarButton
               variant='contained'
               color='primary'
@@ -177,11 +194,10 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                 height: '40px',
               }}
               fullWidth
-              onClick={toggleSidenav}
+              onClick={checkoutHandler}
             >
               Checkout Now (${totalPrice.toFixed(2)})
             </BazarButton>
-          </Link>
           <Link href='/cart'>
             <BazarButton
               color='primary'

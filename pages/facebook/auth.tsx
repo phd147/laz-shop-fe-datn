@@ -31,7 +31,6 @@ export default function Login() {
   }, [code])
   return (
     <div>
-      Login Facebook.....
     </div>
   )
 }

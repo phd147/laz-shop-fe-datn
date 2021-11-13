@@ -1,8 +1,7 @@
 import Card1 from '@component/Card1'
 import DashboardPageHeader from '@component/layout/DashboardPageHeader'
 import VendorDashboardLayout from '@component/layout/VendorDashboardLayout'
-import countryList from '@data/countryList'
-import { Autocomplete, Avatar, Button, Grid, TextField } from '@material-ui/core'
+import { Autocomplete, Avatar, Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import CameraAlt from '@material-ui/icons/CameraAlt'
 import Settings from '@material-ui/icons/Settings'
 import { Box } from '@material-ui/system'
@@ -12,8 +11,11 @@ import * as yup from 'yup'
 import { instance } from '../../../src/api/api'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
 
 const AccountSettings = () => {
+
+  const router = useRouter();
 
   const { user } = useSelector(state => state.authReducer)
 
@@ -22,19 +24,68 @@ const AccountSettings = () => {
 
   const formilkRef = useRef()
 
+  const [provinceIds, setProvinceIds] = useState([])
+  const [districtIds, setDistricIds] = useState([])
+  const [wardCodes, setWardCodes] = useState([])
+
+  const initProvince = async () => {
+    const provinceIdRes = await instance.get('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+      headers: {
+        // @ts-ignore
+        'Token': process.env.NEXT_PUBLIC_GHN_TOKEN_API,
+      },
+      withCredentials: false,
+    })
+    setProvinceIds(provinceIdRes.data.data)
+  }
+
+  const initDistrict = async (provinceId) => {
+    const districts = await instance.post('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district', {
+      province_id:provinceId ,
+    }, {
+      headers: {
+        // @ts-ignore
+        'Token': process.env.NEXT_PUBLIC_GHN_TOKEN_API,
+      },
+      withCredentials: false,
+    })
+    setDistricIds(districts.data.data)
+  }
+
+  const initWardCode = async  (districtId) => {
+    const wardCodes = await instance.post('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id', {
+      district_id:districtId,
+    }, {
+      headers: {
+        // @ts-ignore
+        'Token': process.env.NEXT_PUBLIC_GHN_TOKEN_API,
+      },
+      withCredentials: false,
+    })
+
+    setWardCodes(wardCodes.data.data)
+  }
+
+
   const getShopDetail = async () => {
     try {
       const res = await instance.get(`/shops/${user?.shop?.id}`)
       const { data } = res
-      const { name, email, address, phoneNumber, description, avatarUrl: avatar, coverUrl: cover } = data
+      const { name, email, address, phoneNumber, description, avatarUrl: avatar, coverUrl: cover,districtId , provinceId , wardCode  } = data
       setAvatarUrl(avatar)
       setCoverUrl(cover)
       if (formilkRef.current) {
-        formilkRef.current.setFieldValue('name', name)
-        formilkRef.current.setFieldValue('email', email)
-        formilkRef.current.setFieldValue('address', address)
-        formilkRef.current.setFieldValue('phoneNumber', phoneNumber)
-        formilkRef.current.setFieldValue('description', description)
+        formilkRef.current.setValues({
+          name,
+          address,
+          phoneNumber,
+          email,
+          description,
+          districtId ,
+          provinceId ,
+          wardCode
+        })
+        await Promise.all([initWardCode(districtId),initDistrict(provinceId)])
       }
     } catch (err) {
       toast.error('Error')
@@ -42,6 +93,7 @@ const AccountSettings = () => {
   }
 
   useEffect(() => {
+    initProvince()
     getShopDetail()
   }, [])
 
@@ -230,7 +282,85 @@ const AccountSettings = () => {
                       value={values.address || ''}
                       error={!!touched.address && !!errors.address}
                       helperText={touched.address && errors.address}
+                      multiline
                     />
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <TextField
+                      name='phoneNumber'
+                      label='Phone'
+                      fullWidth
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.phoneNumber || ''}
+                      error={!!touched.phoneNumber && !!errors.phoneNumber}
+                      helperText={touched.phoneNumber && errors.phoneNumber}
+                    />
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <TextField
+                      name='provinceId'
+                      label='Select province'
+                      placeholder='Provinces'
+                      fullWidth
+                      select
+                      onBlur={handleBlur}
+                      onChange={async (e) => {
+                        handleChange(e)
+                        // setCategorySelected(e.target.value)
+                        // setSubCategoryDisabled(false)
+                        setFieldValue('provinceId', e.target.value)
+                        initDistrict(e.target.value)
+
+                      }}
+                      value={values.provinceId}
+                      error={!!touched.provinceId && !!errors.provinceId}
+                      helperText={touched.provinceId && errors.provinceId}
+                    >
+                      {provinceIds.map(province => <MenuItem key={province.ProvinceID}
+                                                             value={province.ProvinceID}>{province.ProvinceName}</MenuItem>)}
+                    </TextField>
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <TextField
+                      name='districtId'
+                      label='Select district'
+                      placeholder='District'
+                      fullWidth
+                      select
+                      onBlur={handleBlur}
+                      onChange={async (e) => {
+                        handleChange(e)
+                        setFieldValue('districtId', e.target.value)
+                        initWardCode(e.target.value)
+                      }}
+                      value={values.districtId}
+                      error={!!touched.districtId && !!errors.districtId}
+                      helperText={touched.districtId && errors.districtId}
+                    >
+                      {districtIds.map(district => <MenuItem key={district.DistrictID}
+                                                             value={district.DistrictID}>{district.DistrictName}</MenuItem>)}
+                    </TextField>
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <TextField
+                      name='wardCode'
+                      label='Select WardCode'
+                      placeholder='WardCode'
+                      fullWidth
+                      select
+                      onBlur={handleBlur}
+                      onChange={async (e) => {
+                        handleChange(e)
+                        setFieldValue('wardCode', e.target.value)
+                      }}
+                      value={values.wardCode}
+                      error={!!touched.wardCode && !!errors.wardCode}
+                      helperText={touched.wardCode && errors.wardCode}
+                    >
+                      {wardCodes.map(wardCode => <MenuItem key={wardCode.WardCode}
+                                                           value={wardCode.WardCode}>{wardCode.WardName}</MenuItem>)}
+                    </TextField>
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
@@ -248,7 +378,7 @@ const AccountSettings = () => {
                   <Grid item md={6} xs={12}>
                     <TextField
                       name='phoneNumber'
-                      label='Phone number'
+                      label='Phone'
                       fullWidth
                       type='tel'
                       onBlur={handleBlur}
@@ -258,17 +388,18 @@ const AccountSettings = () => {
                       helperText={touched.phoneNumber && errors.phoneNumber}
                     />
                   </Grid>
-
                   <Grid item md={6} xs={12}>
                     <TextField
                       name='description'
                       label='Description'
                       fullWidth
+                      type='text'
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.description || ''}
                       error={!!touched.description && !!errors.description}
-                      helperText={touched.description && errors.description} multiline
+                      helperText={touched.description && errors.description}
+                      multiline
                     />
                   </Grid>
                 </Grid>
@@ -287,18 +418,24 @@ const AccountSettings = () => {
 
 const initialValues = {
   name: '',
-  email: '',
-  address: null,
+  address: '',
   phoneNumber: '',
+  email: '',
   description: '',
+  districtId : '',
+  provinceId : '',
+  wardCode : ''
 }
 
 const accountSchema = yup.object().shape({
   name: yup.string().required('required'),
-  email: yup.string().email('invalid email').required('required'),
-  address: yup.string().required('required'),
+  address: yup.mixed().required('required'),
   phoneNumber: yup.string().required('required'),
-  description: yup.string().required('required'),
+  email: yup.string().email('invalid email').required('required'),
+  description: yup.string(),
+  districtId: yup.number().integer().required('required'),
+  provinceId: yup.number().integer().required('required'),
+  wardCode: yup.string().required('required'),
 })
 
 export default AccountSettings
