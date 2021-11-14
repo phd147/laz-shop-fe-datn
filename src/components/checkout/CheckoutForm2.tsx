@@ -1,6 +1,5 @@
 import Card1 from '@component/Card1'
 import FlexBox from '@component/FlexBox'
-import LazyImage from '@component/LazyImage'
 import { H6, Paragraph } from '@component/Typography'
 import {
   Avatar,
@@ -12,7 +11,6 @@ import {
   Typography,
 } from '@material-ui/core'
 import { Box } from '@material-ui/system'
-import { format } from 'date-fns'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -37,12 +35,22 @@ const CheckoutForm2 = () => {
   const [hasVoucher, setHasVoucher] = useState(false)
   const router = useRouter()
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const { checkoutType, cartItems, buyNowItem } = useSelector(state => state.checkoutReducer)
+  let { checkoutType, cartItems, buyNowItem } = useSelector(state => state.checkoutReducer)
 
   const [paymentType, setPaymentType] = useState(null)
   const [addressId, setAddressId] = useState(null)
+
+  const {cartList} = useSelector(state => state.cartReducer);
+
+
+  cartItems = cartList.filter(cartItem => cartItems.includes(cartItem.id)).map(cartItem => cartItem.id);
+
+  const changeAddressHandler = () => {
+    // TODO : fetch shipping fee and expected delivery time of each cart item
+  }
+
 
   const handleFormSubmit = async (values: any) => {
     console.log(values)
@@ -63,14 +71,14 @@ const CheckoutForm2 = () => {
       }
 
 
-      const res = await instance.post('/payment', data);
+      const res = await instance.post('/payment', data)
 
 
       if (paymentType === PaymentType.CASH_ON_DELIVERY) {
-           // TODO :
+        // TODO :
 
       } else if (paymentType === PaymentType.ZALO_PAY) {
-          router.push(res.data.orderurl);
+        router.push(res.data.orderurl)
       }
     } catch (err) {
       toast.error('Error')
@@ -129,7 +137,7 @@ const CheckoutForm2 = () => {
 
     return () => {
       dispatch({
-        type : RESET_CHECKOUT
+        type: RESET_CHECKOUT,
       })
     }
   }, [])
@@ -161,36 +169,6 @@ const CheckoutForm2 = () => {
             <Box mb={3.5}>
               <Grid container spacing={3}>
                 <Grid item sm={6} xs={12}>
-                  {/*  <TextField*/}
-                  {/*    name="date"*/}
-                  {/*    label="Delivery Date"*/}
-                  {/*    error={!!touched.date && !!errors.date}*/}
-                  {/*    helperText={touched.date && errors.date}*/}
-                  {/*    select*/}
-                  {/*    fullWidth*/}
-                  {/*  >*/}
-                  {/*    {dateList.map((item) => (*/}
-                  {/*      <MenuItem value={item.value} key={item.label}>*/}
-                  {/*        {item.label}*/}
-                  {/*      </MenuItem>*/}
-                  {/*    ))}*/}
-                  {/*  </TextField>*/}
-                  {/*</Grid>*/}
-                  {/*<Grid item sm={6} xs={12}>*/}
-                  {/*  <TextField*/}
-                  {/*    name="date"*/}
-                  {/*    label="Delivery Time"*/}
-                  {/*    error={!!touched.time && !!errors.time}*/}
-                  {/*    helperText={touched.time && errors.time}*/}
-                  {/*    select*/}
-                  {/*    fullWidth*/}
-                  {/*  >*/}
-                  {/*    {timeList.map((item) => (*/}
-                  {/*      <MenuItem value={item.value} key={item.value}>*/}
-                  {/*        {item.value}*/}
-                  {/*      </MenuItem>*/}
-                  {/*    ))}*/}
-                  {/*  </TextField>*/}
                 </Grid>
               </Grid>
             </Box>
@@ -216,7 +194,7 @@ const CheckoutForm2 = () => {
                         item.id,
                         'addressId',
                         setFieldValue,
-                      )();
+                      )()
                       setAddressId(item.id)
                     }}
                   >
@@ -275,7 +253,7 @@ const CheckoutForm2 = () => {
                         item.cardType,
                         'paymentType',
                         setFieldValue,
-                      )();
+                      )()
                       setPaymentType(item.cardType)
                     }}
                   >
@@ -334,7 +312,7 @@ const CheckoutForm2 = () => {
               type='submit'
               fullWidth
               sx={{ mt: '1.5rem' }}
-              disabled={ !addressId || !paymentType || !checkoutType }
+              disabled={!addressId || !paymentType || !checkoutType}
             >
               Confirm
             </Button>
@@ -362,19 +340,11 @@ const paymentMethodList = [
 
 const initialValues = {
   addressId: '',
-  // card: '',
-  // date: '',
-  // time: '',
-  // voucher: '',
   paymentType: '',
 }
 
 const checkoutSchema = yup.object().shape({
   addressId: yup.string().required('required'),
-  // card: yup.string().required('required'),
-  // date: yup.object().required('required'),
-  // time: yup.object().required('required'),
-  // voucher: yup.string(),
   paymentType: yup.string().required('required'),
 })
 

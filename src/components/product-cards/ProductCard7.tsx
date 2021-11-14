@@ -7,14 +7,15 @@ import Close from '@material-ui/icons/Close'
 import Remove from '@material-ui/icons/Remove'
 import { Box } from '@material-ui/system'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import ProductCard7Style from './ProductCard7Style'
-import { CHANGE_AMOUNT_CART_ITEM_SAGA, DELETE_CART_ITEM_SAGA } from '../../redux/constants'
+import { CHANGE_AMOUNT_CART_ITEM_SAGA, DELETE_CART_ITEM_SAGA, TOGGLE_CART_ITEM } from '../../redux/constants'
 import { ChangeAmount } from '../../constants/cart'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { Checkbox } from '@mui/material'
 
 export interface ProductCard7Props {
-  id:  number
+  id: number
   // name: string
   quantity: number
   // price: number
@@ -32,6 +33,11 @@ const ProductCard7: React.FC<ProductCard7Props> = ({
 
   const dispatch = useDispatch()
 
+
+  const { cartItems } = useSelector(state => state.checkoutReducer)
+
+  const checked = cartItems.includes(id)
+
   const handleCartAmountChange = (type: ChangeAmount) => {
     dispatch({
       type: CHANGE_AMOUNT_CART_ITEM_SAGA,
@@ -48,9 +54,22 @@ const ProductCard7: React.FC<ProductCard7Props> = ({
     })
   }
 
+  const toggleCartItem = (e, id) => {
+    const checked = e.target.checked
+    dispatch({
+      type : TOGGLE_CART_ITEM,
+      checked , id
+    })
+  }
+
 
   return (
     <ProductCard7Style>
+      <Checkbox
+        checked={checked}
+        onChange={(e) => toggleCartItem(e, id)}
+        inputProps={{ 'aria-label': 'controlled' }}
+      />
       <Image
         src={imageUrl || '/assets/images/products/iphone-xi.png'}
         height={140}

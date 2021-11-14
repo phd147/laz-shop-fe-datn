@@ -44,6 +44,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                                                      shop,
                                                      averageStar,
                                                      totalReview,
+                                                     stock
                                                    }) => {
 
 
@@ -288,7 +289,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             <H2 color='primary.main' mb={0.5} lineHeight='1'>
               ${price.toFixed(2)}
             </H2>
-            <Box color='inherit'>Stock Available</Box>
+            <Box color='inherit'>Stock Available : {stock}</Box>
           </Box>
 
             <FlexBox alignItems='center' mb={4.5}>

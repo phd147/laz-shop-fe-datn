@@ -40,7 +40,6 @@ const OrderDetails = () => {
       const { data } = res
       console.log({ data, formikRef})
       const { name, amount, price, imageUrl, description, products } = data
-      console.log({data})
       const categoryId = products[0].id
       if (formikRef.current) {
         formikRef.current.setFieldValue('name',name);
