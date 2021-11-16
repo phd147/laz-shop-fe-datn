@@ -72,6 +72,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
         type : INIT_CART,
         cartList : res.data.rows
       })
+      toast.success('OK');
     }catch(err){
       toast.error(err.response.data.message);
     }

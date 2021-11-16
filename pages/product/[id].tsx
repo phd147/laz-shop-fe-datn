@@ -100,9 +100,9 @@ const ProductDetails = () => {
 
       {/*<FrequentlyBought />*/}
 
-      <AvailableShops />
+      {/*<AvailableShops />*/}
 
-      <RelatedProducts />
+      <RelatedProducts productId={product?.products?.length > 0 ? product?.products[0].id : null } />
     </NavbarLayout>
   )
 }

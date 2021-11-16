@@ -5,19 +5,13 @@ import { Avatar, Card, Container, Grid, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
-import { H6, Paragraph } from '@component/Typography'
 import { instance } from '../src/api/api'
 import { toast } from 'react-toastify'
 import * as yup from 'yup'
 import { useRouter } from 'next/router'
 
-import { Formik } from 'formik'
-import FlexBox from '@component/FlexBox'
-
-import Card1 from '@component/Card1'
 import CheckoutForm2 from '@component/checkout/CheckoutForm2'
 import CheckoutSummary2 from '@component/checkout/CheckoutSummary2'
-import checkoutReducer from '../src/redux/reducers/checkoutReducer'
 
 const Checkout = () => {
 
