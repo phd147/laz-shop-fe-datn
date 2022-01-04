@@ -15,8 +15,8 @@ services:
       context: frontend
     volumes:
       - ../:/app
-    ports:
-      - "3005:7000"
+#    ports:
+#      - "3005:7000"
     tty: true
 #    command: yarn dev
   nginx:

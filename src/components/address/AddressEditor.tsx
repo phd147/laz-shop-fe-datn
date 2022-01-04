@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
 
-const AddressEditor = ({ type, id }) => {
+const AddressEditor = ({ type, id,toggleDialog,setAddresses }) => {
 
   const router = useRouter()
 
@@ -22,6 +22,16 @@ const AddressEditor = ({ type, id }) => {
 
   const handleFormSubmit = async (values: any) => {
     switch (type) {
+      case 'DIALOG':
+        try {
+          const res = await instance.post('/addresses', values)
+          toast.success('OK');
+          toggleDialog();
+          setAddresses( addresses => addresses.concat(res.data));
+        } catch (err) {
+          toast.error('Error')
+        }
+        break
       case 'ADD' :
         try {
           const res = await instance.post('/addresses', values)
@@ -91,7 +101,6 @@ const AddressEditor = ({ type, id }) => {
   const fetchAddressDetail = async () => {
     try {
       const res = await instance.get(`/addresses/${id}`);
-      console.log({res})
       const { data } = res
       const {name,address ,districtId,provinceId,wardCode,phoneNumber} = data ;
       formikRef.current?.setValues({

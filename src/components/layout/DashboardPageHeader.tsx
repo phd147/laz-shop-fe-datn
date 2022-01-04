@@ -61,7 +61,7 @@ const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
         </Box>
         {/* )} */}
 
-        {!isTablet && button}
+        {!isTablet &&  (button || <div></div> )}
       </FlexBox>
 
       {isTablet && !!button && <Box mt={2}>{button}</Box>}

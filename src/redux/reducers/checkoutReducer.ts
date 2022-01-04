@@ -18,9 +18,6 @@ const initialState = {
     item: {},
     quantity: null,
   },
-  shippingInfo: {
-    // TODO : key : cartItemId , value : object { fee, expected time }
-  },
 }
 
 const reducer = (state = initialState, action: any) => {

@@ -106,6 +106,7 @@ const Cart = () => {
   }
   return (
     <CheckoutNavLayout>
+
       <Grid container spacing={3}>
         {
           cartList.length ? <>
@@ -117,7 +118,7 @@ const Cart = () => {
               />
               <span >Choose all cart items</span>
               <CustomDialog handleClose={handleClose} submitHandler={handleSubmit} open={open} title={'Remove from cart'} content={'Are you sure?'}/>
-              <DeleteOutlineIcon onClick={() => setOpen(true)} style={{cursor : 'pointer',float : 'right'}}/>
+              { cartItems.length ? <DeleteOutlineIcon onClick={() => setOpen(true)} style={{cursor : 'pointer',float : 'right'}}/> : null}
               {cartList.map((item) => (
                 <ProductCard7 key={item.id} {...item} />
               ))}
@@ -145,30 +146,30 @@ const Cart = () => {
 
                 <Divider sx={{ mb: '1rem' }} />
 
-                <FlexBox alignItems='center' mb={2}>
-                  <Span fontWeight='600' mr={1.25}>
-                    Additional Comments
-                  </Span>
-                  <Span
-                    fontSize='12px'
-                    color='primary.main'
-                    lineHeight='1'
-                    p='6px 10px'
-                    bgcolor='primary.light'
-                    borderRadius='3px'
-                  >
-                    Note
-                  </Span>
-                </FlexBox>
+                {/*<FlexBox alignItems='center' mb={2}>*/}
+                {/*  <Span fontWeight='600' mr={1.25}>*/}
+                {/*    Additional Comments*/}
+                {/*  </Span>*/}
+                {/*  <Span*/}
+                {/*    fontSize='12px'*/}
+                {/*    color='primary.main'*/}
+                {/*    lineHeight='1'*/}
+                {/*    p='6px 10px'*/}
+                {/*    bgcolor='primary.light'*/}
+                {/*    borderRadius='3px'*/}
+                {/*  >*/}
+                {/*    Note*/}
+                {/*  </Span>*/}
+                {/*</FlexBox>*/}
 
-                <TextField
-                  variant='outlined'
-                  rows={6}
-                  fullWidth
-                  multiline
-                  sx={{ mb: '1rem' }}
-                  onChange={(e) => setAdditionalComment(e.target.value)}
-                />
+                {/*<TextField*/}
+                {/*  variant='outlined'*/}
+                {/*  rows={6}*/}
+                {/*  fullWidth*/}
+                {/*  multiline*/}
+                {/*  sx={{ mb: '1rem' }}*/}
+                {/*  onChange={(e) => setAdditionalComment(e.target.value)}*/}
+                {/*/>*/}
 
                 <Divider sx={{ mb: '1rem' }} />
 

@@ -27,7 +27,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import {
   CHAT_WITH_SHOP,
   CHAT_WITH_USER,
-  INIT_CART,
+  INIT_CART, INIT_CATEGORY,
   INIT_SOCKET_CLIENT,
   INIT_USER_CONVERSATION_LIST,
   TOGGLE_SHOW_CHAT,
@@ -72,6 +72,19 @@ const App = ({ Component, pageProps }: any) => {
     }
   }
 
+  const fetchCategories = async () => {
+    try {
+      const res = await instance.get('/products')
+      dispatch({
+        type: INIT_CATEGORY,
+        categories: res.data,
+      })
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
+
   useEffect(() => {
     // connect socket
     const socket = createSocketClient()
@@ -88,10 +101,11 @@ const App = ({ Component, pageProps }: any) => {
       jssStyles.parentElement!.removeChild(jssStyles)
     }
 
-      // fetch conversation list
-      fetchConversationList()
+    // fetch conversation list
+    fetchConversationList()
 
-
+    // fetch categories
+    fetchCategories()
 
   }, [])
 

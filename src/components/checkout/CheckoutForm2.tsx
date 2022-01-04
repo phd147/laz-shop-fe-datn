@@ -1,6 +1,9 @@
 import Card1 from '@component/Card1'
 import FlexBox from '@component/FlexBox'
 import { H6, Paragraph } from '@component/Typography'
+
+import { PayPalButton } from 'react-paypal-button-v2'
+
 import {
   Avatar,
   Button,
@@ -19,7 +22,11 @@ import { instance } from '../../api/api'
 import { toast } from 'react-toastify'
 import { CheckoutType } from '../../constants/cart'
 import { useDispatch, useSelector } from 'react-redux'
-import { RESET_CHECKOUT } from '../../redux/constants'
+import { INIT_CHECKOUT, RESET_CHECKOUT } from '../../redux/constants'
+
+import { Add } from '@material-ui/icons'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import AddressEditor from '@component/address/AddressEditor'
 
 type DateProps = {
   label: string
@@ -31,7 +38,18 @@ enum PaymentType {
   CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
 }
 
-const CheckoutForm2 = () => {
+const CheckoutForm2 = ({ additionalComment }) => {
+
+  const [open, setOpen] = React.useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
   const [hasVoucher, setHasVoucher] = useState(false)
   const router = useRouter()
 
@@ -42,10 +60,12 @@ const CheckoutForm2 = () => {
   const [paymentType, setPaymentType] = useState(null)
   const [addressId, setAddressId] = useState(null)
 
-  const {cartList} = useSelector(state => state.cartReducer);
+  const { cartList } = useSelector(state => state.cartReducer)
 
 
-  cartItems = cartList.filter(cartItem => cartItems.includes(cartItem.id)).map(cartItem => cartItem.id);
+  cartItems = cartList.filter(cartItem => cartItems.includes(cartItem.id)).map(cartItem => cartItem.id)
+
+  const checkoutItems = cartList.filter(cartItem => cartItems.includes(cartItem.id))
 
   const changeAddressHandler = () => {
     // TODO : fetch shipping fee and expected delivery time of each cart item
@@ -61,13 +81,17 @@ const CheckoutForm2 = () => {
         paymentType: paymentType,
         checkoutType: checkoutType,
         addressId: addressId,
+        additionalComment,
       }
 
       if (checkoutType === CheckoutType.CART) {
         data.cartItems = cartItems
       }
       if (checkoutType === CheckoutType.BUYNOW) {
-        data.buyNowItem = buyNowItem
+        data.buyNowItem = {
+          id: buyNowItem.item.id,
+          quantity: buyNowItem.quantity,
+        }
       }
 
 
@@ -132,6 +156,20 @@ const CheckoutForm2 = () => {
     }
   }
 
+  const previewOrder = async (addressId) => {
+    if (checkoutType === CheckoutType.CART) {
+      const getPreviewOrderPromises = checkoutItems.map(cartItem => {
+        return instance.get(`/order/preview?itemId=${cartItem.item.id}&quantity=${cartItem.quantity}&addressId=${addressId}`)
+      })
+
+      const [...result] = await Promise.all(getPreviewOrderPromises)
+      console.log({ result })
+    }
+    if (checkoutType === CheckoutType.BUYNOW) {
+
+    }
+  }
+
   useEffect(() => {
     fetchAddress()
 
@@ -164,7 +202,20 @@ const CheckoutForm2 = () => {
                 1
               </Avatar>
               <Typography fontSize='20px'>Delivery Address</Typography>
+
             </FlexBox>
+
+
+            <Dialog open={open} onClose={handleClose}>
+              {/*<DialogTitle>Add new address</DialogTitle>*/}
+              <DialogContent>
+                <AddressEditor setAddresses={setAddresses} toggleDialog={handleClose} type={'DIALOG'} />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                {/*<Button onClick={handleClose}>Subscribe</Button>*/}
+              </DialogActions>
+            </Dialog>
 
             <Box mb={3.5}>
               <Grid container spacing={3}>
@@ -174,7 +225,7 @@ const CheckoutForm2 = () => {
             </Box>
 
             {/*<Typography mb={1.5}>Delivery Address</Typography>*/}
-            <Grid container spacing={3}>
+            <Grid container sx={{ mb: '10px' }} spacing={3}>
               {addresses.map((item, ind) => (
                 <Grid item md={4} sm={6} xs={12} key={ind}>
                   <Card
@@ -196,15 +247,21 @@ const CheckoutForm2 = () => {
                         setFieldValue,
                       )()
                       setAddressId(item.id)
+                      previewOrder(item.id)
                     }}
                   >
                     <H6 mb={0.5}>{item.name}</H6>
                     <H6 mb={0.5}>{item.phoneNumber}</H6>
                     <Paragraph color='grey.700'>{item.address}</Paragraph>
                   </Card>
+
                 </Grid>
+
               ))}
             </Grid>
+            <Button onClick={handleClickOpen} variant='outlined' startIcon={<Add />}>
+              Add new address
+            </Button>
             <FlexBox justifyContent='center' mt={5}>
               <Pagination
                 count={totalPage}
@@ -229,51 +286,51 @@ const CheckoutForm2 = () => {
               >
                 2
               </Avatar>
-              <Typography fontSize='20px'>Payment Type</Typography>
+              <Typography fontSize='20px'>Payment</Typography>
             </FlexBox>
 
-            <Typography mb={1.5}>Saved Payment Methods</Typography>
-            <Grid container spacing={3}>
-              {paymentMethodList.map((item) => (
-                <Grid item md={4} sm={6} xs={12} key={item.cardType}>
-                  <Card
-                    sx={{
-                      backgroundColor: 'grey.100',
-                      p: '1rem',
-                      boxShadow: 'none',
-                      border: '1px solid',
-                      cursor: 'pointer',
-                      borderColor:
-                        item.cardType === values.paymentType
-                          ? 'primary.main'
-                          : 'transparent',
-                    }}
-                    onClick={() => {
-                      handleFieldValueChange(
-                        item.cardType,
-                        'paymentType',
-                        setFieldValue,
-                      )()
-                      setPaymentType(item.cardType)
-                    }}
-                  >
-                    <Box position='relative' mb={1}>
-                      <img
-                        src={item.url}
-                        // layout="fill"
-                        // objectFit="contain"
-                        style={{ width: '100%', height: '100px' }}
-                      />
-                    </Box>
+            {/*<Typography mb={1.5}>Saved Payment Methods</Typography>*/}
+            {/*<Grid container spacing={3}>*/}
+            {/*  {paymentMethodList.map((item) => (*/}
+            {/*    <Grid item md={4} sm={6} xs={12} key={item.cardType}>*/}
+            {/*      <Card*/}
+            {/*        sx={{*/}
+            {/*          backgroundColor: 'grey.100',*/}
+            {/*          p: '1rem',*/}
+            {/*          boxShadow: 'none',*/}
+            {/*          border: '1px solid',*/}
+            {/*          cursor: 'pointer',*/}
+            {/*          borderColor:*/}
+            {/*            item.cardType === values.paymentType*/}
+            {/*              ? 'primary.main'*/}
+            {/*              : 'transparent',*/}
+            {/*        }}*/}
+            {/*        onClick={() => {*/}
+            {/*          handleFieldValueChange(*/}
+            {/*            item.cardType,*/}
+            {/*            'paymentType',*/}
+            {/*            setFieldValue,*/}
+            {/*          )()*/}
+            {/*          setPaymentType(item.cardType)*/}
+            {/*        }}*/}
+            {/*      >*/}
+            {/*        <Box position='relative' mb={1}>*/}
+            {/*          <img*/}
+            {/*            src={item.url}*/}
+            {/*            // layout="fill"*/}
+            {/*            // objectFit="contain"*/}
+            {/*            style={{ width: '100%', height: '100px' }}*/}
+            {/*          />*/}
+            {/*        </Box>*/}
 
-                    <Paragraph color='grey.700'>
-                      {/***** **** **** {item.last4Digits}*/}
-                    </Paragraph>
-                    {/*<Paragraph color="grey.700">{item.name}</Paragraph>*/}
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+            {/*        <Paragraph color='grey.700'>*/}
+            {/*          /!***** **** **** {item.last4Digits}*!/*/}
+            {/*        </Paragraph>*/}
+            {/*        /!*<Paragraph color="grey.700">{item.name}</Paragraph>*!/*/}
+            {/*      </Card>*/}
+            {/*    </Grid>*/}
+            {/*  ))}*/}
+            {/*</Grid>*/}
 
             <Button
               sx={{
@@ -316,6 +373,39 @@ const CheckoutForm2 = () => {
             >
               Confirm
             </Button>
+            <PayPalButton
+
+              createOrder={
+                async (data, action) => {
+                  const res = await instance.post('/payment/paypal/setup-order', {
+                    amount: 5,
+                  })
+                  console.log(res)
+                  return res.data.orderId
+                }
+              }
+              // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+              // onSuccess={(details, data) => {
+              //   alert('Transaction completed by ' + details.payer.name.given_name)
+              //
+              //   // OPTIONAL: Call your server to save the transaction
+              //   return fetch('/paypal-transaction-complete', {
+              //     method: 'post',
+              //     body: JSON.stringify({
+              //       orderID: data.orderID,
+              //     }),
+              //   })
+              // }}
+              onApprove={async (data, actions) => {
+                await instance.post('/payment/paypal/capture-order', {
+                  orderId: data.orderID,
+                })
+              }}
+              options={{
+                clientId: 'AcmLaGKjsabaL41mJ3p4QVk14GIp0zl7_TrPq4vXW4XoFqXq9iHX-WorjnaFyf-oZdrgvFKbxgPJ88l9',
+                currency: 'USD',
+              }}
+            />
           </Card1>
         </form>
       )}

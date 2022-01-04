@@ -6,6 +6,9 @@ import React from 'react'
 import CategoryMenuItem from './CategoryMenuItem'
 import MegaMenu1 from './mega-menu/MegaMenu1'
 import MegaMenu2 from './mega-menu/MegaMenu2'
+import categories from '@data/categories'
+import { useSelector } from 'react-redux'
+import categoryReducer from '../../redux/reducers/categoryReducer'
 
 export interface CategoryMenuCardProps {
   open?: boolean
@@ -37,20 +40,22 @@ const CategoryMenuCard: React.FC<CategoryMenuCardProps> = (props) => {
     MegaMenu2,
   }
 
+  const { categories } = useSelector(state => state.categoryReducer)
+
   return (
     <Box className={classes.root}>
-      {navigations.map((item) => {
-        let MegaMenu = megaMenu[item.menuComponent]
+      {categories.map((item) => {
+        let MegaMenu = megaMenu['MegaMenu2']
 
         return (
           <CategoryMenuItem
-            title={item.title}
-            href={item.href}
+            title={item.name}
+            href={`/products/category?id=${item.id}`}
             // icon={item.icon}
             caret={!!item.menuData}
-            key={item.title}
+            key={item.id}
           >
-            <MegaMenu data={item.menuData || {}} />
+            <MegaMenu data={[]} />
           </CategoryMenuItem>
         )
       })}

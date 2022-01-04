@@ -14,7 +14,7 @@ import FlexBox from '../FlexBox'
 import { ChangeAmount } from '../../constants/cart'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  CHANGE_USER_CHAT_HEADER_INFO, INIT_CART,
+  CHANGE_USER_CHAT_HEADER_INFO, INIT_CART, INIT_CHECKOUT,
   INIT_CONVERSATION_WITH_SHOP,
   INIT_USER_MESSAGE_LIST,
   TOGGLE_SHOW_CHAT,
@@ -80,6 +80,26 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
 
   const buyNowHandler = () => {
     console.log('Incomming soon');
+    dispatch({
+      type : INIT_CHECKOUT,
+      data : {
+        checkoutType : 'BUYNOW',
+        buyNowItem : {
+          item : {
+            imageUrl ,
+            name,
+            price ,
+            id,
+            shop,
+            averageStar,
+            totalReview,
+            stock
+          },
+          quantity : amount
+        }
+      }
+    })
+    router.push('/checkout');
   }
 
 
@@ -118,22 +138,6 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
     setCurrentImage(0)
     setIsViewerOpen(false)
   }
-
-  // const handleCartAmountChange = useCallback(
-  //   (amount) => () => {
-  //     dispatch({
-  //       type: 'CHANGE_CART_AMOUNT',
-  //       payload: {
-  //         qty: amount,
-  //         name: title,
-  //         price,
-  //         imgUrl: imgUrl[0],
-  //         id: id || routerId,
-  //       },
-  //     })
-  //   },
-  //   [],
-  // )
 
   const chatWithShopHandler = async () => {
 

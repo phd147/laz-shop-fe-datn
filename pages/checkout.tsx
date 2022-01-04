@@ -17,6 +17,10 @@ const Checkout = () => {
 
   const router = useRouter();
 
+
+  const [additionalComment, setAdditionalComment] = useState('');
+
+
   const user = useSelector(state => state.authReducer)
 
   const {checkoutType} = useSelector(state => state.checkoutReducer);
@@ -55,10 +59,10 @@ const Checkout = () => {
       <Container sx={{ my: '1.5rem' }}>
         <Grid container spacing={3}>
           <Grid item lg={8} md={8} xs={12}>
-            <CheckoutForm2 />
+            <CheckoutForm2 additionalComment={additionalComment} />
           </Grid>
           <Grid item lg={4} md={4} xs={12}>
-            <CheckoutSummary2 />
+            <CheckoutSummary2 setAdditionalComment={setAdditionalComment} />
           </Grid>
         </Grid>
       </Container>

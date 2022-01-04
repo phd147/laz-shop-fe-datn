@@ -6,25 +6,53 @@ import { useSelector } from 'react-redux'
 import checkoutReducer from '../../redux/reducers/checkoutReducer'
 import { CheckoutType } from '../../constants/cart'
 import cartReducer from '../../redux/reducers/cartReducer'
+import { TextField } from '@mui/material'
+import { instance } from '../../api/api'
 
-const CheckoutSummary2 = () => {
+const CheckoutSummary2 = ({setAdditionalComment}) => {
 
-  const { checkoutType } = useSelector(state => state.checkoutReducer)
+  const { checkoutType, buyNowItem } = useSelector(state => state.checkoutReducer)
 
   const {cartList} = useSelector(state => state.cartReducer);
 
   const {cartItems} = useSelector(state => state.checkoutReducer);
 
 
+
   const checkoutItems = cartList.filter(cartItem => cartItems.includes(cartItem.id));
 
-  const subTotal = CheckoutType.CART ?  checkoutItems.reduce((total, cartItems ) => {
+  const subTotal = checkoutType === CheckoutType.CART ?  checkoutItems.reduce((total, cartItems ) => {
     const finalTotal = total + cartItems.quantity * cartItems.item.price ;
     return finalTotal ;
-  },0) : 9999
+  },0) : buyNowItem.item.price * buyNowItem.quantity
+
 
   return (
     <Box>
+      <FlexBox alignItems='center' mb={2}>
+        <Span fontWeight='600' mr={1.25}>
+          Additional Comments
+        </Span>
+        <Span
+          fontSize='12px'
+          color='primary.main'
+          lineHeight='1'
+          p='6px 10px'
+          bgcolor='primary.light'
+          borderRadius='3px'
+        >
+          Note
+        </Span>
+      </FlexBox>
+
+      <TextField
+        variant='outlined'
+        rows={6}
+        fullWidth
+        multiline
+        sx={{ mb: '1rem' }}
+        onChange={(e) => setAdditionalComment(e.target.value)}
+      />
       <Typography color='secondary.900' fontWeight='700' mb={3}>
         Your order
       </Typography>
@@ -52,15 +80,15 @@ const CheckoutSummary2 = () => {
           justifyContent='space-between'
           alignItems='center'
           mb={3}
-          key={''}
+          key={buyNowItem.item.name}
         >
           <Typography>
             <Span fontWeight='700' fontSize='14px'>
-              quantity
+              {buyNowItem.quantity}
             </Span>{' '}
-            name
+            x {buyNowItem.item.name}
           </Typography>
-          <Typography> total price</Typography>
+          <Typography>${ buyNowItem.quantity * buyNowItem.item.price.toFixed(2)}</Typography>
         </FlexBox>
       }
 

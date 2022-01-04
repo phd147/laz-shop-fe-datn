@@ -51,6 +51,7 @@
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.2",
     "react-number-format": "^4.7.3",
+    "react-paypal-button-v2": "^2.6.3",
     "react-redux": "^7.2.5",
     "react-scroll": "^1.8.2",
     "react-simple-image-viewer": "0.0.8",
