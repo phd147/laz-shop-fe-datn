@@ -102,7 +102,7 @@ const CheckoutSummary2 = ({setAdditionalComment}) => {
       </FlexBox>
 
       <FlexBox justifyContent='space-between' alignItems='center' mb={1}>
-        <Typography color='grey.600'>Shipping:</Typography>
+        {/*<Typography color='grey.600'>Shipping:</Typography>*/}
         <Typography fontWeight='700'>-</Typography>
       </FlexBox>
 

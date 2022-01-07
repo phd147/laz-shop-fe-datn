@@ -171,29 +171,29 @@ const Cart = () => {
                 {/*  onChange={(e) => setAdditionalComment(e.target.value)}*/}
                 {/*/>*/}
 
-                <Divider sx={{ mb: '1rem' }} />
+                {/*<Divider sx={{ mb: '1rem' }} />*/}
 
-                <TextField
-                  label='Voucher'
-                  placeholder='Voucher'
-                  size='small'
-                  variant='outlined'
-                  fullWidth
-                />
+                {/*<TextField*/}
+                {/*  label='Voucher'*/}
+                {/*  placeholder='Voucher'*/}
+                {/*  size='small'*/}
+                {/*  variant='outlined'*/}
+                {/*  fullWidth*/}
+                {/*/>*/}
 
-                <Button
-                  variant='outlined'
-                  color='primary'
-                  fullWidth
-                  sx={{
-                    mt: '1rem',
-                    mb: '30px',
-                  }}
-                >
-                  Apply Voucher
-                </Button>
+                {/*<Button*/}
+                {/*  variant='outlined'*/}
+                {/*  color='primary'*/}
+                {/*  fullWidth*/}
+                {/*  sx={{*/}
+                {/*    mt: '1rem',*/}
+                {/*    mb: '30px',*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  Apply Voucher*/}
+                {/*</Button>*/}
 
-                <Divider sx={{ mb: '1rem' }} />
+                {/*<Divider sx={{ mb: '1rem' }} />*/}
 
                 <Button disabled={ !cartItems.length } onClick={checkoutHandler} variant='contained' color='primary' fullWidth>
                   Checkout Now

@@ -62,23 +62,23 @@ const Profile = () => {
                     <FlexBox alignItems='center'>
                       <Typography color='grey.600'>Balance:</Typography>
                       <Typography ml={0.5} color='primary.main'>
-                        $500
+                        $500 Laz coin
                       </Typography>
                     </FlexBox>
                   </div>
 
                   <Typography color='grey.600' letterSpacing='0.2em'>
-                   {user.type}
+                    {user.type}
                   </Typography>
                 </FlexBox>
               </Box>
             </Card>
           </Grid>
 
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+          <Grid item lg={12} md={6} sm={12} xs={12}>
             <Grid container spacing={4}>
               {infoList.map((item) => (
-                <Grid item lg={3} sm={6} xs={6} key={item.subtitle}>
+                <Grid item lg={2} sm={6} xs={6} key={item.subtitle}>
                   <Card
                     sx={{
                       display: 'flex',
@@ -148,7 +148,11 @@ const infoList = [
   {
     title: '02',
     subtitle: 'Awaiting Payments',
-  },
+  }, {
+    title: '02',
+    subtitle: 'Awaiting Picking',
+  }
+  ,
   {
     title: '00',
     subtitle: 'Awaiting Shipment',

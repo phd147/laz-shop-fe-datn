@@ -4,7 +4,7 @@ import Dashboard from '@material-ui/icons/Dashboard'
 import NoteAdd from '@material-ui/icons/NoteAdd'
 import Settings from '@material-ui/icons/Settings'
 import ShoppingCart from '@material-ui/icons/ShoppingCart'
-import { Message } from '@material-ui/icons'
+import { Message, Money } from '@material-ui/icons'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { DashboardNavigationWrapper, StyledDashboardNav } from './DashboardStyle'
@@ -69,6 +69,11 @@ const linkList = [
     href: '/vendor/chat',
     title: 'Chat',
     icon: Message,
+  },
+  {
+    href: '/vendor/with-draw',
+    title: 'Withdraw',
+    icon: Money,
   },
 ]
 

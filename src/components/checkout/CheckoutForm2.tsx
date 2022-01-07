@@ -95,15 +95,6 @@ const CheckoutForm2 = ({ additionalComment }) => {
       }
 
 
-      const res = await instance.post('/payment', data)
-
-
-      if (paymentType === PaymentType.CASH_ON_DELIVERY) {
-        // TODO :
-
-      } else if (paymentType === PaymentType.ZALO_PAY) {
-        router.push(res.data.orderurl)
-      }
     } catch (err) {
       toast.error('Error')
     }
@@ -340,7 +331,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
               }}
               onClick={toggleHasVoucher}
             >
-              I have a voucher
+              You have 999 laz coin
             </Button>
 
             {hasVoucher && (
@@ -377,9 +368,26 @@ const CheckoutForm2 = ({ additionalComment }) => {
 
               createOrder={
                 async (data, action) => {
-                  const res = await instance.post('/payment/paypal/setup-order', {
-                    amount: 5,
-                  })
+
+                  const dataSend = {
+                    paymentType: paymentType,
+                    checkoutType: checkoutType,
+                    addressId: addressId,
+                    additionalComment,
+                  }
+
+                  if (checkoutType === CheckoutType.CART) {
+                    dataSend.cartItems = cartItems
+                  }
+                  if (checkoutType === CheckoutType.BUYNOW) {
+                    dataSend.buyNowItem = {
+                      id: buyNowItem.item.id,
+                      quantity: buyNowItem.quantity,
+                    }
+                  }
+
+
+                  const res = await instance.post('/payment/paypal/setup-order', dataSend)
                   console.log(res)
                   return res.data.orderId
                 }
@@ -397,9 +405,27 @@ const CheckoutForm2 = ({ additionalComment }) => {
               //   })
               // }}
               onApprove={async (data, actions) => {
+                const dataSend = {
+                  paymentType: paymentType,
+                  checkoutType: checkoutType,
+                  addressId: addressId,
+                  additionalComment,
+                }
+
+                if (checkoutType === CheckoutType.CART) {
+                  dataSend.cartItems = cartItems
+                }
+                if (checkoutType === CheckoutType.BUYNOW) {
+                  dataSend.buyNowItem = {
+                    id: buyNowItem.item.id,
+                    quantity: buyNowItem.quantity,
+                  }
+                }
                 await instance.post('/payment/paypal/capture-order', {
                   orderId: data.orderID,
+                  data : dataSend
                 })
+                await router.push('/orders')
               }}
               options={{
                 clientId: 'AcmLaGKjsabaL41mJ3p4QVk14GIp0zl7_TrPq4vXW4XoFqXq9iHX-WorjnaFyf-oZdrgvFKbxgPJ88l9',

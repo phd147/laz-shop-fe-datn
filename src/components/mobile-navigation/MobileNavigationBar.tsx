@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/styles'
 import { MuiThemeProps } from '@theme/theme'
 import { layoutConstant } from '@utils/constants'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles(({ palette }: MuiThemeProps) => ({
   root: {
@@ -51,19 +52,23 @@ const useStyles = makeStyles(({ palette }: MuiThemeProps) => ({
 const MobileNavigationBar = () => {
   const width = useWindowSize()
   const classes = useStyles()
-  const { state } = useAppContext()
-  const { cartList } = state.cart
+  const { cartList } = useSelector(state => state.cartReducer)
+
+  const totalItem = cartList.reduce((total, currentElement) => {
+    total += currentElement.quantity
+    return total
+  },0)
 
   return width <= 900 ? (
     <Box className={classes.root}>
       {list.map((item) => (
         <NavLink className={classes.link} href={item.href} key={item.title}>
           {item.title === 'Cart' ? (
-            <Badge badgeContent={cartList.length} color="primary">
-              <item.icon className={classes.icon} fontSize="small" />
+            <Badge badgeContent={totalItem} color='primary'>
+              <item.icon className={classes.icon} fontSize='small' />
             </Badge>
           ) : (
-            <item.icon className={classes.icon} fontSize="small" />
+            <item.icon className={classes.icon} fontSize='small' />
           )}
 
           {item.title}

@@ -8,71 +8,74 @@ import Link from 'next/link'
 import React from 'react'
 
 export interface OrderRowProps {
-  item: {
+  order: {
     orderNo: any
     status: string
     href: string
     purchaseDate: string | Date
     price: number
-  }
+  },
+  isShop: boolean
 }
 
-const OrderRow: React.FC<OrderRowProps> = ({ item }) => {
+const OrderRow: React.FC<OrderRowProps> = ({ order, isShop }) => {
   const getColor = (status: string) => {
     switch (status) {
-      case 'Pending':
+      // case 'PaymentProcessing':
+      //   return 'secondary'
+      case 'Picking':
         return 'secondary'
-      case 'Processing':
+      case 'Shipping':
         return 'secondary'
-      case 'Delivered':
+      case 'Complete':
         return 'success'
-      case 'Cancelled':
-        return 'error'
       default:
         return ''
     }
   }
 
   return (
-    <Link href={item.href}>
+    <Link href={isShop ? `/vendor/orders/${order.code}` : `/orders/${order.code}`}>
       <a>
         <TableRow sx={{ my: '1rem', padding: '6px 18px' }}>
-          <H5 m={0.75} textAlign="left">
-            {item.orderNo}
+          <H5 m={0.75} textAlign='left'>
+            {order.code.substring(0, 12).toUpperCase()}
           </H5>
           <Box m={0.75}>
             <Chip
-              size="small"
-              label={item.status}
+              size='small'
+              label={order.status}
               sx={{
                 p: '0.25rem 0.5rem',
                 fontSize: 12,
-                color: !!getColor(item.status)
-                  ? `${getColor(item.status)}.900`
-                  : 'inherit',
-                backgroundColor: !!getColor(item.status)
-                  ? `${getColor(item.status)}.100`
-                  : 'none',
+                // color: !!getColor(order.status)
+                //   ? `${getColor(order.status)}.900`
+                //   : 'inherit',
+                // backgroundColor: !!getColor(order.status)
+                //   ? `${getColor(order.status)}.100`
+                //   : 'none',
+                backgroundColor: 'success',
+                color: 'success',
               }}
             />
           </Box>
-          <Typography className="pre" m={0.75} textAlign="left">
-            {format(new Date(item.purchaseDate), 'MMM dd, yyyy')}
+          <Typography className='pre' m={0.75} textAlign='left'>
+            {format(new Date(order.createdAt), 'MMM dd, yyyy')}
           </Typography>
-          <Typography m={0.75} textAlign="left">
-            ${item.price.toFixed(2)}
+          <Typography m={0.75} textAlign='left'>
+            ${order.total.toFixed(2)}
           </Typography>
 
           <Typography
-            textAlign="center"
-            color="grey.600"
+            textAlign='center'
+            color='grey.600'
             sx={{
               flex: '0 0 0 !important',
               display: { xs: 'none', md: 'block' },
             }}
           >
             <IconButton>
-              <East fontSize="small" color="inherit" />
+              <East fontSize='small' color='inherit' />
             </IconButton>
           </Typography>
         </TableRow>

@@ -28,7 +28,7 @@ const OrderDetails = () => {
 
   const router = useRouter()
 
-  const [categoryName, setCategoryName] = useState('');
+  const [categoryName, setCategoryName] = useState('')
 
 
   useEffect(() => {
@@ -145,7 +145,7 @@ const OrderDetails = () => {
                     height={300}
                     position='relative'
                     style={{
-                      background: `url(${imageUrl || 'https://aina.vn/wp-content/uploads/2021/08/default-image-620x600-1.jpg' }) center/cover`,
+                      background: `url(${imageUrl || 'https://aina.vn/wp-content/uploads/2021/08/default-image-620x600-1.jpg'}) center/cover`,
                     }}
                   >
                     <Box
@@ -172,7 +172,7 @@ const OrderDetails = () => {
                       </label>
                       <input
                         className='hidden'
-                        onChange={(e)  => onChangeHandler(e.target.files)}
+                        onChange={(e) => onChangeHandler(e.target.files)}
                         id='cover-image'
                         accept='image/*'
                         type='file'
@@ -229,6 +229,62 @@ const OrderDetails = () => {
                     helperText={touched.price && errors.price}
                   />
                 </Grid>
+                <Grid item sm={4} xs={12}>
+                  <TextField
+                    name='weight'
+                    label='Weight'
+                    placeholder='Weight'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.weight || ''}
+                    error={!!touched.weight && !!errors.weight}
+                    helperText={touched.weight && errors.weight}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <TextField
+                    name='width'
+                    label='Width'
+                    placeholder='Width'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.width || ''}
+                    error={!!touched.width && !!errors.width}
+                    helperText={touched.width && errors.width}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <TextField
+                    name='height'
+                    label='Height'
+                    placeholder='Height'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.height || ''}
+                    error={!!touched.height && !!errors.height}
+                    helperText={touched.height && errors.height}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <TextField
+                    name='length'
+                    label='Length'
+                    placeholder='Length'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.length || ''}
+                    error={!!touched.length && !!errors.length}
+                    helperText={touched.length && errors.length}
+                  />
+                </Grid>
               </Grid>
             </Card>
             <Button
@@ -238,7 +294,7 @@ const OrderDetails = () => {
               sx={{ mt: '25px' }}
               startIcon={<SaveIcon />}
             >
-              Guardar producto
+              Add product
             </Button>
           </form>
         )}
@@ -254,6 +310,10 @@ const initialValues = {
   description: '',
   amount: 1,
   categoryId: 1,
+  weight: 0,
+  width: 0,
+  height: 0,
+  length: 0,
 }
 
 const checkoutSchema = yup.object().shape({
@@ -262,6 +322,11 @@ const checkoutSchema = yup.object().shape({
   price: yup.number().required('required'),
   amount: yup.number().required('required'),
   description: yup.string(),
+  weight: yup.number().required('required'),
+  width: yup.number().required('required'),
+  height: yup.number().required('required'),
+  length: yup.number().required('required'),
+
 })
 
 export default OrderDetails

@@ -17,19 +17,19 @@ const OrderDetails = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const formikRef = useRef();
+  const formikRef = useRef()
 
   const [imageUrl, setImageUrl] = useState('')
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([])
 
 
-  const getCategories = async() => {
+  const getCategories = async () => {
     try {
-        const res = await instance.get('/products');
-        setCategories(res.data);
-    }catch(err){
-      toast.error(err.response?.data?.message);
+      const res = await instance.get('/products')
+      setCategories(res.data)
+    } catch (err) {
+      toast.error(err.response?.data?.message)
     }
   }
 
@@ -38,15 +38,19 @@ const OrderDetails = () => {
     try {
       const res = await instance.get(`/items/${id}`)
       const { data } = res
-      console.log({ data, formikRef})
-      const { name, amount, price, imageUrl, description, products } = data
+      console.log({ data, formikRef })
+      const { name, amount, price, imageUrl, description, products, weight, width, height, length } = data
       const categoryId = products[0].id
       if (formikRef.current) {
-        formikRef.current.setFieldValue('name',name);
-        formikRef.current.setFieldValue('amount',amount);
-        formikRef.current.setFieldValue('price',price);
-        formikRef.current.setFieldValue('description',description);
-        formikRef.current.setFieldValue('categoryId',categoryId);
+        formikRef.current.setFieldValue('name', name)
+        formikRef.current.setFieldValue('amount', amount)
+        formikRef.current.setFieldValue('price', price)
+        formikRef.current.setFieldValue('description', description)
+        formikRef.current.setFieldValue('categoryId', categoryId)
+        formikRef.current.setFieldValue('weight', weight)
+        formikRef.current.setFieldValue('width', width)
+        formikRef.current.setFieldValue('height', height)
+        formikRef.current.setFieldValue('length', length)
         setImageUrl(imageUrl)
       }
     } catch (err) {
@@ -73,17 +77,17 @@ const OrderDetails = () => {
 
   const handleFormSubmit = async (values: any) => {
     try {
-        await instance.patch(`/items/${id}`, {
-          ...values,imageUrl
-        })
-      toast.success('OK');
-    }catch(err){
-      toast.error(err.response.data.message);
+      await instance.patch(`/items/${id}`, {
+        ...values, imageUrl,
+      })
+      toast.success('OK')
+    } catch (err) {
+      toast.error(err.response.data.message)
     }
   }
 
   useEffect(() => {
-    getCategories();
+    getCategories()
     getProductDetail()
   }, [])
 
@@ -139,7 +143,7 @@ const OrderDetails = () => {
                   >
                     {
                       categories.map(category => (
-                      <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                        <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
                       ))
                     }
                   </TextField>
@@ -184,7 +188,7 @@ const OrderDetails = () => {
                       </label>
                       <input
                         className='hidden'
-                        onChange={(e)  => onChangeHandler(e.target.files)}
+                        onChange={(e) => onChangeHandler(e.target.files)}
                         id='cover-image'
                         accept='image/*'
                         type='file'
@@ -236,6 +240,62 @@ const OrderDetails = () => {
                     helperText={touched.price && errors.price}
                   />
                 </Grid>
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                    name='weight'
+                    label='Weight'
+                    placeholder='Weight'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.weight || ''}
+                    error={!!touched.weight && !!errors.weight}
+                    helperText={touched.weight && errors.weight}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                    name='width'
+                    label='Width'
+                    placeholder='Width'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.width || ''}
+                    error={!!touched.width && !!errors.width}
+                    helperText={touched.width && errors.width}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                    name='height'
+                    label='Height'
+                    placeholder='Height'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.height || ''}
+                    error={!!touched.height && !!errors.height}
+                    helperText={touched.height && errors.height}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                    name='length'
+                    label='Length'
+                    placeholder='Length'
+                    type='number'
+                    fullWidth
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.length || ''}
+                    error={!!touched.length && !!errors.length}
+                    helperText={touched.length && errors.length}
+                  />
+                </Grid>
 
               </Grid>
               <Button
@@ -260,6 +320,10 @@ const initialValues = {
   description: '',
   amount: 1,
   categoryId: 0,
+  weight: 0,
+  width: 0,
+  height: 0,
+  length: 0,
 }
 
 const checkoutSchema = yup.object().shape({
@@ -268,6 +332,10 @@ const checkoutSchema = yup.object().shape({
   price: yup.number().required('required'),
   amount: yup.number().required('required'),
   description: yup.string().required(),
+  weight: yup.number().required('required'),
+  width: yup.number().required('required'),
+  height: yup.number().required('required'),
+  length: yup.number().required('required'),
 })
 
 export default OrderDetails
