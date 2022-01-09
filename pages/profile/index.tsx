@@ -13,13 +13,51 @@ import React, { useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 import { TypeLogin } from '../../src/constants/user'
+import { instance } from '../../src/api/api'
+import { toast } from 'react-toastify'
 
 const Profile = () => {
 
   const { user } = useSelector(state => state.authReducer)
 
+  const [orderOverview, setOrderOverview] = useState({})
+
+  const fetchOrderOverview = async () => {
+    try {
+      const res = await instance.get('/orders/user/overview')
+      setOrderOverview(res.data)
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
+
   useEffect(() => {
+    fetchOrderOverview()
   }, [])
+
+  const infoList = [
+    {
+      title: orderOverview.allOrders,
+      subtitle: 'All Orders',
+    },
+    {
+      title: orderOverview.awaitingPayment,
+      subtitle: 'Awaiting Payments',
+    }, {
+      title: orderOverview.awaitingPicking,
+      subtitle: 'Awaiting Picking',
+    }
+    ,
+    // {
+    //   title: '00',
+    //   subtitle: 'Awaiting Shipment',
+    // },
+    {
+      title: orderOverview.awaitingDelivery,
+      subtitle: 'Awaiting Delivery',
+    },
+  ]
 
   return (
     <CustomerDashboardLayout>
@@ -140,27 +178,5 @@ const Profile = () => {
   )
 }
 
-const infoList = [
-  {
-    title: '16',
-    subtitle: 'All Orders',
-  },
-  {
-    title: '02',
-    subtitle: 'Awaiting Payments',
-  }, {
-    title: '02',
-    subtitle: 'Awaiting Picking',
-  }
-  ,
-  {
-    title: '00',
-    subtitle: 'Awaiting Shipment',
-  },
-  {
-    title: '01',
-    subtitle: 'Awaiting Delivery',
-  },
-]
 
 export default Profile

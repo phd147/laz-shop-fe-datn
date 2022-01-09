@@ -15,7 +15,7 @@ export interface OrderRowProps {
     purchaseDate: string | Date
     price: number
   },
-  isShop: boolean
+  isShop?: boolean
 }
 
 const OrderRow: React.FC<OrderRowProps> = ({ order, isShop }) => {
@@ -24,11 +24,13 @@ const OrderRow: React.FC<OrderRowProps> = ({ order, isShop }) => {
       // case 'PaymentProcessing':
       //   return 'secondary'
       case 'Picking':
-        return 'secondary'
-      case 'Shipping':
-        return 'secondary'
+        return 'secondary.500'
+      case 'Delivering':
+        return 'warning.main'
       case 'Complete':
-        return 'success'
+        return 'success.500'
+      case 'Cancel':
+        return 'error.main'
       default:
         return ''
     }
@@ -51,11 +53,11 @@ const OrderRow: React.FC<OrderRowProps> = ({ order, isShop }) => {
                 // color: !!getColor(order.status)
                 //   ? `${getColor(order.status)}.900`
                 //   : 'inherit',
-                // backgroundColor: !!getColor(order.status)
-                //   ? `${getColor(order.status)}.100`
-                //   : 'none',
-                backgroundColor: 'success',
-                color: 'success',
+                backgroundColor: !!getColor(order.status)
+                  ? `${getColor(order.status)}`
+                  : 'none',
+                // backgroundColor: 'success.900',
+                color: 'warning.contrastText',
               }}
             />
           </Box>

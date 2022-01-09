@@ -27,35 +27,35 @@ const VendorDashboard = () => {
           </Grid>
         ))}
 
-        <Grid item lg={8} xs={12}>
-          <Card sx={{ p: '20px 30px' }}>
-            <H5 mb={3}>Sales</H5>
-            <VendorAnalyticsChart />
-          </Card>
-        </Grid>
+        {/*<Grid item lg={8} xs={12}>*/}
+        {/*  <Card sx={{ p: '20px 30px' }}>*/}
+        {/*    <H5 mb={3}>Sales</H5>*/}
+        {/*    <VendorAnalyticsChart />*/}
+        {/*  </Card>*/}
+        {/*</Grid>*/}
 
-        <Grid item lg={4} xs={12}>
-          <Card sx={{ p: '20px 30px' }}>
-            <H5>Top Countries</H5>
-            {topCountryList.map((item, ind) => (
-              <FlexBox
-                alignItems="center"
-                justifyContent="space-between"
-                my="1rem"
-                key={ind}
-              >
-                <FlexBox alignItems="center">
-                  <Avatar
-                    src={item.flagUrl}
-                    sx={{ mr: '8px', height: 30, width: 30 }}
-                  />
-                  <span>{item.name}</span>
-                </FlexBox>
-                <H5>${item.amount}</H5>
-              </FlexBox>
-            ))}
-          </Card>
-        </Grid>
+        {/*<Grid item lg={4} xs={12}>*/}
+        {/*  <Card sx={{ p: '20px 30px' }}>*/}
+        {/*    <H5>Top Countries</H5>*/}
+        {/*    {topCountryList.map((item, ind) => (*/}
+        {/*      <FlexBox*/}
+        {/*        alignItems="center"*/}
+        {/*        justifyContent="space-between"*/}
+        {/*        my="1rem"*/}
+        {/*        key={ind}*/}
+        {/*      >*/}
+        {/*        <FlexBox alignItems="center">*/}
+        {/*          <Avatar*/}
+        {/*            src={item.flagUrl}*/}
+        {/*            sx={{ mr: '8px', height: 30, width: 30 }}*/}
+        {/*          />*/}
+        {/*          <span>{item.name}</span>*/}
+        {/*        </FlexBox>*/}
+        {/*        <H5>${item.amount}</H5>*/}
+        {/*      </FlexBox>*/}
+        {/*    ))}*/}
+        {/*  </Card>*/}
+        {/*</Grid>*/}
       </Grid>
     </VendorDashboardLayout>
   )

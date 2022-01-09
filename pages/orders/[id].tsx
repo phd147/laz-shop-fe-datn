@@ -47,15 +47,16 @@ const StyledFlexbox = styled(FlexBox)(({ theme }) => ({
 enum OrderStatus1 {
   PaymentProcessing = 'PaymentProcessing',
   Picking = 'Picking',
-  Shipping = 'Shipping',
+  Delivering = 'Delivering',
   Complete = 'Complete',
+  Cancel = "Cancel",
 }
 
-type OrderStatus = 'PaymentProcessing' | 'Picking' | 'Shipping' | 'Complete'
+type OrderStatus = 'PaymentProcessing' | 'Picking' | 'Delivering' | 'Complete'
 
 const OrderDetails = () => {
   // const orderStatus: OrderStatus = 'Picking'
-  const orderStatusList = ['PaymentProcessing', 'Picking', 'Shipping', 'Complete']
+  const orderStatusList = ['PaymentProcessing', 'Picking', 'Delivering', 'Complete',]
   const stepIconList = [Payment, PackageBox, TruckFilled, Delivery]
 
   const router = useRouter();
