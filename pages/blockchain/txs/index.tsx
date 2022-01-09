@@ -1,7 +1,9 @@
-export default function Transaction() {
+const Component = () => {
   return (
     <div>
-      transaction
+
     </div>
   )
 }
+
+export default Component
