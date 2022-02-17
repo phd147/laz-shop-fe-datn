@@ -428,7 +428,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
                 await router.push('/orders')
               }}
               options={{
-                clientId: 'AcmLaGKjsabaL41mJ3p4QVk14GIp0zl7_TrPq4vXW4XoFqXq9iHX-WorjnaFyf-oZdrgvFKbxgPJ88l9',
+                clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                 currency: 'USD',
               }}
             />
