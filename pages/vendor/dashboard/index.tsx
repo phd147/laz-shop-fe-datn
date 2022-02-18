@@ -5,9 +5,56 @@ import VendorDashboardLayout from '@component/layout/VendorDashboardLayout'
 import { H1, H5, Paragraph } from '@component/Typography'
 import { Avatar, Card, Grid } from '@material-ui/core'
 import ShoppingBag from '@material-ui/icons/ShoppingBag'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { instance } from '../../../src/api/api'
 
 const VendorDashboard = () => {
+
+  const [balance,setBalance] = useState(0);
+
+
+  const getShopToken = async () => {
+    try {
+      const res = await instance.get('/balance/shop')
+      setBalance(res.data.balance);
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  // const getTotalOrder = async() => {
+  //   try {
+  //
+  //   }catch(err){
+  //     toast.error('Error');
+  //   }
+  // }
+
+  useEffect(() => {
+    getShopToken();
+  },[])
+
+
+  const cardList = [
+    {
+      title: 'Total products',
+      amount: '$30450.00',
+      subtitle: 'after associated vendor fees',
+    },
+    {
+      title: 'Your balance',
+      amount: `${balance}$`,
+      subtitle: 'Will be processed on Feb 15, 2021',
+    },
+    {
+      title: 'Total Orders',
+      amount: '08',
+      subtitle: '7/3/2020 - 8/1/2020',
+    },
+  ]
+
+
   return (
     <VendorDashboardLayout>
       <DashboardPageHeader title="Dashboard" icon={ShoppingBag} />
@@ -61,23 +108,7 @@ const VendorDashboard = () => {
   )
 }
 
-const cardList = [
-  {
-    title: 'Earnings (before taxes)',
-    amount: '$30450.00',
-    subtitle: 'after associated vendor fees',
-  },
-  {
-    title: 'Your balance',
-    amount: '$4000.00',
-    subtitle: 'Will be processed on Feb 15, 2021',
-  },
-  {
-    title: 'Pending Orders',
-    amount: '08',
-    subtitle: '7/3/2020 - 8/1/2020',
-  },
-]
+
 
 // USE COUNTRY CODE TO FETCH FLAG
 const topCountryList = [
