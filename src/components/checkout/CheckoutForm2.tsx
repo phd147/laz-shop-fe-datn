@@ -41,6 +41,24 @@ enum PaymentType {
 const CheckoutForm2 = ({ additionalComment }) => {
 
   const [open, setOpen] = React.useState(false)
+  const [userBalance, setUserBalance] = useState(0)
+
+  const getUserBalance = async () => {
+    try {
+      const res = await instance.get('/balance/user');
+      setUserBalance(res.data.balance)
+    }catch(err){
+      toast.error('Error');
+    }
+  }
+
+  const handleCoinDiscountChange = e => {
+    setCoinDiscount(e.target.value);
+  }
+
+  useEffect(() => {
+    getUserBalance();
+  },[])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -59,6 +77,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
 
   const [paymentType, setPaymentType] = useState(null)
   const [addressId, setAddressId] = useState(null)
+  const [coinDiscount,setCoinDiscount] = useState(0);
 
   const { cartList } = useSelector(state => state.cartReducer)
 
@@ -331,39 +350,40 @@ const CheckoutForm2 = ({ additionalComment }) => {
               }}
               onClick={toggleHasVoucher}
             >
-              You have 999 laz coin
+              You have {userBalance} laz coin
             </Button>
 
             {hasVoucher && (
               <FlexBox mt={3} maxWidth='400px'>
                 <TextField
-                  name='voucher'
-                  placeholder='Enter voucher code here'
+                  name='coinDiscount'
+                  placeholder='Enter desired coin discount here'
                   fullWidth
-                  value={values.voucher || ''}
-                  onChange={handleChange}
+                  value={coinDiscount || 0}
+                  onChange={handleCoinDiscountChange}
+                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 />
-                <Button
-                  variant='contained'
-                  color='primary'
-                  type='button'
-                  sx={{ ml: '1rem' }}
-                >
-                  Apply
-                </Button>
+                {/*<Button*/}
+                {/*  variant='contained'*/}
+                {/*  color='primary'*/}
+                {/*  type='button'*/}
+                {/*  sx={{ ml: '1rem' }}*/}
+                {/*>*/}
+                {/*  Apply*/}
+                {/*</Button>*/}
               </FlexBox>
             )}
 
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-              fullWidth
-              sx={{ mt: '1.5rem' }}
-              disabled={!addressId || !paymentType || !checkoutType}
-            >
-              Confirm
-            </Button>
+            {/*<Button*/}
+            {/*  variant='contained'*/}
+            {/*  color='primary'*/}
+            {/*  type='submit'*/}
+            {/*  fullWidth*/}
+            {/*  sx={{ mt: '1.5rem' }}*/}
+            {/*  disabled={!addressId || !paymentType || !checkoutType}*/}
+            {/*>*/}
+            {/*  Confirm*/}
+            {/*</Button>*/}
             <PayPalButton
 
               createOrder={
@@ -374,6 +394,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
                     checkoutType: checkoutType,
                     addressId: addressId,
                     additionalComment,
+                    coinDiscount : parseInt(coinDiscount.toString())
                   }
 
                   if (checkoutType === CheckoutType.CART) {
@@ -410,6 +431,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
                   checkoutType: checkoutType,
                   addressId: addressId,
                   additionalComment,
+                  coinDiscount : parseInt(coinDiscount.toString())
                 }
 
                 if (checkoutType === CheckoutType.CART) {
@@ -423,7 +445,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
                 }
                 await instance.post('/payment/paypal/capture-order', {
                   orderId: data.orderID,
-                  data : dataSend
+                  data: dataSend,
                 })
                 await router.push('/orders')
               }}
@@ -457,11 +479,13 @@ const paymentMethodList = [
 const initialValues = {
   addressId: '',
   paymentType: '',
+  coinDiscount : 0
 }
 
 const checkoutSchema = yup.object().shape({
   addressId: yup.string().required('required'),
   paymentType: yup.string().required('required'),
+  coinDiscount : yup.number()
 })
 
 export default CheckoutForm2
