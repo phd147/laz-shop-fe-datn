@@ -431,7 +431,6 @@ const CheckoutForm2 = ({ additionalComment }) => {
                   checkoutType: checkoutType,
                   addressId: addressId,
                   additionalComment,
-                  coinDiscount : parseInt(coinDiscount.toString())
                 }
 
                 if (checkoutType === CheckoutType.CART) {
@@ -446,6 +445,7 @@ const CheckoutForm2 = ({ additionalComment }) => {
                 await instance.post('/payment/paypal/capture-order', {
                   orderId: data.orderID,
                   data: dataSend,
+                  coinDiscount : parseInt(coinDiscount.toString())
                 })
                 await router.push('/orders')
               }}
