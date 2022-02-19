@@ -19,7 +19,7 @@ import { format } from 'date-fns'
 import React, { Fragment, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { instance } from '../../src/api/api'
+import { instance } from '../../../src/api/api';
 
 const StyledFlexbox = styled(FlexBox)(({ theme }) => ({
   flexDirection: 'row',
