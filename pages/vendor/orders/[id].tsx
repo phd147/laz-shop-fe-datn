@@ -1,123 +1,215 @@
 import FlexBox from '@component/FlexBox'
+import Delivery from '@component/icons/Delivery'
+import PackageBox from '@component/icons/PackageBox'
+import TruckFilled from '@component/icons/TruckFilled'
+import Payment from '@component/icons/Payment'
+import DashboardLayout from '@component/layout/CustomerDashboardLayout'
+import CustomerDashboardNavigation from '@component/layout/CustomerDashboardNavigation'
 import DashboardPageHeader from '@component/layout/DashboardPageHeader'
-import VendorDashboardLayout from '@component/layout/VendorDashboardLayout'
 import TableRow from '@component/TableRow'
-import { H5, H6 } from '@component/Typography'
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  IconButton,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@material-ui/core'
-import Delete from '@material-ui/icons/Delete'
+import { H5, H6, Paragraph } from '@component/Typography'
+import productDatabase from '@data/product-database'
+import useWindowSize from '@hook/useWindowSize'
+import { Avatar, Button, Card, Divider, Grid, Typography } from '@material-ui/core'
+import { styled } from '@material-ui/core/styles'
+import Done from '@material-ui/icons/Done'
 import ShoppingBag from '@material-ui/icons/ShoppingBag'
-import { Box } from '@material-ui/system'
+import { Box, useTheme } from '@material-ui/system'
 import { format } from 'date-fns'
-import Link from 'next/link'
+import React, { Fragment, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import React from 'react'
+import { instance } from '../../src/api/api'
+
+const StyledFlexbox = styled(FlexBox)(({ theme }) => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  marginTop: '2rem',
+  marginBottom: '2rem',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+  },
+
+  '& .line': {
+    flex: '1 1 0',
+    height: 4,
+    minWidth: 50,
+    [theme.breakpoints.down('sm')]: {
+      flex: 'unset',
+      height: 50,
+      minWidth: 4,
+    },
+  },
+}))
+
+enum OrderStatus1 {
+  PaymentProcessing = 'PaymentProcessing',
+  Picking = 'Picking',
+  Delivering = 'Delivering',
+  Complete = 'Complete',
+  Cancel = "Cancel",
+}
+
+type OrderStatus = 'PaymentProcessing' | 'Picking' | 'Delivering' | 'Complete'
 
 const OrderDetails = () => {
-  const router = useRouter()
+  // const orderStatus: OrderStatus = 'Picking'
+  const orderStatusList = ['PaymentProcessing', 'Picking', 'Delivering', 'Complete',]
+  const stepIconList = [Payment, PackageBox, TruckFilled, Delivery]
+
+  const router = useRouter();
+
   const { id } = router.query
 
+
+  const [orderDetail, setOrderDetail] = useState({})
+
+  const statusIndex = orderStatusList.indexOf(orderDetail?.status)
+  const width = useWindowSize()
+  const theme = useTheme()
+  const breakpoint = 350
+  console.log(theme.breakpoints.up('md'))
+
+  const fetchOrderDetail = async () => {
+    try {
+      const res = await instance.get(`/orders/${id}`)
+      setOrderDetail(res.data)
+    }catch(err){
+      toast.error('Error')
+    }
+
+  }
+
+  useEffect(() => {
+    fetchOrderDetail()
+  },[])
+
+  const orderItem = orderDetail ? [orderDetail.item] : []
+  console.log({orderItem})
+
+
   return (
-    <VendorDashboardLayout>
+    <DashboardLayout>
       <DashboardPageHeader
-        title="Order Details"
+        title='Order Details'
         icon={ShoppingBag}
-        button={
-          <Link href="/vendor/orders">
-            <Button color="primary" sx={{ bgcolor: 'primary.light', px: '2rem' }}>
-              Back to Order List
-            </Button>
-          </Link>
-        }
+        // button={
+        //   <Button color='primary' sx={{ bgcolor: 'primary.light', px: '2rem' }}>
+        //     Order Again
+        //   </Button>
+        // }
+        navigation={<CustomerDashboardNavigation />}
       />
+
+      <Card sx={{ p: '2rem 1.5rem', mb: '30px' }}>
+        <StyledFlexbox>
+          {stepIconList.map((Icon, ind) => (
+            <Fragment key={ind}>
+              <Box position='relative'>
+                <Avatar
+                  sx={{
+                    height: 64,
+                    width: 64,
+                    bgcolor: ind <= statusIndex ? 'primary.main' : 'grey.300',
+                    color: ind <= statusIndex ? 'grey.white' : 'primary.main',
+                  }}
+                >
+                  <Icon color='inherit' sx={{ fontSize: '32px' }} />
+                </Avatar>
+                {ind < statusIndex && (
+                  <Box position='absolute' right='0' top='0'>
+                    <Avatar
+                      sx={{
+                        height: 22,
+                        width: 22,
+                        bgcolor: 'grey.200',
+                        color: 'success.main',
+                      }}
+                    >
+                      <Done color='inherit' sx={{ fontSize: '1rem' }} />
+                    </Avatar>
+                  </Box>
+                )}
+              </Box>
+              {ind < stepIconList.length - 1 && (
+                <Box
+                  className='line'
+                  bgcolor={ind < statusIndex ? 'primary.main' : 'grey.300'}
+                />
+              )}
+            </Fragment>
+          ))}
+        </StyledFlexbox>
+
+        <FlexBox justifyContent={width < breakpoint ? 'center' : 'flex-end'}>
+          <Typography
+            p='0.5rem 1rem'
+            borderRadius='300px'
+            bgcolor='primary.light'
+            color='primary.main'
+            textAlign='center'
+          >
+            Estimated Delivery Date <b>4th October</b>
+          </Typography>
+        </FlexBox>
+      </Card>
 
       <Card sx={{ p: '0px', mb: '30px' }}>
         <TableRow
-          elevation={0}
           sx={{
             bgcolor: 'grey.200',
             p: '12px',
-            borderRadius: '0px !important',
+            boxShadow: 'none',
+            borderRadius: 0,
           }}
         >
-          <FlexBox
-            flex="0 0 0 !important"
-            m={0.75}
-            alignItems="center"
-            whiteSpace="pre"
-          >
-            <Typography fontSize="14px" color="grey.600" mr={0.5}>
+          <FlexBox className='pre' m={0.75} alignItems='center'>
+            <Typography fontSize='14px' color='grey.600' mr={0.5}>
               Order ID:
             </Typography>
-            <Typography fontSize="14px">{id}</Typography>
+            <Typography fontSize='14px'>{orderDetail?.code?.substring(0,12).toUpperCase()}</Typography>
           </FlexBox>
-          <FlexBox className="pre" m={0.75} alignItems="center">
-            <Typography fontSize="14px" color="grey.600" mr={0.5}>
+          <FlexBox className='pre' m={0.75} alignItems='center'>
+            <Typography fontSize='14px' color='grey.600' mr={0.5}>
               Placed on:
             </Typography>
-            <Typography fontSize="14px">
+            <Typography fontSize='14px'>
               {format(new Date(), 'dd MMM, yyyy')}
             </Typography>
           </FlexBox>
-
-          <Box maxWidth="160px">
-            <TextField
-              label="Order Status"
-              placeholder="Order Status"
-              select
-              fullWidth
-            >
-              {orderStatusList.map((item) => (
-                <MenuItem value={item.value} key={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Box>
+          <FlexBox className='pre' m={0.75} alignItems='center'>
+            <Typography fontSize='14px' color='grey.600' mr={0.5}>
+              Delivered on:
+            </Typography>
+            <Typography fontSize='14px'>
+              {format(new Date(), 'dd MMM, yyyy')}
+            </Typography>
+          </FlexBox>
         </TableRow>
 
-        <Box p="1rem 1.5rem 10px">
-          <TextField label="Add Product" fullWidth />
-        </Box>
-
         <Box py={1}>
-          {[1, 2, 3, 4].map((item) => (
-            <FlexBox px={2} py={1} flexWrap="wrap" alignItems="center" key={item}>
-              <FlexBox flex="2 2 260px" m={0.75} alignItems="center">
-                <Avatar
-                  src="/assets/images/products/imagetree.png"
-                  sx={{ height: 64, width: 64 }}
-                />
+          {  orderItem.map((item) => (
+            <FlexBox px={2} py={1} flexWrap='wrap' alignItems='center' key={item?.id}>
+              <FlexBox flex='2 2 260px' m={0.75} alignItems='center'>
+                <Avatar src={item?.imageUrl} sx={{ height: 64, width: 64 }} />
                 <Box ml={2.5}>
-                  <H6 my="0px">Nike React Phantom Run Flyknit 2</H6>
-                  <FlexBox alignItems="center">
-                    <Typography fontSize="14px" color="grey.600">
-                      $145 x
-                    </Typography>
-                    <Box maxWidth="60px" ml={1} mt={0.5}>
-                      <TextField defaultValue={3} type="number" fullWidth />
-                    </Box>
-                  </FlexBox>
+                  <H6 my='0px'>{item?.name}</H6>
+                  <Typography fontSize='14px' color='grey.600'>
+                    ${item?.price} x {orderDetail?.quantity}
+                  </Typography>
                 </Box>
               </FlexBox>
-              <FlexBox flex="1 1 260px" m={0.75} alignItems="center">
-                <Typography fontSize="14px" color="grey.600">
+              <FlexBox flex='1 1 260px' m={0.75} alignItems='center'>
+                <Typography fontSize='14px' color='grey.600'>
                   Product properties: Black, L
                 </Typography>
               </FlexBox>
-              <FlexBox flex="0 0 0 !important" m={0.75} alignItems="center">
-                <IconButton>
-                  <Delete fontSize="small" />
-                </IconButton>
+              <FlexBox flex='160px' m={0.75} alignItems='center'>
+                <Button onClick={() => router.push(`/product/${item?.id}`)} variant='text' color='primary'>
+                  <Typography fontSize='14px'>Detail</Typography>
+                </Button>
               </FlexBox>
             </FlexBox>
           ))}
@@ -126,101 +218,54 @@ const OrderDetails = () => {
 
       <Grid container spacing={3}>
         <Grid item lg={6} md={6} xs={12}>
-          <Card sx={{ p: '20px 30px', mb: '1.5rem' }}>
+          <Card sx={{ p: '20px 30px' }}>
             <H5 mt={0} mb={2}>
               Shipping Address
             </H5>
-            <TextField
-              defaultValue="Kelly Williams 777 Brockton Avenue, Abington MA 2351"
-              multiline
-              rows={5}
-              fullWidth
-              sx={{ borderRadius: '10px' }}
-            />
-          </Card>
-
-          <Card sx={{ p: '20px 30px' }}>
-            <H5 mt={0} mb={2}>
-              Customer's Note
-            </H5>
-            <TextField
-              defaultValue="Please deliver ASAP."
-              multiline
-              rows={5}
-              fullWidth
-              sx={{ borderRadius: '10px' }}
-            />
+            <Paragraph fontSize='14px' my='0px'>
+              Address :  {orderDetail?.address?.address}
+            </Paragraph>
+            <Paragraph fontSize='14px' my='0px'>
+              Phone :  {orderDetail?.address?.phoneNumber}
+            </Paragraph>
           </Card>
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Card sx={{ p: '20px 30px', mb: '1.5rem' }}>
+          <Card sx={{ p: '20px 30px' }}>
             <H5 mt={0} mb={2}>
               Total Summary
             </H5>
-            <FlexBox justifyContent="space-between" alignItems="center" mb={1}>
-              <Typography fontSize="14px" color="grey.600">
+            <FlexBox justifyContent='space-between' alignItems='center' mb={1}>
+              <Typography fontSize='14px' color='grey.600'>
                 Subtotal:
               </Typography>
-              <H6 my="0px">$335</H6>
+              <H6 my='0px'>{orderDetail.total + orderDetail.discount}</H6>
             </FlexBox>
-            <FlexBox justifyContent="space-between" alignItems="center" mb={1}>
-              <Typography fontSize="14px" color="grey.600">
-                Shipping fee:
-              </Typography>
-              <FlexBox alignItems="center" maxWidth="100px" ml={1} mt={0.5}>
-                <Typography mr={1}>$</Typography>
-                <TextField defaultValue={10} type="number" fullWidth />
-              </FlexBox>
-            </FlexBox>
-            <FlexBox justifyContent="space-between" alignItems="center" mb={1}>
-              <Typography fontSize="14px" color="grey.600">
+            {/*<FlexBox justifyContent='space-between' alignItems='center' mb={1}>*/}
+            {/*  <Typography fontSize='14px' color='grey.600'>*/}
+            {/*    Shipping fee:*/}
+            {/*  </Typography>*/}
+            {/*  <H6 my='0px'>$10</H6>*/}
+            {/*</FlexBox>*/}
+            <FlexBox justifyContent='space-between' alignItems='center' mb={1}>
+              <Typography fontSize='14px' color='grey.600'>
                 Discount:
               </Typography>
-              <FlexBox alignItems="center" maxWidth="100px" ml={1} mt={0.5}>
-                <Typography mr={1}>-$</Typography>
-                <TextField defaultValue={30} type="number" fullWidth />
-              </FlexBox>
+              <H6 my='0px'>-{orderDetail.discount}</H6>
             </FlexBox>
 
             <Divider sx={{ mb: '0.5rem' }} />
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb={2}>
-              <H6 my="0px">Total</H6>
-              <H6 my="0px">$315</H6>
+            <FlexBox justifyContent='space-between' alignItems='center' mb={2}>
+              <H6 my='0px'>Total</H6>
+              <H6 my='0px'>{orderDetail.total}</H6>
             </FlexBox>
-            <Typography fontSize="14px">Paid by Credit/Debit Card</Typography>
+            <Typography fontSize='14px'>Paid by {orderDetail.paymentType}</Typography>
           </Card>
-
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ ml: 'auto', display: 'block' }}
-          >
-            Save Changes
-          </Button>
         </Grid>
       </Grid>
-    </VendorDashboardLayout>
+    </DashboardLayout>
   )
 }
-
-const orderStatusList = [
-  {
-    label: 'Processing',
-    value: 'Processing',
-  },
-  {
-    label: 'Pending',
-    value: 'Pending',
-  },
-  {
-    label: 'Delivered',
-    value: 'Delivered',
-  },
-  {
-    label: 'Cancelled',
-    value: 'Cancelled',
-  },
-]
 
 export default OrderDetails

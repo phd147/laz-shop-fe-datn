@@ -22,6 +22,8 @@ const Profile = () => {
 
   const [orderOverview, setOrderOverview] = useState({})
 
+  const [balance, setBalance] = useState(0)
+
   const fetchOrderOverview = async () => {
     try {
       const res = await instance.get('/orders/user/overview')
@@ -31,9 +33,19 @@ const Profile = () => {
     }
   }
 
+  const fetchBalance = async () => {
+    try {
+      const res = await instance.get('/balance/user')
+      setBalance(res.data.balance)
+    } catch (err) {
+      toast.error('Error')
+    }
+  }
+
 
   useEffect(() => {
     fetchOrderOverview()
+    fetchBalance()
   }, [])
 
   const infoList = [
@@ -100,7 +112,7 @@ const Profile = () => {
                     <FlexBox alignItems='center'>
                       <Typography color='grey.600'>Balance:</Typography>
                       <Typography ml={0.5} color='primary.main'>
-                        $500 Laz coin
+                        {balance} Laz coin
                       </Typography>
                     </FlexBox>
                   </div>
