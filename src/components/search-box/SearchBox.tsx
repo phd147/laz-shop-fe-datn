@@ -9,6 +9,8 @@ import SearchOutlined from '@material-ui/icons/SearchOutlined'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
+import {useRouter} from 'next/router'
+
 const StyledBox = styled(Box)(({ theme }) => ({
   '.searchIcon': {
     color: theme.palette.grey[600],
@@ -62,21 +64,23 @@ const SearchBox = () => {
   const [resultList, setResultList] = useState<string[]>([])
   const parentRef = useRef()
 
+  const router = useRouter();
+
   const handleCategoryChange = (cat: any) => () => {
     setCategory(cat)
   }
 
-  const search = debounce((e) => {
-    const value = e.target?.value
+  // const search = debounce((e) => {
+  //   const value = e.target?.value
+  //
+  //   if (!value) setResultList([])
+  //   else setResultList(dummySearchResult)
+  // }, 200)
 
-    if (!value) setResultList([])
-    else setResultList(dummySearchResult)
-  }, 200)
-
-  const hanldeSearch = useCallback((event) => {
-    event.persist()
-    search(event)
-  }, [])
+  // const hanldeSearch = useCallback((event) => {
+  //   event.persist()
+  //   search(event)
+  // }, [])
 
   const handleDocumentClick = () => {
     setResultList([])
@@ -90,30 +94,13 @@ const SearchBox = () => {
   }, [])
 
   const categoryDropdown = (
-    <BazarMenu
-      direction='left'
-      handler={
-        <FlexBox
-          className='dropdownHandler'
-          alignItems='center'
-          bgcolor='grey.100'
-          height='100%'
-          px={3}
-          color='grey.700'
-          component={TouchRipple}
-        >
-          <Box mr={0.5}>{category}</Box>
-          <KeyboardArrowDownOutlined fontSize='small' color='inherit' />
-        </FlexBox>
-      }
-    >
-      {categories.map((item) => (
-        <MenuItem key={item} onClick={handleCategoryChange(item)}>
-          {item}
-        </MenuItem>
-      ))}
-    </BazarMenu>
+    <></>
   )
+
+  const searchHandler = (e) => {
+    console.log('search handler')
+    location.replace(`/product/search/${e.target.value}?type=search`)
+  }
 
   return (
     <StyledBox
@@ -127,7 +114,7 @@ const SearchBox = () => {
         variant='outlined'
         placeholder='Search in shop'
         fullWidth
-        onChange={hanldeSearch}
+        onChange={() => {}}
         InputProps={{
           sx: {
             height: 44,
@@ -139,17 +126,22 @@ const SearchBox = () => {
           endAdornment: categoryDropdown,
           startAdornment: <SearchOutlined className='searchIcon' fontSize='small' />,
         }}
+        onKeyDown={(e) => {
+          if (e.code === "Enter") {
+            e.preventDefault()
+            searchHandler(e);
+          }
+        }}
       />
 
-      {!!resultList.length && (
-        <Card className='searchResultCard' elevation={2}>
-          {resultList.map((item) => (
-            <Link href={`/product/search/${item}`} key={item}>
-              <MenuItem key={item}>{item}</MenuItem>
-            </Link>
-          ))}
-        </Card>
-      )}
+      {/*{!!resultList.length && (*/}
+      {/*  <Card className='searchResultCard' elevation={2}>*/}
+      {/*    {resultList.map((item) => (*/}
+      {/*      <Link href={`/product/search/${item}`} key={item}>*/}
+      {/*        <MenuItem key={item}>{item}</MenuItem>*/}
+      {/*      </Link>*/}
+      {/*    ))}*/}
+      {/*  </Card>*/}
     </StyledBox>
   )
 }

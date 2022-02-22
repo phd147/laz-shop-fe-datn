@@ -54,13 +54,13 @@ const CategoryMenuItem: React.FC<CategoryMenuItemProps> = ({
 
   return (
     <Box className={classes.root}>
-      <Link href={href}>
+      <a href={href}>
         <MenuItem className="category-dropdown-link">
           {rest.icon && <rest.icon fontSize="small" color="inherit" />}
           <span className="title">{title}</span>
           {caret && <ChevronRight fontSize="small" />}
         </MenuItem>
-      </Link>
+      </a>
       {children}
     </Box>
   )

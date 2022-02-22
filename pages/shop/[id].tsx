@@ -55,18 +55,18 @@ const Shop = () => {
     <NavbarLayout>
       <ShopIntroCard shop={shop} />
       <Grid container spacing={3}>
-        <Grid
-          item
-          md={3}
-          xs={12}
-          sx={{
-            '@media only screen and (max-width: 1024px)': {
-              display: 'none',
-            },
-          }}
-        >
-          <ProductFilterCard />
-        </Grid>
+        {/*<Grid*/}
+        {/*  item*/}
+        {/*  md={3}*/}
+        {/*  xs={12}*/}
+        {/*  sx={{*/}
+        {/*    '@media only screen and (max-width: 1024px)': {*/}
+        {/*      display: 'none',*/}
+        {/*    },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <ProductFilterCard />*/}
+        {/*</Grid>*/}
 
         <Grid item md={9} xs={12}>
           {isTablet && (

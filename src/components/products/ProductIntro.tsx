@@ -44,7 +44,8 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                                                      shop,
                                                      averageStar,
                                                      totalReview,
-                                                     stock
+                                                     stock,
+                                                     categories,
                                                    }) => {
 
 
@@ -56,7 +57,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   const [currentImage, setCurrentImage] = useState(0)
 
 
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState(1)
 
   const [isFavorite, setIsFavorite] = useState(false)
 
@@ -65,44 +66,42 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
 
   const addToCartHandler = async () => {
     try {
-        const res = await instance.post(`/cart-items/${itemId}`, {
-          amount
-        })
-      dispatch({
-        type : INIT_CART,
-        cartList : res.data.rows
+      const res = await instance.post(`/cart-items/${itemId}`, {
+        amount,
       })
-      toast.success('OK');
-    }catch(err){
-      toast.error(err.response.data.message);
+      dispatch({
+        type: INIT_CART,
+        cartList: res.data.rows,
+      })
+      toast.success('OK')
+    } catch (err) {
+      toast.error(err.response.data.message)
     }
   }
 
   const buyNowHandler = () => {
-    console.log('Incomming soon');
+    console.log('Incomming soon')
     dispatch({
-      type : INIT_CHECKOUT,
-      data : {
-        checkoutType : 'BUYNOW',
-        buyNowItem : {
-          item : {
-            imageUrl ,
+      type: INIT_CHECKOUT,
+      data: {
+        checkoutType: 'BUYNOW',
+        buyNowItem: {
+          item: {
+            imageUrl,
             name,
-            price ,
+            price,
             id,
             shop,
             averageStar,
             totalReview,
-            stock
+            stock,
           },
-          quantity : amount
-        }
-      }
+          quantity: amount,
+        },
+      },
     })
-    router.push('/checkout');
+    router.push('/checkout')
   }
-
-
 
 
   const toggleIsFavorite = async () => {
@@ -194,13 +193,13 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
     // })
     switch (type) {
       case ChangeAmount.INCREMENT :
-        setAmount(amount => amount +1);
-        break ;
+        setAmount(amount => amount + 1)
+        break
       case ChangeAmount.DECREMENT :
-        setAmount(amount => amount -1);
-        break ;
+        setAmount(amount => amount - 1)
+        break
       default :
-        break ;
+        break
     }
 
   }
@@ -208,15 +207,15 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   const getIsFavorite = async () => {
     try {
       const res = await instance.get(`/items/${id}/isFavorite`)
-      setIsFavorite(!!res.data);
+      setIsFavorite(!!res.data)
     } catch (err) {
-      toast.error('Error');
+      toast.error('Error')
     }
   }
 
-  useEffect(async() => {
-    if(isLogin){
-      getIsFavorite();
+  useEffect(async () => {
+    if (isLogin) {
+      getIsFavorite()
     }
   }, [])
 
@@ -278,8 +277,10 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
           <H1 mb={2}>{name}</H1>
 
           <FlexBox alignItems='center' mb={2}>
-            <Box>Brand:</Box>
-            <H6 ml={1}>Xiaomi</H6>
+
+            <Box>Categories:</Box>
+              <H6 ml={1}>{categories && categories[0].name}</H6>
+
           </FlexBox>
 
           <FlexBox alignItems='center' mb={2}>
@@ -297,33 +298,33 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             <Box color='inherit'>Stock Available : {stock}</Box>
           </Box>
 
-            <FlexBox alignItems='center' mb={4.5}>
-              <BazarButton
-                sx={{ p: '9px' }}
-                variant='outlined'
-                size='small'
-                color='primary'
-                onClick={() => handleCartAmountChange(ChangeAmount.DECREMENT)}
-                disabled={amount === 1}
-              >
-                <Remove fontSize='small' />
-              </BazarButton>
-              <H3 fontWeight='600' mx={2.5}>
-                {amount}
-                {/*{cartItem?.qty.toString().padStart(2, '0')}*/}
-                {/*{'????'}*/}
-              </H3>
-              <BazarButton
-                sx={{ p: '9px' }}
-                variant='outlined'
-                size='small'
-                color='primary'
-                onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT)}
-              >
-                <Add fontSize='small' />
-              </BazarButton>
-            </FlexBox>
-          <FlexBox alignItems='center' >
+          <FlexBox alignItems='center' mb={4.5}>
+            <BazarButton
+              sx={{ p: '9px' }}
+              variant='outlined'
+              size='small'
+              color='primary'
+              onClick={() => handleCartAmountChange(ChangeAmount.DECREMENT)}
+              disabled={amount === 1}
+            >
+              <Remove fontSize='small' />
+            </BazarButton>
+            <H3 fontWeight='600' mx={2.5}>
+              {amount}
+              {/*{cartItem?.qty.toString().padStart(2, '0')}*/}
+              {/*{'????'}*/}
+            </H3>
+            <BazarButton
+              sx={{ p: '9px' }}
+              variant='outlined'
+              size='small'
+              color='primary'
+              onClick={() => handleCartAmountChange(ChangeAmount.INCREMENT)}
+            >
+              <Add fontSize='small' />
+            </BazarButton>
+          </FlexBox>
+          <FlexBox alignItems='center'>
             <BazarButton
               variant='contained'
               color='warning'
@@ -336,28 +337,28 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             >
               Buy now
             </BazarButton>
-          <BazarButton
-            variant='contained'
-            color='primary'
-            sx={{
-              mb: '20px',
-              px: '1.75rem',
-              height: '40px',
-              ml : '10px'
-            }}
-            onClick={isLogin ? () => addToCartHandler() : () => dispatch(toggleLoginPopup())}
-          >
-            Add to Cart
-          </BazarButton>
+            <BazarButton
+              variant='contained'
+              color='primary'
+              sx={{
+                mb: '20px',
+                px: '1.75rem',
+                height: '40px',
+                ml: '10px',
+              }}
+              onClick={isLogin ? () => addToCartHandler() : () => dispatch(toggleLoginPopup())}
+            >
+              Add to Cart
+            </BazarButton>
           </FlexBox>
           <FlexBox alignItems='center' mb={1}>
-          <IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>
-            {isFavorite ? (
-              <Favorite color='primary' fontSize='large' />
-            ) : (
-              <FavoriteBorder fontSize='large' />
-            )}
-          </IconButton>
+            <IconButton sx={{ p: '6px' }} onClick={isLogin ? toggleIsFavorite : () => dispatch(toggleLoginPopup())}>
+              {isFavorite ? (
+                <Favorite color='primary' fontSize='large' />
+              ) : (
+                <FavoriteBorder fontSize='large' />
+              )}
+            </IconButton>
           </FlexBox>
           <FlexBox alignItems='center' mb={2}>
             <Box>Sold By:</Box>

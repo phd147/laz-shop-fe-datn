@@ -48,7 +48,6 @@ const Section10 = () => {
       <CategorySectionHeader
         title='Categories'
         icon={<Category color='primary' />}
-        seeMoreLink='#'
       />
 
       <Grid container spacing={3}>

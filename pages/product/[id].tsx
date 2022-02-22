@@ -74,12 +74,12 @@ const ProductDetails = () => {
   }
 
 
-  const { imageUrl, price, shop, description, name, averageStar, totalReview  :  totalReviews, amount} = product
+  const { imageUrl, price, shop, description, name, averageStar, totalReview  :  totalReviews, amount, products} = product
 
 
   return (
     <NavbarLayout>
-      <ProductIntro id={id} totalReview={totalReviews}  averageStar={averageStar} imageUrl={[imageUrl]} price={price} shop={shop} name={name} stock={amount}/>
+      <ProductIntro categories={products} id={id} totalReview={totalReviews}  averageStar={averageStar} imageUrl={[imageUrl]} price={price} shop={shop} name={name} stock={amount}/>
 
       <StyledTabs
         value={selectedOption}

@@ -50,7 +50,7 @@ const CategoryMenuCard: React.FC<CategoryMenuCardProps> = (props) => {
         return (
           <CategoryMenuItem
             title={item.name}
-            href={`/products/category?id=${item.id}`}
+            href={`/product/search/${item.name}?type=category`}
             // icon={item.icon}
             caret={!!item.menuData}
             key={item.id}

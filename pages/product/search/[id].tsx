@@ -6,12 +6,15 @@ import ProductFilterCard from '@component/products/ProductFilterCard'
 import Sidenav from '@component/sidenav/Sidenav'
 import { H5, Paragraph } from '@component/Typography'
 import useWindowSize from '@hook/useWindowSize'
-import { Card, Grid, IconButton, MenuItem, TextField } from '@material-ui/core'
+import { Card, Grid, IconButton, MenuItem, Pagination, TextField } from '@material-ui/core'
 import Apps from '@material-ui/icons/Apps'
 import FilterList from '@material-ui/icons/FilterList'
 import ViewList from '@material-ui/icons/ViewList'
 import { Box } from '@material-ui/system'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+import { instance } from '../../../src/api/api'
 
 const ProductSearchResult = () => {
   const [view, setView] = useState('grid')
@@ -22,8 +25,34 @@ const ProductSearchResult = () => {
     (v) => () => {
       setView(v)
     },
-    []
+    [],
   )
+
+  const [page, setPage] = useState(1);
+  const [limit,setLimit] = useState(9);
+
+  const router = useRouter()
+
+  const { type, id } = router.query
+  console.log(router.query)
+
+
+  const [items,setItems] = useState([]);
+
+  const fetchItems = async (page=1) => {
+    try {
+        const url = type === 'category' ? `/item/search?type=category&categoryName=${id}&page=${page}&limit=${limit}` : `/item/search?search[item_name]=${id}&page=${page}&limit=${limit}`
+      const res = await instance.get(url);
+        setItems(res.data)
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    fetchItems();
+  },[])
+
 
   return (
     <NavbarLayout>
@@ -44,49 +73,25 @@ const ProductSearchResult = () => {
           elevation={1}
         >
           <div>
-            <H5>Searching for “ mobile phone ”</H5>
-            <Paragraph color="grey.600">48 results found</Paragraph>
+            <H5>Searching for {type === 'category' && type} “ {id}”</H5>
+            <Paragraph color='grey.600'>48 results found</Paragraph>
           </div>
-          <FlexBox alignItems="center" flexWrap="wrap" my="0.5rem">
-            <FlexBox alignItems="center" flex="1 1 0">
-              <Paragraph color="grey.600" mr={2} whiteSpace="pre">
-                Short by:
-              </Paragraph>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="Short by"
-                select
-                defaultValue={sortOptions[0].value}
-                fullWidth
-                sx={{
-                  flex: '1 1 0',
-                  mr: '1.75rem',
-                  minWidth: '150px',
-                }}
-              >
-                {sortOptions.map((item) => (
-                  <MenuItem value={item.value} key={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FlexBox>
+          <FlexBox alignItems='center' flexWrap='wrap' my='0.5rem'>
 
-            <FlexBox alignItems="center" my="0.25rem">
-              <Paragraph color="grey.600" mr={1}>
+            <FlexBox alignItems='center' my='0.25rem'>
+              <Paragraph color='grey.600' mr={1}>
                 View:
               </Paragraph>
               <IconButton onClick={toggleView('grid')}>
                 <Apps
                   color={view === 'grid' ? 'primary' : 'inherit'}
-                  fontSize="small"
+                  fontSize='small'
                 />
               </IconButton>
               <IconButton onClick={toggleView('list')}>
                 <ViewList
                   color={view === 'list' ? 'primary' : 'inherit'}
-                  fontSize="small"
+                  fontSize='small'
                 />
               </IconButton>
 
@@ -94,7 +99,7 @@ const ProductSearchResult = () => {
                 <Sidenav
                   handle={
                     <IconButton>
-                      <FilterList fontSize="small" />
+                      <FilterList fontSize='small' />
                     </IconButton>
                   }
                 >
@@ -106,21 +111,14 @@ const ProductSearchResult = () => {
         </Card>
 
         <Grid container spacing={3}>
-          <Grid
-            item
-            lg={3}
-            xs={12}
-            sx={{
-              '@media only screen and (max-width: 1024px)': {
-                display: 'none',
-              },
-            }}
-          >
-            <ProductFilterCard />
-          </Grid>
 
           <Grid item lg={9} xs={12}>
-            {view === 'grid' ? <ProductCard1List /> : <ProductCard9List />}
+            {view === 'grid' ? <ProductCard1List shopItems={items.items} /> : <ProductCard9List />}
+            {/*<ProductCard1List shopItems={[]} />*/}
+            <Pagination page={page} count={items.last_page} variant="outlined" color="primary" onChagne={(e,newValue) => {
+              fetchItems(newValue)
+              setPage(newValue);
+            }}/>
           </Grid>
         </Grid>
       </Box>

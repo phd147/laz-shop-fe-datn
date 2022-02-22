@@ -35,7 +35,6 @@ const Section2 = () => {
     <CategorySectionCreator
       icon={<Light color='primary' />}
       title='Recommend for you'
-      seeMoreLink='#'
     >
       <Box mt={-0.5} mb={-0.5}>
         <Carousel

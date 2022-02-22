@@ -19,6 +19,7 @@ import {
 import { instance } from '../../../src/api/api'
 
 import {format} from 'date-fns'
+import { toast } from 'react-toastify'
 
 const WithDraw = () => {
 
@@ -36,8 +37,11 @@ const WithDraw = () => {
         email,
         amount,
       })
+      toast.success('OK');
+      fetchTransactions(page)
       console.log(res)
     } catch (err) {
+      toast.error('Some things went wrong');
     }
   }
 
@@ -95,7 +99,7 @@ const WithDraw = () => {
         </Button>
         <h3>Transactions History</h3>
         <Grid container>
-          <Grid item md={8} xs={12}>
+          <Grid justifyContent={'center'} item md={10} xs={12}>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

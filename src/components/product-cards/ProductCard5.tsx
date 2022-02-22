@@ -5,25 +5,25 @@ import { Box } from '@material-ui/core'
 import React from 'react'
 
 export interface ProductCard5Props {
-  imgUrl: string
-  title: string
+  imageUrl: string
+  name: string
 }
 
-const ProductCard5: React.FC<ProductCard5Props> = ({ imgUrl, title }) => {
+const ProductCard5: React.FC<ProductCard5Props> = ({ imageUrl, name }) => {
   return (
     <Box>
       <HoverBox borderRadius="5px" mb={1}>
         <LazyImage
-          src={imgUrl}
+          src={imageUrl}
           width={260}
           height={175}
           layout="responsive"
           objectFit="cover"
-          alt={title}
+          alt={name}
         />
       </HoverBox>
       <H4 fontSize="14px" fontWeight="600">
-        {title}
+        {name}
       </H4>
     </Box>
   )

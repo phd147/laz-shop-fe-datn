@@ -3,12 +3,41 @@ import DottedStar from '@component/icons/DottedStar'
 import RankBadge from '@component/icons/RankBadge'
 import { Box, Container, Grid } from '@material-ui/core'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CategorySectionHeader from '../CategorySectionHeader'
-import ProductCard4 from '../product-cards/ProductCard4'
+import ProductCard4 from '../Top-shop-item'
 import ProductCard5 from '../product-cards/ProductCard5'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
 
 const Section4 = () => {
+
+  const [topShops,setTopShops] = useState([])
+  const [categories, setCategories] = useState([])
+
+  const fetchTopShop = async () => {
+    try {
+      const res = await instance.get('/shop/top');
+      setTopShops(res.data);
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const res = await instance.get('/feature-categories');
+      setCategories(res.data);
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    fetchTopShop();
+    fetchCategories();
+  },[])
+
   return (
     <Box mb={7.5}>
       <Container>
@@ -17,14 +46,14 @@ const Section4 = () => {
             <Grid item lg={6} xs={12}>
               <CategorySectionHeader
                 icon={<RankBadge />}
-                title="Top Ratings"
-                seeMoreLink="#"
+                title="Top Shop"
+                seeMoreLink="/shops"
               />
               <BazarCard sx={{ p: '1rem' }}>
                 <Grid container spacing={4}>
-                  {topRatedList.map((item) => (
-                    <Grid item md={3} sm={6} xs={6} key={item.title}>
-                      <Link href={item.productUrl}>
+                  {topShops.map((item) => (
+                    <Grid item md={3} sm={6} xs={6} key={item.id}>
+                      <Link href={`/shop/${item.id}`}>
                         <a>
                           <ProductCard4 {...item} />
                         </a>
@@ -36,15 +65,15 @@ const Section4 = () => {
             </Grid>
             <Grid item md={6} xs={12}>
               <CategorySectionHeader
+
                 icon={<DottedStar />}
-                title="Featured Brands"
-                seeMoreLink="#"
+                title="Featured categories"
               />
               <BazarCard sx={{ p: '1rem' }}>
                 <Grid container spacing={4}>
-                  {brandList.map((item) => (
-                    <Grid item sm={6} xs={12} key={item.title}>
-                      <Link href={item.productUrl}>
+                  {categories.map((item) => (
+                    <Grid item sm={6} xs={12} key={item.name}>
+                      <Link href={`/product/search/${item.name}?type=category`}>
                         <a>
                           <ProductCard5 {...item} />
                         </a>

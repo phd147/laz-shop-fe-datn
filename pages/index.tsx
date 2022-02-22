@@ -29,7 +29,7 @@ const IndexPage = ({userInfo} : any) => {
       <Categories />
       {/*<ProductsSale />*/}
       {/*<AllProducts />*/}
-        {/*<Section4 />*/}
+        <Section4 />
         {/*<Section5 />*/}
         {/*<Section13 />*/}
         {/*<Section6 />*/}

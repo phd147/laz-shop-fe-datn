@@ -13,7 +13,7 @@ const ProductCard1List: React.FC<ProductCard1ListProps> = ({ shopItems }) => {
   return (
     <div>
       <Grid container spacing={3}>
-        {shopItems.map((item, ind) => (
+        {shopItems?.map((item, ind) => (
           <Grid item lg={4} sm={6} xs={12} key={ind}>
             <ProductCard1 {...item} />
           </Grid>
