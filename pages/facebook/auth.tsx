@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import { instance } from '../../src/api/api'
+import { toast } from 'react-toastify'
 
 export default function Login() {
 
@@ -16,7 +17,9 @@ export default function Login() {
       })
       router.push('/')
     } catch (err) {
+      toast.error(err.response.data.message)
       console.log({ err })
+      router.push('/')
     }
 
   }

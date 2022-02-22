@@ -74,12 +74,12 @@ const VendorDashboard = () => {
           </Grid>
         ))}
 
-        {/*<Grid item lg={8} xs={12}>*/}
-        {/*  <Card sx={{ p: '20px 30px' }}>*/}
-        {/*    <H5 mb={3}>Sales</H5>*/}
-        {/*    <VendorAnalyticsChart />*/}
-        {/*  </Card>*/}
-        {/*</Grid>*/}
+        <Grid item lg={8} xs={12}>
+          <Card sx={{ p: '20px 30px' }}>
+            <H5 mb={3}>Sales</H5>
+            <VendorAnalyticsChart />
+          </Card>
+        </Grid>
 
         {/*<Grid item lg={4} xs={12}>*/}
         {/*  <Card sx={{ p: '20px 30px' }}>*/}
