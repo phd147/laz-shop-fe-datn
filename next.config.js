@@ -19,6 +19,6 @@ module.exports = {
   //   ]
   // }
   images: {
-    domains: ['phd-bucket-1999.s3.ap-southeast-1.amazonaws.com'],
+    domains: ['phd-bucket-1999.s3.ap-southeast-1.amazonaws.com','m.media-amazon.com'],
   },
 }

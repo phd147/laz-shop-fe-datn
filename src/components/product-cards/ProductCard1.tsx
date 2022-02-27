@@ -151,7 +151,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
   return (
     <BazarCard className={classes.root} hoverEffect={hoverEffect}>
-      <div className={classes.imageHolder}>
+      <div style={{width : '100%', paddingTop : '100%', position: 'relative'}} className={classes.imageHolder} >
         {/*{!!off && (*/}
         {/*  <Chip*/}
         {/*    className={classes.offerChip}*/}
@@ -182,6 +182,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
               height='auto'
               layout='responsive'
               alt={name}
+              style={{width : '100%', height : '100%', top : '0', left : '0', position : 'absolute'}}
               // style={{backgroundSize : 'cover'}}
             />
           </a>

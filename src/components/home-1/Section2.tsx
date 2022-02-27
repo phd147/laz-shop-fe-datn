@@ -7,6 +7,8 @@ import CategorySectionCreator from '../CategorySectionCreator'
 import ProductCard1 from '../product-cards/ProductCard1'
 import { useDispatch, useSelector } from 'react-redux'
 import { INIT_GENERAL_ITEM_SAGA } from '../../redux/constants'
+import { toast } from 'react-toastify'
+import { instance } from '../../api/api'
 
 const Section2 = () => {
 
@@ -21,6 +23,12 @@ const Section2 = () => {
 
   const { generalItem } = useSelector(state => state.itemReducer)
 
+  const [isFetchRecommend, setIsFetchRecommend] = useState(false)
+  const [recommendItems , setRecommendItems] = useState([])
+
+  const {isLogin} = useSelector(state => state.authReducer)
+  const {user} = useSelector(state => state.authReducer)
+
   const [visibleSlides, setVisibleSlides] = useState(4)
   const width = useWindowSize()
 
@@ -30,6 +38,37 @@ const Section2 = () => {
     else if (width < 950) setVisibleSlides(3)
     else setVisibleSlides(4)
   }, [width])
+
+  const fetchRecommendItem = async () => {
+    try {
+        const res = await instance.get(`/recommend?is_auth=1&user_id=${user.id}`)
+      console.log(res)
+      setRecommendItems(res.data)
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  const fetchRecommend = async () => {
+    try {
+      const res = await instance.get(`/recommend?is_auth=0`)
+      console.log(res)
+      setRecommendItems(res.data)
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
+  useEffect(() => {
+    if(isLogin && !isFetchRecommend){
+      fetchRecommendItem()
+      setIsFetchRecommend(true)
+    }
+  })
+
+  useEffect(() => {
+    fetchRecommend()
+  },[])
 
   return (
     <CategorySectionCreator
@@ -42,7 +81,7 @@ const Section2 = () => {
           visibleSlides={visibleSlides}
           infinite={true}
         >
-          {generalItem.map((item, ind) => (
+          {recommendItems.map((item, ind) => (
             <Box py={0.5} key={ind}>
               <ProductCard1
                 shop={item.shop}

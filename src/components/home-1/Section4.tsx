@@ -43,7 +43,7 @@ const Section4 = () => {
       <Container>
         <Box>
           <Grid container spacing={4}>
-            <Grid item lg={6} xs={12}>
+            <Grid item lg={12} xs={12}>
               <CategorySectionHeader
                 icon={<RankBadge />}
                 title="Top Shop"
@@ -52,7 +52,7 @@ const Section4 = () => {
               <BazarCard sx={{ p: '1rem' }}>
                 <Grid container spacing={4}>
                   {topShops.map((item) => (
-                    <Grid item md={3} sm={6} xs={6} key={item.id}>
+                    <Grid item md={2} sm={6} xs={6} key={item.id}>
                       <Link href={`/shop/${item.id}`}>
                         <a>
                           <ProductCard4 {...item} />
@@ -63,26 +63,26 @@ const Section4 = () => {
                 </Grid>
               </BazarCard>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <CategorySectionHeader
+            {/*<Grid item md={6} xs={12}>*/}
+            {/*  <CategorySectionHeader*/}
 
-                icon={<DottedStar />}
-                title="Featured categories"
-              />
-              <BazarCard sx={{ p: '1rem' }}>
-                <Grid container spacing={4}>
-                  {categories.map((item) => (
-                    <Grid item sm={6} xs={12} key={item.name}>
-                      <Link href={`/product/search/${item.name}?type=category`}>
-                        <a>
-                          <ProductCard5 {...item} />
-                        </a>
-                      </Link>
-                    </Grid>
-                  ))}
-                </Grid>
-              </BazarCard>
-            </Grid>
+            {/*    icon={<DottedStar />}*/}
+            {/*    title="Featured categories"*/}
+            {/*  />*/}
+            {/*  /!*<BazarCard sx={{ p: '1rem' }}>*!/*/}
+            {/*  /!*  <Grid container spacing={4}>*!/*/}
+            {/*  /!*    {categories.map((item) => (*!/*/}
+            {/*  /!*      <Grid item sm={6} xs={12} key={item.name}>*!/*/}
+            {/*  /!*        <Link href={`/product/search/${item.name}?type=category`}>*!/*/}
+            {/*  /!*          <a>*!/*/}
+            {/*  /!*            <ProductCard5 {...item} />*!/*/}
+            {/*  /!*          </a>*!/*/}
+            {/*  /!*        </Link>*!/*/}
+            {/*  /!*      </Grid>*!/*/}
+            {/*  /!*    ))}*!/*/}
+            {/*  /!*  </Grid>*!/*/}
+            {/*  /!*</BazarCard>*!/*/}
+            {/*</Grid>*/}
           </Grid>
         </Box>
       </Container>
