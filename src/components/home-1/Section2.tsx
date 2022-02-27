@@ -92,6 +92,7 @@ const Section2 = () => {
                 price={item.price}
                 off={20}
                 disableAddToCart={true}
+                totalReview={item.totalReview}
               />
             </Box>
           ))}

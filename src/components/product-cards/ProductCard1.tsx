@@ -135,6 +135,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                                                      averageStar = 0,
                                                      hoverEffect,
                                                      shop,
+                                                     totalReview
                                                    }) => {
 
   const dispatch = useDispatch();
@@ -207,8 +208,10 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                 </H3>
               </a>
             </Link>
-
-            <BazarRating value={Math.floor(Number(averageStar)) || 0} color='warn' readOnly />
+            <FlexBox >
+              <BazarRating value={Math.floor(Number(averageStar)) || 0} color='warn' readOnly />
+             ( {totalReview} )
+            </FlexBox>
 
             <FlexBox alignItems='center' mt={0.5}>
               {/*<Box pr={1} fontWeight='600' color='primary.main'>*/}

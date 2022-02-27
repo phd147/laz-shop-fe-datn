@@ -13,6 +13,13 @@ const VendorDashboard = () => {
 
   const [balance,setBalance] = useState(0);
 
+  const [shopOverview, setShopOverview] = useState({
+    totalCustomer: 0,
+    totalOrders: 0,
+    totalPendingOrders: 0,
+    totalProduct: 0,
+  })
+
 
   const getShopToken = async () => {
     try {
@@ -23,34 +30,38 @@ const VendorDashboard = () => {
     }
   }
 
-  // const getTotalOrder = async() => {
-  //   try {
-  //
-  //   }catch(err){
-  //     toast.error('Error');
-  //   }
-  // }
+  const getShopOverview = async () => {
+    try {
+      const res = await instance.get('/shop/overview');
+      setShopOverview(res.data)
+    }catch(err){
+      toast.error('Error')
+    }
+  }
+
 
   useEffect(() => {
     getShopToken();
+    getShopOverview()
   },[])
 
 
   const cardList = [
     {
       title: 'Total products',
-      amount: '$30450.00',
-      subtitle: 'after associated vendor fees',
+      amount: shopOverview.totalProduct,
     },
     {
       title: 'Your balance',
       amount: `${balance}$`,
-      subtitle: 'Will be processed on Feb 15, 2021',
     },
     {
       title: 'Total Orders',
-      amount: '08',
-      subtitle: '7/3/2020 - 8/1/2020',
+      amount: shopOverview.totalOrders,
+    },
+    {
+      title: 'Pending Orders',
+      amount: shopOverview.totalPendingOrders,
     },
   ]
 
@@ -61,7 +72,7 @@ const VendorDashboard = () => {
 
       <Grid container spacing={3}>
         {cardList.map((item, ind) => (
-          <Grid item lg={4} md={4} sm={6} xs={12} key={ind}>
+          <Grid item lg={6} md={6} sm={6} xs={12} key={ind}>
             <Card sx={{ textAlign: 'center', py: '1.5rem', height: '100%' }}>
               <H5 color="grey.600" mb={1}>
                 {item.title}
@@ -74,12 +85,12 @@ const VendorDashboard = () => {
           </Grid>
         ))}
 
-        <Grid item lg={8} xs={12}>
-          <Card sx={{ p: '20px 30px' }}>
-            <H5 mb={3}>Sales</H5>
-            <VendorAnalyticsChart />
-          </Card>
-        </Grid>
+        {/*<Grid item lg={8} xs={12}>*/}
+        {/*  <Card sx={{ p: '20px 30px' }}>*/}
+        {/*    <H5 mb={3}>Sales</H5>*/}
+        {/*    <VendorAnalyticsChart />*/}
+        {/*  </Card>*/}
+        {/*</Grid>*/}
 
         {/*<Grid item lg={4} xs={12}>*/}
         {/*  <Card sx={{ p: '20px 30px' }}>*/}
