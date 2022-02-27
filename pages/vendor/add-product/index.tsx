@@ -233,7 +233,7 @@ const OrderDetails = () => {
                   <TextField
                     name='weight'
                     label='Weight'
-                    placeholder='Weight'
+                    placeholder='Weight (gram)'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}
@@ -247,7 +247,7 @@ const OrderDetails = () => {
                   <TextField
                     name='width'
                     label='Width'
-                    placeholder='Width'
+                    placeholder='Width (cm)'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}
@@ -261,7 +261,7 @@ const OrderDetails = () => {
                   <TextField
                     name='height'
                     label='Height'
-                    placeholder='Height'
+                    placeholder='Height (cm)'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}
@@ -274,8 +274,8 @@ const OrderDetails = () => {
                 <Grid item sm={4} xs={12}>
                   <TextField
                     name='length'
-                    label='Length'
-                    placeholder='Length'
+                    label='Length (cm)'
+                    placeholder='Length (cm)'
                     type='number'
                     fullWidth
                     onBlur={handleBlur}

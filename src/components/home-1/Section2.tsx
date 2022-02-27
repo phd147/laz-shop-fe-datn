@@ -12,15 +12,6 @@ import { instance } from '../../api/api'
 
 const Section2 = () => {
 
-  // const dispatch = useDispatch()
-  //
-  // useEffect(() => {
-  //   dispatch({
-  //     type: INIT_GENERAL_ITEM_SAGA,
-  //   })
-  // }, [])
-
-
   const { generalItem } = useSelector(state => state.itemReducer)
 
   const [isFetchRecommend, setIsFetchRecommend] = useState(false)
@@ -77,7 +68,7 @@ const Section2 = () => {
     >
       <Box mt={-0.5} mb={-0.5}>
         <Carousel
-          totalSlides={generalItem.length}
+          totalSlides={recommendItems.length}
           visibleSlides={visibleSlides}
           infinite={true}
         >

@@ -22,7 +22,7 @@ const Shop = () => {
 
   const [shop, setShop] = useState({})
   const [shopItems, setShopItems] = useState([])
-  const [perPage, setPerPage] = useState(10)
+  const [perPage, setPerPage] = useState(16)
   const [lastPage, setLastPage] = useState(1)
 
 
@@ -68,7 +68,7 @@ const Shop = () => {
         {/*  <ProductFilterCard />*/}
         {/*</Grid>*/}
 
-        <Grid item md={9} xs={12}>
+        <Grid item md={12} xs={12}>
           {isTablet && (
             <Sidenav
               position='left'

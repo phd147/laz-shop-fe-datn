@@ -29,7 +29,7 @@ const ProductSearchResult = () => {
   )
 
   const [page, setPage] = useState(1);
-  const [limit,setLimit] = useState(9);
+  const [limit,setLimit] = useState(16);
 
   const router = useRouter()
 
@@ -112,10 +112,10 @@ const ProductSearchResult = () => {
 
         <Grid container spacing={3}>
 
-          <Grid item lg={9} xs={12}>
+          <Grid item lg={12} xs={12}>
             {view === 'grid' ? <ProductCard1List shopItems={items.items} /> : <ProductCard9List />}
             {/*<ProductCard1List shopItems={[]} />*/}
-            <Pagination page={page} count={items.last_page} variant="outlined" color="primary" onChagne={(e,newValue) => {
+            <Pagination page={page} count={items.last_page} variant="outlined" color="primary" onChange={(e,newValue) => {
               fetchItems(newValue)
               setPage(newValue);
             }}/>
