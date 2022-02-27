@@ -53,7 +53,7 @@ const Section10 = () => {
       <Grid container spacing={3}>
         {categories?.map((category, ind) => (
           <Grid item lg={2} md={3} sm={4} xs={12} key={ind}>
-            <Link href='/'>
+            <Link href={`/product/search/${category.name}?type=category`}>
               <a>
                 <BazarCard className={classes.card} elevation={1}>
                   <LazyImage
