@@ -74,7 +74,7 @@ const ProductSearchResult = () => {
         >
           <div>
             <H5>Searching for {type === 'category' && type} “ {id}”</H5>
-            <Paragraph color='grey.600'>48 results found</Paragraph>
+            <Paragraph color='grey.600'>{items?.total} results found</Paragraph>
           </div>
           <FlexBox alignItems='center' flexWrap='wrap' my='0.5rem'>
 
