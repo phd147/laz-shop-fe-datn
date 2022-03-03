@@ -19,12 +19,23 @@ export interface ProductCard4Props {
 const ProductCard4: React.FC<ProductCard4Props> = ({
                                                      avatarUrl,
                                                      name,
-                                                     totalProfit =0,
+                                                     totalProfit = 0,
                                                    }) => {
   return (
     <Box>
-      <HoverBox mb={2} mx='auto' borderRadius='8px'>
+      <HoverBox mb={2} mx='auto' borderRadius='8px' style={{
+        width: '100%',
+        paddingTop: '100%',
+        position: 'relative',
+      }}>
         <LazyImage
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: 'auto',
+          }}
           src={avatarUrl}
           width='100%'
           height='auto'
@@ -40,7 +51,7 @@ const ProductCard4: React.FC<ProductCard4Props> = ({
       {/*  /!*  ({reviewCount})*!/*/}
       {/*  /!*</Small>*!/*/}
       {/*</FlexBox>*/}
-      {/*<p>{name}</p>*/}
+      <h4>{name}</h4>
       {/*<H4*/}
       {/*  fontWeight='600'*/}
       {/*  fontSize='14px'*/}
