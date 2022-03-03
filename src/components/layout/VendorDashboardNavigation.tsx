@@ -8,9 +8,11 @@ import { Message, Money } from '@material-ui/icons'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { DashboardNavigationWrapper, StyledDashboardNav } from './DashboardStyle'
+import { useSelector } from 'react-redux'
 
 const VendorDashboardNavigation = () => {
   const { pathname } = useRouter()
+
 
   return (
     <DashboardNavigationWrapper sx={{ px: '0px', py: '1.5rem', color: 'grey.900' }}>

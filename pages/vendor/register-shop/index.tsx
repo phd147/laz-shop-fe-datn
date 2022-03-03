@@ -345,19 +345,19 @@ const AccountSettings = () => {
                       helperText={touched.email && errors.email}
                     />
                   </Grid>
-                  <Grid item md={6} xs={12}>
-                    <TextField
-                      name='phoneNumber'
-                      label='Phone'
-                      fullWidth
-                      type='tel'
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.phoneNumber || ''}
-                      error={!!touched.phoneNumber && !!errors.phoneNumber}
-                      helperText={touched.phoneNumber && errors.phoneNumber}
-                    />
-                  </Grid>
+                  {/*<Grid item md={6} xs={12}>*/}
+                  {/*  <TextField*/}
+                  {/*    name='phoneNumber'*/}
+                  {/*    label='Phone'*/}
+                  {/*    fullWidth*/}
+                  {/*    type='tel'*/}
+                  {/*    onBlur={handleBlur}*/}
+                  {/*    onChange={handleChange}*/}
+                  {/*    value={values.phoneNumber || ''}*/}
+                  {/*    error={!!touched.phoneNumber && !!errors.phoneNumber}*/}
+                  {/*    helperText={touched.phoneNumber && errors.phoneNumber}*/}
+                  {/*  />*/}
+                  {/*</Grid>*/}
                   <Grid item md={6} xs={12}>
                     <TextField
                       name='description'

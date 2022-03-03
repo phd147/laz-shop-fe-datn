@@ -11,13 +11,14 @@ const ShopList = () => {
   const [shopList, setShopList] = useState([])
 
   const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1)
   const [limit,setLimit] = useState(6);
 
   const getShopLists = async (page=1) => {
     try {
       const res = await instance.get(`/shops?page=${page}&limit=${limit}`)
-      console.log({res})
       setShopList(res.data.items)
+      setLastPage(res.data.last_page)
     }catch(err){
       console.log({err})
     }
@@ -46,7 +47,7 @@ const ShopList = () => {
         mt={4}
       >
         {/*<Span color="grey.600">Showing 1-9 of 300 Shops</Span>*/}
-        <Pagination page={page} count={shopList.last_page} variant="outlined" color="primary" onChagne={(e,newValue) => {
+        <Pagination count={lastPage} variant="outlined" color="primary" onChange={(e,newValue) => {
               getShopLists(newValue);
               setPage(newValue);
         }}/>
